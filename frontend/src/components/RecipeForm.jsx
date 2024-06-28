@@ -4,9 +4,6 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import ValidatedTextField from "./ValidatedTextField";
 
 export const RecipeForm = ({handleSubmit, selectedCategory, setSelectedCategory}) => {

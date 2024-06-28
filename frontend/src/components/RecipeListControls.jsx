@@ -1,6 +1,7 @@
 import {useState} from "react";
 import {Box, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 import SearchBar from "./SearchBar";
+import IngredientFilterInput from "./IngredientFilterInput.jsx";
 
 export default function RecipeListControls({setRecipes}) {
     const [sortValue, setSortValue] = useState("name");
@@ -18,7 +19,13 @@ export default function RecipeListControls({setRecipes}) {
             width="100%"
             mb="2em"
         >
+            <Box display="flex"
+                 flex-direction="row" gap="1em">
+
             <SearchBar {...{setRecipes}} />
+            <IngredientFilterInput/>
+            <IngredientFilterInput/>
+            </Box>
             <Box>
                 <FormControl sx={{m: 1, minWidth: 120}}>
                     <InputLabel id="sort-label">Sortowanie</InputLabel>
