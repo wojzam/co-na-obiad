@@ -9,15 +9,11 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import ValidatedTextField from "./ValidatedTextField";
 
-export const RecipeForm = ({
-                               handleSubmit,
-                               selectedCategory,
-                               setSelectedCategory
-                           }) => {
+export const RecipeForm = ({handleSubmit, selectedCategory, setSelectedCategory}) => {
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        fetch("/api/public/category")
+        fetch("/api/recipes/categories")
             .then((response) => response.json())
             .then((data) => {
                 setCategories(data);
@@ -29,52 +25,35 @@ export const RecipeForm = ({
             <Grid container spacing={2} sx={{mb: 2}}>
                 <Grid item xs={12}>
                     <ValidatedTextField
-                        id="title"
-                        label="Title"
-                        name="title"
+                        id="name"
+                        label="Nazwa"
+                        name="name"
                         maxLength={50}
                     />
                 </Grid>
                 <Grid item xs={12}>
                     <ValidatedTextField
-                        name="description"
-                        label="Description"
-                        id="description"
+                        name="comment"
+                        label="Komentarz"
+                        id="comment"
                         multiline
                         rows={5}
                         minLength={0}
                         maxLength={1000}
+                        required={false}
                     />
                 </Grid>
                 <Grid item xs={12}>
                     <Autocomplete
                         disablePortal
                         id="category"
-                        value={selectedCategory}
-                        options={categories}
+                        value={selectedCategory.name}
+                        defaultValue={"Obiad"}
+                        options={categories.map(category => category.name)}
                         onChange={(e, v) => setSelectedCategory(v)}
                         disableClearable
-                        renderInput={(params) => <TextField {...params} label="Category"/>}
+                        renderInput={(params) => <TextField {...params} label="Kategoria"/>}
                     />
-                </Grid>
-                <Grid item xs={12} display="flex" justifyContent="center">
-                    <RadioGroup
-                        aria-labelledby="radio-buttons-group-label"
-                        defaultValue="private"
-                        name="publicVisibility"
-                        row
-                    >
-                        <FormControlLabel
-                            value="private"
-                            control={<Radio/>}
-                            label="Private"
-                        />
-                        <FormControlLabel
-                            value="public"
-                            control={<Radio/>}
-                            label="Public"
-                        />
-                    </RadioGroup>
                 </Grid>
             </Grid>
             <Button type="submit" fullWidth variant="contained" sx={{mt: 5, mb: 2}}>

@@ -16,6 +16,7 @@ const ValidatedTextField = ({
                                 multiline = false,
                                 rows = 1,
                                 sx = {},
+                                required=true
                             }) => {
     const [value, setValue] = useState(initialValue);
     const [error, setError] = useState(false);
@@ -38,10 +39,10 @@ const ValidatedTextField = ({
                 ? "Email is invalid"
                 : isTooShort
                     ? minLength === 1
-                        ? `${label} is required`
-                        : `${label} must be at least ${minLength} characters`
+                        ? `${label} nie może być pusta`
+                        : `${label} musi mieć przynamniej ${minLength} znaków`
                     : isTooLong
-                        ? `${label} is too long`
+                        ? `${label} jest za długi`
                         : ""
         );
     };
@@ -56,7 +57,7 @@ const ValidatedTextField = ({
 
     return (
         <TextField
-            required
+            required={required}
             fullWidth
             id={id}
             name={name}
