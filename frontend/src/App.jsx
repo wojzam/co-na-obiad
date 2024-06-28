@@ -3,6 +3,7 @@ import Login from "./pages/Login";
 import TopicsList from "./pages/TopicsList";
 import Create from "./pages/Create";
 import ThemeSwitcher from "./components/ThemeSwitcher";
+import Healthcheck from "./components/Healthcheck";
 import { Route, Routes } from "react-router-dom";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
@@ -17,8 +18,6 @@ export default function App() {
         <ThemeSwitcher />
         <main className="content">
           <Routes>
-            {/*<Route path="/" element={<Home />} />*/}
-            {/*<Route path="/signup" element={<SignUp />} />*/}
             <Route path="/" element={<Login />} />
             <Route
               path="/explore"
@@ -30,7 +29,7 @@ export default function App() {
             />
             <Route path="/create" element={<Create />} />
             {/*<Route path="/topic/:id" element={<Topic />} />*/}
-            {/*<Route path="/admin" element={<AdminDashboard />} />*/}
+            <Route path="/healthcheck" element={<Healthcheck />} />
           </Routes>
         </main>
       </ThemeProvider>
