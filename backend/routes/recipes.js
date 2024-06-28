@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Recipe = require('../models/recipe');
+const recipeDto = require('../dto/recipeDto');
 const IngredientType = require('../models/ingredientType');
 const Unit = require('../models/unit');
 const User = require('../models/user');
@@ -10,9 +11,10 @@ const User = require('../models/user');
 router.get('/', async (req, res) => {
     try {
         const recipes = await Recipe.find();
-        res.json(recipes);
+        const recipesDto = recipes.map(recipe => recipeDto(recipe));
+        res.json(recipesDto);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json({message: err.message});
     }
 });
 
@@ -20,15 +22,15 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
         const recipe = await Recipe.findById(req.params.id);
-        if (!recipe) return res.status(404).json({ message: 'Recipe not found' });
+        if (!recipe) return res.status(404).json({message: 'Recipe not found'});
         res.json(recipe);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json({message: err.message});
     }
 });
 
 router.post('/', async (req, res) => {
-    const { name, ingredients, instructions } = req.body;
+    const {name, ingredients, instructions} = req.body;
 
     // const newRecipe = new Recipe({
     //     name,
@@ -40,7 +42,7 @@ router.post('/', async (req, res) => {
         // const savedRecipe = await newRecipe.save();
         // res.redirect(`/recipes/${savedRecipe._id}`);
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        res.status(400).json({message: err.message});
     }
 });
 
