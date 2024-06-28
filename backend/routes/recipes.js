@@ -10,7 +10,12 @@ const User = require('../models/user');
 // Get all recipes
 router.get('/', async (req, res) => {
     try {
-        const recipes = await Recipe.find();
+        const {name, sort} = req.query;
+        const query = name ? {name: {$regex: name, $options: 'i'}} : {};
+        const sortOption = sort === 'date' ? {created_at: -1} : {name: 1};
+
+        let recipes = await Recipe.find(query).sort(sortOption);
+
         const recipesDto = recipes.map(recipe => recipeDto(recipe));
         res.json(recipesDto);
     } catch (err) {

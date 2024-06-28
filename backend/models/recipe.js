@@ -19,4 +19,7 @@ const recipeSchema = new mongoose.Schema({
     created_at: {type: Date, default: Date.now},
 });
 
+recipeSchema.index({name: 1});
+recipeSchema.index({created_at: 1});
+
 module.exports = mongoose.model('Recipe', recipeSchema);

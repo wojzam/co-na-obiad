@@ -17,7 +17,6 @@ const RecipesBrowser = () => {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
                 setRecipes(data);
                 setIsPending(false);
             });
