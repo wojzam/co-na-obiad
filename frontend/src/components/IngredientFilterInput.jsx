@@ -1,8 +1,7 @@
 import {useEffect, useState} from "react";
 import {Autocomplete, TextField} from "@mui/material";
 
-export default function IngredientFilterInput({}) {
-    const [searchQuery, setSearchQuery] = useState("");
+export default function IngredientFilterInput({filter, onFilterChange, text}) {
     const [ingredients, setIngredients] = useState([]);
 
     useEffect(() => {
@@ -10,15 +9,12 @@ export default function IngredientFilterInput({}) {
             .then((response) => response.json())
             .then((data) => {
                 setIngredients(data);
-                console.log(data);
             });
     }, []);
 
-    const handleInputChange = (event) => {
-        setSearchQuery(event.target.value);
-    };
-
-    const handleSearch = (event) => {
+    const handleInputChange = (event, value) => {
+        const selectedIds = value.map((item) => item._id);
+        onFilterChange(text === "Zawiera" ? {include: selectedIds} : {exclude: selectedIds});
     };
 
     return (
@@ -35,10 +31,11 @@ export default function IngredientFilterInput({}) {
             options={ingredients}
             getOptionLabel={(option) => option.name}
             filterSelectedOptions
+            onChange={handleInputChange}
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    label="Zawiera"
+                    label={text}
                 />
             )}
         />

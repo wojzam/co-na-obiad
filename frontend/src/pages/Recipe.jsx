@@ -17,7 +17,6 @@ const Recipe = () => {
             .then((response) => response.json())
             .then((data) => {
                 setTopicData(data);
-                console.log(data);
                 setIsPending(false);
             });
     }, []);

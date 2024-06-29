@@ -2,27 +2,17 @@ import {useState} from "react";
 import {IconButton, InputBase, Paper} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
-export default function SearchBar({setRecipes}) {
+export default function SearchBar({filter, onFilterChange}) {
     const [searchQuery, setSearchQuery] = useState("");
 
     const handleInputChange = (event) => {
         setSearchQuery(event.target.value);
+        onFilterChange({name: event.target.value});
     };
 
     const handleSearch = (event) => {
         event.preventDefault();
-        const endpoint = `/api/recipes?name=${searchQuery}`;
-        const token = localStorage.getItem("token");
-
-        fetch(endpoint, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                setRecipes(data);
-            });
+        onFilterChange({name: searchQuery});
     };
 
     return (

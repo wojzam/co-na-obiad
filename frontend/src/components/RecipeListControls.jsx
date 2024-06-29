@@ -1,14 +1,42 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Box, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 import SearchBar from "./SearchBar";
 import IngredientFilterInput from "./IngredientFilterInput.jsx";
 
 export default function RecipeListControls({setRecipes}) {
-    const [sortValue, setSortValue] = useState("name");
+    const [filter, setFilter] = useState({
+        name: "",
+        include: [],
+        exclude: []
+    });
+    const [sort, setSort] = useState("name");
+
+    const handleFilterChange = (newFilter) => {
+        setFilter((prevFilter) => ({
+            ...prevFilter,
+            ...newFilter
+        }));
+    };
 
     const handleSortChange = (event) => {
-        setSortValue(event.target.value);
-    };
+        setSort(event.target.value);
+    }
+
+    useEffect(() => {
+        const endpoint =
+            `/api/recipes?name=${filter.name}&include=${filter.include}&exclude=${filter.exclude}&sort=${sort}`;
+        const token = localStorage.getItem("token");
+
+        fetch(endpoint, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                setRecipes(data);
+            });
+    }, [filter, sort]);
 
     return (
         <Box
@@ -22,9 +50,9 @@ export default function RecipeListControls({setRecipes}) {
             <Box display="flex"
                  flex-direction="row" gap="1em">
 
-            <SearchBar {...{setRecipes}} />
-            <IngredientFilterInput/>
-            <IngredientFilterInput/>
+                <SearchBar filter={filter} onFilterChange={handleFilterChange}/>
+                <IngredientFilterInput filter={filter} onFilterChange={handleFilterChange} text={"Zawiera"}/>
+                <IngredientFilterInput filter={filter} onFilterChange={handleFilterChange} text={"Nie zawiera"}/>
             </Box>
             <Box>
                 <FormControl sx={{m: 1, minWidth: 120}}>
@@ -32,7 +60,7 @@ export default function RecipeListControls({setRecipes}) {
                     <Select
                         labelId="sort-label"
                         id="sort-select"
-                        value={sortValue}
+                        value={sort}
                         label="Sortuj po"
                         onChange={handleSortChange}
                     >

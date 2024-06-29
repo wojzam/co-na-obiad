@@ -7,16 +7,30 @@ const IngredientType = require('../models/ingredientType');
 const Unit = require('../models/unit');
 const DishCategory = require('../models/dishCategory');
 
-
 // Get all recipes
 router.get('/', async (req, res) => {
     try {
-        const {name, sort} = req.query;
-        const query = name ? {name: {$regex: name, $options: 'i'}} : {};
+        const {name, include, exclude, sort} = req.query;
+        const includeIds = include ? include.split(",") : [];
+        const excludeIds = exclude ? exclude.split(",") : [];
+
+        let query = name ? {name: {$regex: name, $options: 'i'}} : {};
+
+        if (includeIds.length > 0) {
+            query.$or = [
+                {'ingredients._id': {$in: includeIds}},
+                {'optional._id': {$in: includeIds}}
+            ];
+        }
+        if (excludeIds.length > 0) {
+            query.$and = [
+                {'ingredients._id': {$nin: excludeIds}}
+            ];
+        }
+
         const sortOption = sort === 'date' ? {created_at: -1} : {name: 1};
 
-        let recipes = await Recipe.find(query).sort(sortOption);
-
+        const recipes = await Recipe.find(query).sort(sortOption);
         const recipesDto = recipes.map(recipe => recipeDto(recipe));
         res.json(recipesDto);
     } catch (err) {
