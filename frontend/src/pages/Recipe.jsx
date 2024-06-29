@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import {Box, Skeleton, Typography} from "@mui/material";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import {Box, Divider, Skeleton, Typography} from "@mui/material";
 import BackButton from "../components/BackButton";
 
 const Recipe = () => {
@@ -18,6 +17,7 @@ const Recipe = () => {
             .then((response) => response.json())
             .then((data) => {
                 setTopicData(data);
+                console.log(data);
                 setIsPending(false);
             });
     }, []);
@@ -33,31 +33,47 @@ const Recipe = () => {
                 my="2em"
             >
                 <Box width="100%">
-                    {topicData && topicData.readOnly && (
-                        <Box display="flex" flexDirection="row" alignItems="center" gap={1}>
-                            <LockOutlinedIcon color="disabled"/>
-                            <Typography variant="h6" fontWeight="light">
-                                read-only
-                            </Typography>
-                        </Box>
-                    )}
                     <Box
                         display="flex"
-                        flexDirection="row"
+                        flexDirection="column"
                         justifyContent="space-between"
                     >
-                        <Typography
-                            component="h2"
-                            variant="h2"
-                            fontWeight="regular"
-                            gutterBottom
-                        >
+                        <Typography variant="h6" fontWeight="regular">
+                            {isPending ? <Skeleton width={100}/> : topicData.category.name}
+                        </Typography>
+                        <Typography component="h2" variant="h2" fontWeight="regular" gutterBottom>
                             {isPending ? <Skeleton width={300}/> : topicData.name}
                         </Typography>
+                        <Divider/>
+                        <Box>
+                            <Typography variant="h5" marginTop={3} fontWeight="medium" gutterBottom>
+                                Składniki:
+                            </Typography>
+                            {isPending ? <Skeleton width={600}/> :
+                                topicData.ingredients.map((i) => (
+                                    <Typography variant="h6" key={i._id} fontWeight="regular">{i.name}</Typography>
+                                ))
+                            }
+                        </Box>
+                        <Box>
+                            <Typography variant="h5" marginTop={3} fontWeight="medium" gutterBottom>
+                                Dodatki:
+                            </Typography>
+                            {isPending ? <Skeleton width={600}/> :
+                                topicData.optional.map((i) => (
+                                    <Typography variant="h6" key={i._id} fontWeight="light">{i.name}</Typography>
+                                ))
+                            }
+                        </Box>
+                        <Box>
+                            <Typography marginTop={3} variant="h5" fontWeight="medium" gutterBottom>
+                                {topicData && topicData.comment && "Komentarz:"}
+                            </Typography>
+                            <Typography variant="h6" fontWeight="regular">
+                                {topicData && topicData.comment && topicData.comment}
+                            </Typography>
+                        </Box>
                     </Box>
-                    <Typography variant="h5" fontWeight="regular">
-                        {isPending ? <Skeleton width={600}/> : topicData.comment}
-                    </Typography>
                 </Box>
             </Box>
         </>

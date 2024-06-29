@@ -10,7 +10,7 @@ export default function BackButton() {
     return (
         <IconButton onClick={goBack}>
             <ArrowBackIcon/>
-            <Typography variant="h6">Back</Typography>
+            <Typography variant="h6">Wróć</Typography>
         </IconButton>
     );
 }
