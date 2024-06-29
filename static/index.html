@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=https://co-na-obiad.onrender.com">
+    <title>Redirecting...</title>
+    <script>
+        const frontendUrl = "https://co-na-obiad.onrender.com/healthcheck";
+        const backendUrl = "https://co-na-obiad-backend.onrender.com/healthcheck";
+
+        function pingServices() {
+            fetch(frontendUrl, {method: 'HEAD', mode: 'no-cors'})
+                .then(() => console.log('Frontend Ok'))
+                .catch(error => console.error('Error pinging frontend:', error));
+
+            fetch(backendUrl, {method: 'HEAD', mode: 'no-cors'})
+                .then(() => console.log('Backend Ok'))
+                .catch(error => console.error('Error pinging backend:', error));
+        }
+
+        window.onload = pingServices;
+    </script>
+</head>
+<body>
+<p>Redirecting ...</p>
+</body>
+</html>
