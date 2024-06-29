@@ -11,12 +11,12 @@ export default defineConfig({
         watch: {
             usePolling: true,
         },
-        host: true,
-        strictPort: true,
+        host: '0.0.0.0',
+        strictPort: false,
         port: 3000,
         proxy: {
             '/api': {
-                target: process.env.API_URL,
+                target: process.env.API_URL || 'http://localhost:3000',
                 changeOrigin: true,
                 secure: false,
                 rewrite: (path) => path.replace(/^\/api/, '')
