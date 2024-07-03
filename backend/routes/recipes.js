@@ -1,4 +1,5 @@
 const express = require('express');
+const {query, matchedData, validationResult} = require('express-validator');
 const router = express.Router();
 const Recipe = require('../models/recipe');
 const recipeDto = require('../dto/recipeDto');
@@ -8,13 +9,18 @@ const Unit = require('../models/unit');
 const DishCategory = require('../models/dishCategory');
 
 // Get all recipes
-router.get('/', async (req, res) => {
+router.get('/', query(['name', 'include', 'exclude', 'sort']).escape(), async (req, res) => {
     try {
-        const {name, include, exclude, sort} = req.query;
-        const includeIds = include ? include.split(",") : [];
-        const excludeIds = exclude ? exclude.split(",") : [];
+        const result = validationResult(req);
+        if (!result.isEmpty()) {
+            return res.send({errors: result.array()});
+        }
 
-        let query = name ? {name: {$regex: name, $options: 'i'}} : {};
+        const data = matchedData(req);
+        const includeIds = data.include ? data.include.split(",") : [];
+        const excludeIds = data.exclude ? data.exclude.split(",") : [];
+
+        let query = data.name ? {name: {$regex: data.name, $options: 'i'}} : {};
 
         if (includeIds.length > 0) {
             query.$or = [
@@ -28,7 +34,7 @@ router.get('/', async (req, res) => {
             ];
         }
 
-        const sortOption = sort === 'date' ? {created_at: -1} : {name: 1};
+        const sortOption = data.sort === 'date' ? {created_at: -1} : {name: 1};
 
         const recipes = await Recipe.find(query).sort(sortOption);
         const recipesDto = recipes.map(recipe => recipeDto(recipe));
