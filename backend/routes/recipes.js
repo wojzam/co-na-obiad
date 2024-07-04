@@ -1,5 +1,5 @@
 const express = require('express');
-const {query, matchedData, validationResult} = require('express-validator');
+const {query, body, matchedData, validationResult} = require('express-validator');
 const router = express.Router();
 const Recipe = require('../models/recipe');
 const recipeDto = require('../dto/recipeDto');
@@ -8,35 +8,39 @@ const IngredientType = require('../models/ingredientType');
 const Unit = require('../models/unit');
 const DishCategory = require('../models/dishCategory');
 
-// Get all recipes
 router.get('/', query(['name', 'include', 'exclude', 'sort']).escape(), async (req, res) => {
     try {
         const result = validationResult(req);
         if (!result.isEmpty()) {
-            return res.send({errors: result.array()});
+            return res.status(400).json({message: result.array()});
         }
 
         const data = matchedData(req);
         const includeIds = data.include ? data.include.split(",") : [];
         const excludeIds = data.exclude ? data.exclude.split(",") : [];
 
-        let query = data.name ? {name: {$regex: data.name, $options: 'i'}} : {};
+        let query = data.name ? [{name: {$regex: data.name, $options: 'i'}}] : [];
 
         if (includeIds.length > 0) {
-            query.$or = [
-                {'ingredients._id': {$in: includeIds}},
-                {'optional._id': {$in: includeIds}}
-            ];
+            query.push({
+                $or: [
+                    {'ingredientSections.ingredients._id': {$in: includeIds}}
+                ]
+            });
         }
+
         if (excludeIds.length > 0) {
-            query.$and = [
-                {'ingredients._id': {$nin: excludeIds}}
-            ];
+            query.push({
+                $and: [
+                    {'ingredientSections.ingredients._id': {$nin: excludeIds}}
+                ]
+            });
         }
 
-        const sortOption = data.sort === 'date' ? {created_at: -1} : {name: 1};
+        const findQuery = query.length > 0 ? {$and: query} : {};
+        const sortQuery = data.sort === 'date' ? {created_at: -1} : {name: 1};
 
-        const recipes = await Recipe.find(query).sort(sortOption);
+        const recipes = await Recipe.find(findQuery).sort(sortQuery);
         const recipesDto = recipes.map(recipe => recipeDto(recipe));
         res.json(recipesDto);
     } catch (err) {
@@ -89,7 +93,6 @@ router.get('/units', async (req, res) => {
     }
 });
 
-// Get a single recipes by ID
 router.get('/:id', async (req, res) => {
     try {
         const recipe = await Recipe.findById(req.params.id);
@@ -100,7 +103,6 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// // Update a recipes by ID
 // router.get('/:id/edit', async (req, res) => {
 //     try {
 //         const recipe = await Recipe.findById(req.params.id);

@@ -1,22 +1,26 @@
 const mongoose = require('mongoose');
 
-const recipeSchema = new mongoose.Schema({
-    name: {type: String, required: true},
+const ingredientsSectionSchema = new mongoose.Schema({
+    _id: {type: Number, required: true},
+    section_name: {type: String, default: ""},
+    optional: {type: Boolean, default: false},
     ingredients: [{
         _id: {type: mongoose.Schema.Types.ObjectId, ref: 'Ingredient', required: true},
         name: {type: String, required: true},
-        count: {type: Number},
+        value: {type: Number},
         unit: {type: String}
-    }],
-    optional: [{
-        _id: {type: mongoose.Schema.Types.ObjectId, ref: 'Ingredient', required: true},
-        name: {type: String, required: true},
-        count: {type: Number},
-        unit: {type: String}
-    }],
+    }]
+});
+
+const recipeSchema = new mongoose.Schema({
+    name: {type: String, required: true},
     comment: {type: String, default: ""},
+    ingredientSections: [ingredientsSectionSchema],
     creator_id: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
     created_at: {type: Date, default: Date.now},
+    updated_at: {type: Date, default: Date.now},
+}, {
+    versionKey: false
 });
 
 recipeSchema.index({name: 1});
