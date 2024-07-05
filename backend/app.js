@@ -9,6 +9,7 @@ const logger = require('morgan');
 const connectDB = require('./db');
 
 const indexRouter = require('./routes/index');
+const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
 const recipesRouter = require('./routes/recipes');
 
@@ -30,6 +31,7 @@ app.use(mongoSanitize());
 connectDB();
 
 app.use('/', indexRouter);
+app.use('/auth', authRouter);
 app.use('/users', usersRouter);
 app.use('/recipes', recipesRouter);
 

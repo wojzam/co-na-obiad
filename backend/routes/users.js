@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const verifyToken = require('../middlewares/authMiddleware');
 const User = require('../models/user');
 
-/* GET users listing. */
-router.get('/', async (req, res) => {
+router.get('/', verifyToken, async (req, res) => {
     try {
-        res.render('users', {users: await User.find()});
+        res.json(await User.find({}).select('username'));
     } catch (err) {
         res.status(500).json({message: err.message});
     }
