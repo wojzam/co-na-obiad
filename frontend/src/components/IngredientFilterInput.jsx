@@ -1,16 +1,8 @@
-import {useEffect, useState} from "react";
 import {Autocomplete, TextField} from "@mui/material";
+import {useIngredients} from "../hooks/useCachedData.jsx";
 
-export default function IngredientFilterInput({filter, onFilterChange, text}) {
-    const [ingredients, setIngredients] = useState([]);
-
-    useEffect(() => {
-        fetch("/api/recipes/ingredients")
-            .then((response) => response.json())
-            .then((data) => {
-                setIngredients(data);
-            });
-    }, []);
+export default function IngredientFilterInput({onFilterChange, text}) {
+    const ingredients = useIngredients();
 
     const handleInputChange = (event, value) => {
         const selectedIds = value.map((item) => item._id);

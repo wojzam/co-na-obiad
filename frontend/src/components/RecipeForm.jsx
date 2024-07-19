@@ -5,17 +5,10 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import ValidatedTextField from "./ValidatedTextField";
+import {useCategories} from "../hooks/useCachedData.jsx";
 
-export const RecipeForm = ({handleSubmit, selectedCategory, setSelectedCategory}) => {
-    const [categories, setCategories] = useState([]);
-
-    useEffect(() => {
-        fetch("/api/recipes/categories")
-            .then((response) => response.json())
-            .then((data) => {
-                setCategories(data);
-            });
-    }, []);
+export const RecipeForm = ({handleSubmit, category, setCategory}) => {
+    const categories = useCategories();
 
     return (
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 3}}>
@@ -26,6 +19,18 @@ export const RecipeForm = ({handleSubmit, selectedCategory, setSelectedCategory}
                         label="Nazwa"
                         name="name"
                         maxLength={50}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <Autocomplete
+                        disablePortal
+                        id="category"
+                        value={category.name}
+                        defaultValue={"Obiad"}
+                        options={categories.map(category => category.name)}
+                        onChange={(e, v) => setCategory(v)}
+                        disableClearable
+                        renderInput={(params) => <TextField {...params} label="Kategoria"/>}
                     />
                 </Grid>
                 <Grid item xs={12}>
