@@ -3,7 +3,7 @@ import HeaderBar from "./components/HeaderBar";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp.jsx";
 import RecipesBrowser from "./pages/RecipesBrowser.jsx";
-import Recipe from "./pages/Recipe.jsx";
+import RecipeDetails from "./pages/RecipeDetails.jsx";
 import CreateRecipe from "./pages/CreateRecipe.jsx";
 import ThemeSwitcher from "./components/ThemeSwitcher";
 import Healthcheck from "./components/Healthcheck";
@@ -33,7 +33,7 @@ export default function App() {
                         <Route path="/recipes" element={<RecipesBrowser/>}/>
                         <Route path="/userRecipes"
                                element={isAuthenticated ? <RecipesBrowser/> : <Navigate to="/login" replace/>}/>
-                        <Route path="/recipes/:id" element={<Recipe/>}/>
+                        <Route path="/recipes/:id" element={<RecipeDetails/>}/>
                         <Route path="/create"
                                element={isAuthenticated ? <CreateRecipe/> : <Navigate to="/login" replace/>}/>
                         <Route path="/healthcheck" element={<Healthcheck/>}/>
