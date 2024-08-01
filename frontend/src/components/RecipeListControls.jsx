@@ -51,8 +51,8 @@ export default function RecipeListControls({setRecipes}) {
                  flex-direction="row" gap="1em">
 
                 <SearchBar filter={filter} onFilterChange={handleFilterChange}/>
-                <IngredientFilterInput filter={filter} onFilterChange={handleFilterChange} text={"Zawiera"}/>
-                <IngredientFilterInput filter={filter} onFilterChange={handleFilterChange} text={"Nie zawiera"}/>
+                <IngredientFilterInput onFilterChange={handleFilterChange} text={"Zawiera"}/>
+                <IngredientFilterInput onFilterChange={handleFilterChange} text={"Nie zawiera"}/>
             </Box>
             <Box>
                 <FormControl sx={{m: 1, minWidth: 120}}>

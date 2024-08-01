@@ -1,4 +1,4 @@
-import React, from "react";
+import React from "react";
 import { useIngredients, useUnits } from "../hooks/useCachedData.jsx";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
