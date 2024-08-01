@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {CircularProgress, Grid, Typography} from "@mui/material";
+import {CircularProgress, Grid, Grow, Typography} from "@mui/material";
 import Recipe from "../components/Recipe.jsx";
 import RecipeListControls from "../components/RecipeListControls.jsx";
 
@@ -27,11 +27,13 @@ const RecipesBrowser = () => {
             <Typography component="h1" variant="h2" fontWeight="medium" gutterBottom> Przepisy </Typography>
             <RecipeListControls {...{setRecipes}} />
             {isPending && <CircularProgress/>}
-            <Grid container spacing={{xs: 2, md: 3}} columns={{xs: 4, sm: 8, md: 12}} alignItems="stretch">
+            <Grid container spacing={3} columns={{sm: 2, md: 8, lg: 8, xl: 12}} alignItems="stretch">
                 {recipes && recipes.map((recipe, index) => (
-                    <Grid item xs={2} sm={4} md={4} key={index}>
-                        <Recipe key={recipe._id} {...recipe} />
-                    </Grid>
+                    <Grow in={!isPending} timeout={500} key={index}>
+                        <Grid item sm={2} md={4} lg={4} xl={4} key={index}>
+                            <Recipe key={recipe._id} {...recipe} />
+                        </Grid>
+                    </Grow>
                 ))}
             </Grid>
         </>
