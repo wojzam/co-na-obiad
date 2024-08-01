@@ -4,7 +4,7 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp.jsx";
 import RecipesBrowser from "./pages/RecipesBrowser.jsx";
 import Recipe from "./pages/Recipe.jsx";
-import Create from "./pages/Create";
+import CreateRecipe from "./pages/CreateRecipe.jsx";
 import ThemeSwitcher from "./components/ThemeSwitcher";
 import Healthcheck from "./components/Healthcheck";
 import {Navigate, Route, Routes} from "react-router-dom";
@@ -26,13 +26,16 @@ export default function App() {
                 <main className="content">
                     <Routes>
                         <Route path="/" element={<RecipesBrowser/>}/>
-                        <Route path="/login" element={isAuthenticated ? <Navigate to="/userRecipes" replace/> : <Login/>}/>
-                        <Route path="/signup" element={isAuthenticated ? <Navigate to="/userRecipes" replace/> : <SignUp/>}/>
+                        <Route path="/login"
+                               element={isAuthenticated ? <Navigate to="/userRecipes" replace/> : <Login/>}/>
+                        <Route path="/signup"
+                               element={isAuthenticated ? <Navigate to="/userRecipes" replace/> : <SignUp/>}/>
                         <Route path="/recipes" element={<RecipesBrowser/>}/>
                         <Route path="/userRecipes"
                                element={isAuthenticated ? <RecipesBrowser/> : <Navigate to="/login" replace/>}/>
                         <Route path="/recipes/:id" element={<Recipe/>}/>
-                        <Route path="/create" element={isAuthenticated ? <Create/> : <Navigate to="/login" replace/>}/>
+                        <Route path="/create"
+                               element={isAuthenticated ? <CreateRecipe/> : <Navigate to="/login" replace/>}/>
                         <Route path="/healthcheck" element={<Healthcheck/>}/>
                     </Routes>
                 </main>

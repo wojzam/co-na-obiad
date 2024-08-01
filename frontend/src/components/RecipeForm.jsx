@@ -1,66 +1,69 @@
-import {useEffect, useState} from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import ValidatedTextField from "./ValidatedTextField";
+import {Typography} from "@mui/material";
+import IngredientEditList from "./IngredientEditList.jsx";
 import {useCategories} from "../hooks/useCachedData.jsx";
+import {Controller, useForm} from "react-hook-form";
 
-export const RecipeForm = ({handleSubmit, category, setCategory}) => {
+export const RecipeForm = ({onSubmit}) => {
+    const {register, control, handleSubmit, formState: {errors}} = useForm();
     const categories = useCategories();
 
-    return (
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 3}}>
-            <Grid container spacing={2} sx={{mb: 2}}>
-                <Grid item xs={12}>
-                    <ValidatedTextField
-                        id="name"
-                        label="Nazwa"
-                        name="name"
-                        maxLength={50}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <Autocomplete
-                        disablePortal
-                        id="category"
-                        value={category.name}
-                        defaultValue={"Obiad"}
-                        options={categories.map(category => category.name)}
-                        onChange={(e, v) => setCategory(v)}
-                        disableClearable
-                        renderInput={(params) => <TextField {...params} label="Kategoria"/>}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <ValidatedTextField
-                        name="comment"
-                        label="Komentarz"
-                        id="comment"
-                        multiline
-                        rows={5}
-                        minLength={0}
-                        maxLength={1000}
-                        required={false}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <Autocomplete
-                        disablePortal
-                        id="category"
-                        value={selectedCategory.name}
-                        defaultValue={"Obiad"}
-                        options={categories.map(category => category.name)}
-                        onChange={(e, v) => setSelectedCategory(v)}
-                        disableClearable
-                        renderInput={(params) => <TextField {...params} label="Kategoria"/>}
-                    />
-                </Grid>
+    return (<Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{mt: 3}}>
+        <Grid container spacing={2} sx={{mb: 2}}>
+            <Grid item xs={12}>
+                <TextField
+                    {...register("name", {
+                        required: "Nazwa jest wymagana"
+                    })}
+                    label="Nazwa"
+                    fullWidth
+                />
+                {errors.name && (
+                    <Typography component="h6" color="error" gutterBottom> {errors.name.message}</Typography>
+                )}
             </Grid>
-            <Button type="submit" fullWidth variant="contained" sx={{mt: 5, mb: 2}}>
-                Create
-            </Button>
-        </Box>
-    );
+            <Grid item xs={12}>
+                <Controller
+                    name="category"
+                    control={control}
+                    defaultValue="Obiad"
+                    render={({field: {onChange, value}}) => (
+                        <Autocomplete
+                            disablePortal
+                            value={value || null}
+                            options={categories.map(category => category.name)}
+                            onChange={(e, v) => onChange(v)}
+                            disableClearable
+                            renderInput={(params) => <TextField {...params} label="Kategoria"/>}
+                        />
+                    )}
+                />
+            </Grid>
+            <Grid item xs={12}>
+                <TextField
+                    {...register("comment")}
+                    label="Komentarz"
+                    fullWidth
+                    multiline
+                    rows={6}
+                />
+                {errors.comment && (
+                    <Typography component="h6" color="error" gutterBottom> {errors.comment.message}</Typography>
+                )}
+            </Grid>
+            <Grid item xs={12}>
+                <Typography variant="h5" marginTop={3} fontWeight="medium" gutterBottom>
+                    Składniki:
+                </Typography>
+                <IngredientEditList control={control}/>
+            </Grid>
+        </Grid>
+        <Button type="submit" fullWidth variant="contained" sx={{mt: 5, mb: 2}}>
+            Stwórz przepis
+        </Button>
+    </Box>);
 };
