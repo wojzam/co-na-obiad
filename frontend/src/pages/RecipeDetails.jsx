@@ -3,20 +3,17 @@ import {useParams} from "react-router-dom";
 import {Box, Divider, Skeleton, Typography} from "@mui/material";
 import BackButton from "../components/BackButton";
 
-const Recipe = () => {
+const RecipeDetails = () => {
     const {id} = useParams();
-    const [topicData, setTopicData] = useState();
+    const [recipe, setRecipe] = useState();
     const [isPending, setIsPending] = useState(true);
 
     useEffect(() => {
         fetch(`/api/recipes/${id}`, {
-            // headers: {
-            //   Authorization: token && `Bearer ${token}`,
-            // },
         })
             .then((response) => response.json())
             .then((data) => {
-                setTopicData(data);
+                setRecipe(data);
                 setIsPending(false);
             });
     }, []);
@@ -38,10 +35,10 @@ const Recipe = () => {
                         justifyContent="space-between"
                     >
                         <Typography variant="h6" fontWeight="regular">
-                            {isPending ? <Skeleton width={100}/> : topicData?.category.name}
+                            {isPending ? <Skeleton width={100}/> : recipe?.category.name}
                         </Typography>
                         <Typography component="h2" variant="h2" fontWeight="regular" gutterBottom>
-                            {isPending ? <Skeleton width={300}/> : topicData?.name}
+                            {isPending ? <Skeleton width={300}/> : recipe?.name}
                         </Typography>
                         <Divider/>
                         <Box display="flex" flexDirection="row" justifyContent="space-between" width="100%">
@@ -52,7 +49,7 @@ const Recipe = () => {
                                 {isPending ? (
                                     <Skeleton width={600}/>
                                 ) : (
-                                    topicData?.ingredientSections.map((section) => (
+                                    recipe?.ingredientSections.map((section) => (
                                         <div key={section._id}>
                                             <Typography variant="h6"
                                                         fontWeight="regular">{section.section_name}</Typography>
@@ -66,11 +63,11 @@ const Recipe = () => {
                                 )}
                             </Box>
                             <Box width="80%">
-                                {topicData?.comment && (
+                                {recipe?.comment && (
                                     <>
                                         <Typography marginTop={3} variant="h5" fontWeight="medium"
                                                     gutterBottom>Komentarz:</Typography>
-                                        <Typography variant="h6" fontWeight="regular">{topicData.comment}</Typography>
+                                        <Typography variant="h6" fontWeight="regular">{recipe.comment}</Typography>
                                     </>
                                 )}
                             </Box>
@@ -82,4 +79,4 @@ const Recipe = () => {
     );
 };
 
-export default Recipe;
+export default RecipeDetails;
