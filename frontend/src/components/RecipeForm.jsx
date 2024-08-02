@@ -49,7 +49,7 @@ export const RecipeForm = ({onSubmit, onDelete, initialData, isEdit = false}) =>
                         label="Komentarz"
                         fullWidth
                         multiline
-                        rows={6}
+                        rows={12}
                     />
                     {errors.comment && (
                         <Typography component="h6" color="error" gutterBottom> {errors.comment.message}</Typography>)}

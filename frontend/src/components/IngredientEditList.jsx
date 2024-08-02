@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {useIngredients, useUnits} from "../hooks/useCachedData.jsx";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
@@ -13,7 +13,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import Button from "@mui/material/Button";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import {DragDropContext, Draggable, Droppable} from "@hello-pangea/dnd";
-import {Controller, useFieldArray} from "react-hook-form";
+import {Controller, useFieldArray, useWatch} from "react-hook-form";
 
 export default function IngredientEditList({control}) {
     const ingredients = useIngredients();
@@ -22,6 +22,26 @@ export default function IngredientEditList({control}) {
         control,
         name: "ingredients"
     });
+
+    const watchedIngredients = useWatch({
+        control,
+        name: "ingredients",
+    });
+
+    useEffect(() => {
+        if (fields.length === 0) {
+            handleAddRow();
+        }
+    }, []);
+
+    useEffect(() => {
+        if (watchedIngredients.length > 0) {
+            const lastIngredient = watchedIngredients[watchedIngredients.length - 1];
+            if (lastIngredient && lastIngredient.name) {
+                handleAddRow();
+            }
+        }
+    }, [watchedIngredients]);
 
     const handleAddRow = () => {
         append({name: null, value: "", unit: null});
@@ -41,7 +61,7 @@ export default function IngredientEditList({control}) {
             <DragDropContext onDragEnd={handleDragEnd}>
                 <Droppable droppableId="ingredients">
                     {(provided) => (
-                        <Table sx={{minWidth: 650}} ref={provided.innerRef} {...provided.droppableProps}>
+                        <Table sx={{minWidth: 650}} ref={provided.innerRef} {...provided.droppableProps} size={"small"}>
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Nazwa</TableCell>
@@ -68,7 +88,7 @@ export default function IngredientEditList({control}) {
                                                                 disablePortal
                                                                 options={ingredients.map((i) => i.name)}
                                                                 value={field.value || null}
-                                                                style={{width: 200, marginRight: 50}}
+                                                                sx={{ '& .MuiInputBase-root': { padding: 0.5 }, width: 200}}
                                                                 onChange={(e, v) => field.onChange(v)}
                                                                 renderInput={(params) => <TextField {...params} />}
                                                             />
@@ -82,9 +102,9 @@ export default function IngredientEditList({control}) {
                                                         render={({field}) => (
                                                             <TextField
                                                                 type="number"
-                                                                inputProps={{min: 0, max: 99999, maxLength: 5}}
+                                                                inputProps={{min: 0, max: 99999, style: {padding: 11.5}}}
                                                                 value={field.value || ""}
-                                                                style={{width: 100}}
+                                                                sx={{ width: 100}}
                                                                 onChange={(e) => field.onChange(e.target.value)}
                                                             />
                                                         )}
@@ -98,7 +118,7 @@ export default function IngredientEditList({control}) {
                                                             <Autocomplete
                                                                 options={units.map((unit) => unit.name)}
                                                                 value={field.value || null}
-                                                                style={{width: 150}}
+                                                                sx={{ '& .MuiInputBase-root': { padding: 0.5 }, width: 150}}
                                                                 onChange={(e, v) => field.onChange(v)}
                                                                 renderInput={(params) => <TextField {...params} />}
                                                             />

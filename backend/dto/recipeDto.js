@@ -14,6 +14,7 @@ const recipeDto = (recipe) => {
     return {
         id: recipe._id,
         name: recipe.name,
+        category: recipe.category.name,
         ingredients: formatIngredients(ingredients.requiredIngredients),
         optional: formatIngredients(ingredients.optionalIngredients),
     };
