@@ -1,5 +1,7 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {AppBar, Box, Button, Menu, MenuItem} from "@mui/material";
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import {useCookies} from "react-cookie";
 
 const homeButtonStyle = {
     textTransform: "none",
@@ -29,8 +31,10 @@ const signupButtonStyle = {
 };
 
 export default function HeaderBar() {
-    const [user, setUser] = useState(localStorage.getItem("user"));
+    const [cookies, setCookie, removeCookie] = useCookies(["token", "user"]);
     const [anchorEl, setAnchorEl] = useState(null);
+
+    const user = cookies.user;
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -41,38 +45,11 @@ export default function HeaderBar() {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        localStorage.removeItem("id");
-        setUser(null);
         handleClose();
+        removeCookie("token", {path: "/"})
+        removeCookie("user", {path: "/"})
         window.location.href = "/login";
     };
-
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            fetch("/api/user", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            })
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error();
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    setUser(data.username);
-                    localStorage.setItem("user", data.username);
-                    localStorage.setItem("id", data.id);
-                })
-                .catch(() => {
-                    handleLogout();
-                });
-        }
-    }, []);
 
     return (
         <AppBar position="fixed" sx={{background: "#ffba73"}}>
@@ -89,16 +66,16 @@ export default function HeaderBar() {
                     <Button href="/recipes" sx={buttonStyle}>
                         Przepisy
                     </Button>
-                    <Button href="/userRecipes" sx={buttonStyle}>
+                    <Button href="/userRecipes" disabled={!user} sx={buttonStyle}>
                         Moje przepisy
                     </Button>
-                    <Button href="/create" /*disabled={!user}*/ sx={buttonStyle}>
+                    <Button href="/create" disabled={!user} sx={buttonStyle}>
                         Dodaj przepis
                     </Button>
                 </Box>
                 {user ? (
                     <Box mr={2}>
-                        <Button onClick={handleClick} sx={buttonStyle}>
+                        <Button startIcon={<AccountCircleOutlinedIcon/>} onClick={handleClick} sx={buttonStyle}>
                             {user}
                         </Button>
                         <Menu
@@ -106,8 +83,8 @@ export default function HeaderBar() {
                             open={Boolean(anchorEl)}
                             onClose={handleClose}
                         >
-                            <MenuItem onClick={handleClose}>My account</MenuItem>
-                            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                            <MenuItem onClick={handleClose}>Moje konto</MenuItem>
+                            <MenuItem onClick={handleLogout}>Wyloguj</MenuItem>
                         </Menu>
                     </Box>
                 ) : (

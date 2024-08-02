@@ -9,7 +9,7 @@ import Container from "@mui/material/Container";
 import ValidatedTextField from "../components/ValidatedTextField";
 
 export default function Login() {
-    const [cookies, setCookie] = useCookies(["token"]);
+    const [cookies, setCookie] = useCookies(["token", "user"]);
     const [errorMessage, setErrorMessage] = useState("");
 
     const handleSubmit = (event) => {
@@ -39,6 +39,7 @@ export default function Login() {
             })
             .then((data) => {
                 setCookie("token", data.token, {path: "/"});
+                setCookie("user", data.user, {path: "/"});
                 window.location.href = `/userRecipes`;
             })
             .catch((error) => {
