@@ -5,8 +5,9 @@ import SignUp from "./pages/SignUp.jsx";
 import RecipesBrowser from "./pages/RecipesBrowser.jsx";
 import RecipeDetails from "./pages/RecipeDetails.jsx";
 import CreateRecipe from "./pages/CreateRecipe.jsx";
+import EditRecipe from "./pages/EditRecipe.jsx";
+import Healthcheck from "./pages/Healthcheck.jsx";
 import ThemeSwitcher from "./components/ThemeSwitcher";
-import Healthcheck from "./components/Healthcheck";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {CssBaseline, ThemeProvider} from "@mui/material";
 import {ColorModeContext, useMode} from "./theme";
@@ -36,6 +37,8 @@ export default function App() {
                         <Route path="/recipes/:id" element={<RecipeDetails/>}/>
                         <Route path="/create-recipe"
                                element={isAuthenticated ? <CreateRecipe/> : <Navigate to="/login" replace/>}/>
+                        <Route path="/edit-recipe/:id"
+                               element={isAuthenticated ? <EditRecipe/> : <Navigate to="/login" replace/>}/>
                         <Route path="/healthcheck" element={<Healthcheck/>}/>
                     </Routes>
                 </main>

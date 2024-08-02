@@ -2,8 +2,10 @@ import {useEffect, useState} from "react";
 import {Box, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 import SearchBar from "./SearchBar";
 import IngredientFilterInput from "./IngredientFilterInput.jsx";
+import {useCookies} from "react-cookie";
 
 export default function RecipeListControls({setRecipes}) {
+    const [cookies] = useCookies(["token"]);
     const [filter, setFilter] = useState({
         name: "",
         include: [],
@@ -25,11 +27,10 @@ export default function RecipeListControls({setRecipes}) {
     useEffect(() => {
         const endpoint =
             `/api/recipes?name=${filter.name}&include=${filter.include}&exclude=${filter.exclude}&sort=${sort}`;
-        const token = localStorage.getItem("token");
 
         fetch(endpoint, {
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${cookies.token}`,
             },
         })
             .then((response) => response.json())

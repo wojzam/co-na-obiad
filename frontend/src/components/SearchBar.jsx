@@ -2,7 +2,7 @@ import {useState} from "react";
 import {IconButton, InputBase, Paper} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
-export default function SearchBar({filter, onFilterChange}) {
+export default function SearchBar({onFilterChange}) {
     const [searchQuery, setSearchQuery] = useState("");
 
     const handleInputChange = (event) => {

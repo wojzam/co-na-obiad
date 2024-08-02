@@ -1,5 +1,5 @@
 import React from "react";
-import { useIngredients, useUnits } from "../hooks/useCachedData.jsx";
+import {useIngredients, useUnits} from "../hooks/useCachedData.jsx";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableHead from "@mui/material/TableHead";
@@ -12,19 +12,19 @@ import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 import Button from "@mui/material/Button";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
-import { Controller, useFieldArray } from "react-hook-form";
+import {DragDropContext, Draggable, Droppable} from "@hello-pangea/dnd";
+import {Controller, useFieldArray} from "react-hook-form";
 
-export default function IngredientEditList({ control }) {
+export default function IngredientEditList({control}) {
     const ingredients = useIngredients();
     const units = useUnits();
-    const { fields, append, remove, move } = useFieldArray({
+    const {fields, append, remove, move} = useFieldArray({
         control,
         name: "ingredients"
     });
 
     const handleAddRow = () => {
-        append({ name: null, value: "", unit: null });
+        append({name: null, value: "", unit: null});
     };
 
     const handleRemoveRow = (index) => {
@@ -41,7 +41,7 @@ export default function IngredientEditList({ control }) {
             <DragDropContext onDragEnd={handleDragEnd}>
                 <Droppable droppableId="ingredients">
                     {(provided) => (
-                        <Table sx={{ minWidth: 650 }} ref={provided.innerRef} {...provided.droppableProps}>
+                        <Table sx={{minWidth: 650}} ref={provided.innerRef} {...provided.droppableProps}>
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Nazwa</TableCell>
@@ -63,12 +63,12 @@ export default function IngredientEditList({ control }) {
                                                     <Controller
                                                         name={`ingredients[${index}].name`}
                                                         control={control}
-                                                        render={({ field }) => (
+                                                        render={({field}) => (
                                                             <Autocomplete
                                                                 disablePortal
                                                                 options={ingredients.map((i) => i.name)}
                                                                 value={field.value || null}
-                                                                style={{ width: 200, marginRight: 50 }}
+                                                                style={{width: 200, marginRight: 50}}
                                                                 onChange={(e, v) => field.onChange(v)}
                                                                 renderInput={(params) => <TextField {...params} />}
                                                             />
@@ -79,12 +79,12 @@ export default function IngredientEditList({ control }) {
                                                     <Controller
                                                         name={`ingredients[${index}].value`}
                                                         control={control}
-                                                        render={({ field }) => (
+                                                        render={({field}) => (
                                                             <TextField
                                                                 type="number"
-                                                                inputProps={{ min: 0, max: 99999, maxLength: 5 }}
+                                                                inputProps={{min: 0, max: 99999, maxLength: 5}}
                                                                 value={field.value || ""}
-                                                                style={{ width: 100 }}
+                                                                style={{width: 100}}
                                                                 onChange={(e) => field.onChange(e.target.value)}
                                                             />
                                                         )}
@@ -94,11 +94,11 @@ export default function IngredientEditList({ control }) {
                                                     <Controller
                                                         name={`ingredients[${index}].unit`}
                                                         control={control}
-                                                        render={({ field }) => (
+                                                        render={({field}) => (
                                                             <Autocomplete
                                                                 options={units.map((unit) => unit.name)}
                                                                 value={field.value || null}
-                                                                style={{ width: 150 }}
+                                                                style={{width: 150}}
                                                                 onChange={(e, v) => field.onChange(v)}
                                                                 renderInput={(params) => <TextField {...params} />}
                                                             />
@@ -107,7 +107,7 @@ export default function IngredientEditList({ control }) {
                                                 </TableCell>
                                                 <TableCell align="right">
                                                     <IconButton onClick={() => handleRemoveRow(index)}>
-                                                        <ClearIcon />
+                                                        <ClearIcon/>
                                                     </IconButton>
                                                 </TableCell>
                                             </TableRow>
@@ -122,9 +122,9 @@ export default function IngredientEditList({ control }) {
             </DragDropContext>
             <Button
                 variant="outlined"
-                startIcon={<AddCircleOutlineIcon />}
+                startIcon={<AddCircleOutlineIcon/>}
                 onClick={handleAddRow}
-                sx={{ mt: 2 }}
+                sx={{mt: 2}}
             >
                 Dodaj składnik
             </Button>
