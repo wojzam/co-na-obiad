@@ -16,13 +16,11 @@ export default function ConfirmationDialog({open, setOpen, onConfirm}) {
 
     return (
         <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Confirm deletion</DialogTitle>
-            <DialogContent>This action cannot be undone</DialogContent>
+            <DialogTitle>Potwierdź usunięcie przepisu</DialogTitle>
+            <DialogContent>Tej operacji nie można cofnąć</DialogContent>
             <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleConfirm} variant="contained">
-                    OK
-                </Button>
+                <Button onClick={handleClose}>Anuluj</Button>
+                <Button onClick={handleConfirm} variant="contained">OK</Button>
             </DialogActions>
         </Dialog>
     );

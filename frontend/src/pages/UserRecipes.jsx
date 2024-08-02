@@ -1,5 +1,6 @@
 import {useState} from "react";
 import {Button, Table, TableBody, TableCell, TableHead, TableRow, Typography, useTheme} from "@mui/material";
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import {useNavigate} from "react-router-dom";
 import RecipeListControls from "../components/RecipeListControls.jsx";
 
@@ -35,7 +36,10 @@ const UserRecipes = () => {
                             key={recipe.id}
                             hover
                             onClick={() => handleRowClick(recipe.id)}
-                            sx={{ cursor: "pointer", backgroundColor: index % 2 === 0 ? theme.palette.neutral.main : theme.palette.neutral.darker }}
+                            sx={{
+                                cursor: "pointer",
+                                backgroundColor: index % 2 === 0 ? theme.palette.neutral.main : theme.palette.neutral.darker
+                            }}
                         >
                             <TableCell>
                                 <Typography component="h4" fontWeight="bold">
@@ -44,7 +48,11 @@ const UserRecipes = () => {
                             </TableCell>
                             <TableCell>{recipe.ingredients}</TableCell>
                             <TableCell align="right">
-                                <Button variant="outlined" onClick={(e) => handleEditClick(e, recipe.id)}>
+                                <Button
+                                    variant="outlined"
+                                    onClick={(e) => handleEditClick(e, recipe.id)}
+                                    startIcon={<EditOutlinedIcon/>}
+                                >
                                     Edytuj
                                 </Button>
                             </TableCell>
