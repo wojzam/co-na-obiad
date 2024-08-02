@@ -26,7 +26,7 @@ router.post('/register', notEmptyBody(['username', 'token', 'password']), async 
         await user.save();
 
         const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET, {
-            expiresIn: '1h',
+            expiresIn: '168h',
         });
 
         res.status(201).json({message: 'User registered successfully', token: token});
@@ -53,7 +53,7 @@ router.post('/login', notEmptyBody(['username', 'password']), async (req, res) =
             return res.status(401).json({error: 'Authentication failed'});
         }
         const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET, {
-            expiresIn: '1h',
+            expiresIn: '168h',
         });
         res.status(200).json({token: token, user: user.username});
     } catch (error) {

@@ -4,6 +4,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const rateLimit = require('express-rate-limit');
 const helmet = require("helmet")
 const path = require('path');
+const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const connectDB = require('./db');
@@ -15,11 +16,14 @@ const recipesRouter = require('./routes/recipes');
 
 const app = express();
 
+const globalRateLimiter = rateLimit({limit: 100});
+const authRateLimiter = rateLimit({max: 10});
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.use(rateLimit({limit: 50}));
+app.use(globalRateLimiter);
 app.use(helmet())
 app.use(logger('dev'));
 app.use(express.json());
@@ -27,11 +31,12 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(mongoSanitize());
+app.use(cors({credentials: true, origin: "http://localhost:3000"}));
 
 connectDB();
 
 app.use('/', indexRouter);
-app.use('/auth', authRouter);
+app.use('/auth', authRateLimiter, authRouter);
 app.use('/users', usersRouter);
 app.use('/recipes', recipesRouter);
 
