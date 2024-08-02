@@ -27,14 +27,14 @@ export default function App() {
                     <Routes>
                         <Route path="/" element={<RecipesBrowser/>}/>
                         <Route path="/login"
-                               element={isAuthenticated ? <Navigate to="/userRecipes" replace/> : <Login/>}/>
+                               element={isAuthenticated ? <Navigate to="/user-recipes" replace/> : <Login/>}/>
                         <Route path="/signup"
-                               element={isAuthenticated ? <Navigate to="/userRecipes" replace/> : <SignUp/>}/>
+                               element={isAuthenticated ? <Navigate to="/user-recipes" replace/> : <SignUp/>}/>
                         <Route path="/recipes" element={<RecipesBrowser/>}/>
-                        <Route path="/userRecipes"
+                        <Route path="/user-recipes"
                                element={isAuthenticated ? <RecipesBrowser/> : <Navigate to="/login" replace/>}/>
                         <Route path="/recipes/:id" element={<RecipeDetails/>}/>
-                        <Route path="/create"
+                        <Route path="/create-recipe"
                                element={isAuthenticated ? <CreateRecipe/> : <Navigate to="/login" replace/>}/>
                         <Route path="/healthcheck" element={<Healthcheck/>}/>
                     </Routes>

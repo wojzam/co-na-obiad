@@ -66,10 +66,10 @@ export default function HeaderBar() {
                     <Button href="/recipes" sx={buttonStyle}>
                         Przepisy
                     </Button>
-                    <Button href="/userRecipes" disabled={!user} sx={buttonStyle}>
+                    <Button href="/user-recipes" disabled={!user} sx={buttonStyle}>
                         Moje przepisy
                     </Button>
-                    <Button href="/create" disabled={!user} sx={buttonStyle}>
+                    <Button href="/create-recipe" disabled={!user} sx={buttonStyle}>
                         Dodaj przepis
                     </Button>
                 </Box>

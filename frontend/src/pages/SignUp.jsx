@@ -69,7 +69,7 @@ export default function SignUp() {
             })
             .then((data) => {
                 setCookie("token", data.token, {path: "/"});
-                window.location.href = `/userRecipes`;
+                window.location.href = `/user-recipes`;
             })
             .catch((error) => {
                 setErrorMessage(error.message);

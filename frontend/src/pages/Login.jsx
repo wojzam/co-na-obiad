@@ -40,7 +40,7 @@ export default function Login() {
             .then((data) => {
                 setCookie("token", data.token, {path: "/"});
                 setCookie("user", data.user, {path: "/"});
-                window.location.href = `/userRecipes`;
+                window.location.href = `/user-recipes`;
             })
             .catch((error) => {
                 setErrorMessage(error.message);

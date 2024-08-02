@@ -30,7 +30,7 @@ export default function CreateRecipe() {
                 return response.json();
             })
             .then((data) => {
-                window.history.pushState({url: "/userRecipes"}, "", "/userRecipes");
+                window.history.pushState({url: "/user-recipes"}, "", "/user-recipes");
                 window.location.href = `/recipes/${data._id}`;
             })
             .catch((error) => {
