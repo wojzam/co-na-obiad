@@ -10,7 +10,7 @@ export const themeSettings = (mode) => {
                 ? {
                     // light mode
                     primary: {
-                        main: teal[500],
+                        main: "#3D314A",
                     },
                     secondary: {
                         main: "#ffba73",
