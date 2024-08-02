@@ -4,7 +4,7 @@ import SearchBar from "./SearchBar";
 import IngredientFilterInput from "./IngredientFilterInput.jsx";
 import {useCookies} from "react-cookie";
 
-export default function RecipeListControls({setRecipes}) {
+export default function RecipeListControls({setRecipes, onlyUser = false}) {
     const [cookies] = useCookies(["token"]);
     const [filter, setFilter] = useState({
         name: "",
@@ -30,7 +30,7 @@ export default function RecipeListControls({setRecipes}) {
 
         fetch(endpoint, {
             headers: {
-                Authorization: `Bearer ${cookies.token}`,
+                Authorization: (onlyUser && cookies.token) ? `Bearer ${cookies.token}` : '',
             },
         })
             .then((response) => response.json())

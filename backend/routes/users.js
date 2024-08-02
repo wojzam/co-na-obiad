@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const verifyToken = require('../middlewares/authMiddleware');
+const {requireToken} = require('../middlewares/authMiddleware');
 const User = require('../models/user');
 
-router.get('/', verifyToken, async (req, res) => {
+router.get('/', requireToken, async (req, res) => {
     try {
         res.json(await User.find({}).select('username'));
     } catch (err) {

@@ -1,6 +1,6 @@
 const express = require('express');
 const {query, body, matchedData, validationResult} = require('express-validator');
-const verifyToken = require('../middlewares/authMiddleware');
+const {requireToken, optionalToken} = require('../middlewares/authMiddleware');
 const router = express.Router();
 const Recipe = require('../models/recipe');
 const recipeDto = require('../dto/recipeDto');
@@ -8,7 +8,7 @@ const Ingredient = require('../models/ingredient');
 const Unit = require('../models/unit');
 const DishCategory = require('../models/dishCategory');
 
-router.get('/', query(['name', 'include', 'exclude', 'sort']).escape(), async (req, res) => {
+router.get('/', optionalToken, query(['name', 'include', 'exclude', 'sort']).escape(), async (req, res) => {
     try {
         const result = validationResult(req);
         if (!result.isEmpty()) {
@@ -20,6 +20,10 @@ router.get('/', query(['name', 'include', 'exclude', 'sort']).escape(), async (r
         const excludeIds = data.exclude ? data.exclude.split(",") : [];
 
         let query = data.name ? [{name: {$regex: data.name, $options: 'i'}}] : [];
+
+        if (req.userId) {
+            query.push({creator_id: req.userId})
+        }
 
         if (includeIds.length > 0) {
             query.push({
@@ -48,7 +52,7 @@ router.get('/', query(['name', 'include', 'exclude', 'sort']).escape(), async (r
     }
 });
 
-router.post('/', verifyToken, body(['name', 'comment', 'category']).trim().notEmpty().escape(), body('ingredients').isArray(), async (req, res) => {
+router.post('/', requireToken, body(['name', 'comment', 'category']).trim().notEmpty().escape(), body('ingredients').isArray(), async (req, res) => {
     const result = validationResult(req);
     if (!result.isEmpty()) {
         return res.status(400).json({message: result.array()});
@@ -57,7 +61,7 @@ router.post('/', verifyToken, body(['name', 'comment', 'category']).trim().notEm
 
     const category = await DishCategory.find({name: data.category}).then(c => c[0]);
 
-    const ingredients = await Ingredient.find({name: { $in: data.ingredients.map(ing => ing.name)} });
+    const ingredients = await Ingredient.find({name: {$in: data.ingredients.map(ing => ing.name)}});
     const mappedIngredients = data.ingredients.map(recipeIngredient => {
         const ingredient = ingredients.find(ing => ing.name === recipeIngredient.name);
         return {
