@@ -13,7 +13,7 @@ const RecipesBrowser = () => {
             {recipes ? <Grid container spacing={3} columns={{sm: 2, md: 8, lg: 8, xl: 12}} alignItems="stretch">
                     {recipes && recipes.map((recipe, index) => (
                         <Grow in={recipes != null} timeout={500} key={index}>
-                            <Grid item sm={2} md={4} lg={4} xl={4} key={index}>
+                            <Grid item sm={2} md={4} lg={4} xl={4} key={index} width="100%">
                                 <Recipe key={recipe._id} {...recipe} />
                             </Grid>
                         </Grow>
