@@ -40,7 +40,12 @@ const register = async (username, password, token) => {
     }
 };
 
-const login = async (username, password) => {
+const login = async (username, password, token) => {
+    const response = await axios.post(
+        `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.CAPTCHA3_SECRET_KEY}&response=${token}`
+    );
+    if (!response.data.success) return UNAUTHORIZED;
+
     const user = await User.findOne({username: username});
     if (!user) return UNAUTHORIZED;
     if (!await bcrypt.compare(password, user.password)) return UNAUTHORIZED;

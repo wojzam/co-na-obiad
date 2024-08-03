@@ -5,25 +5,29 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import ValidatedTextField from "../components/ValidatedTextField";
-import useAuthData from "../hooks/useAuthData.js";
+import useAuthData from "../hooks/useAuthData";
+import {useForm} from "react-hook-form";
+import {TextField} from "@mui/material";
+import {ReCaptchaV3} from "../components/ReCaptchaV3.jsx";
 
 export default function Login() {
     const {login} = useAuthData();
-    const [errorMessage, setErrorMessage] = useState("");
+    const {register, control, handleSubmit, formState: {errors}} = useForm({
+        defaultValues: {username: "", password: ""}
+    });
+    const [captchaToken, setCaptchaToken] = useState("");
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-
+    const onSubmit = (data) => {
+        if (!captchaToken) return;
         fetch("/api/auth/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                username: data.get("username"),
-                password: data.get("password"),
+                username: data.username,
+                password: data.password,
+                token: captchaToken
             }),
         })
             .then((response) => {
@@ -42,7 +46,7 @@ export default function Login() {
                 window.location.href = `/user-recipes`;
             })
             .catch((error) => {
-                setErrorMessage(error.message);
+                console.log(error);
             });
     };
 
@@ -59,39 +63,37 @@ export default function Login() {
                 <Typography component="h1" variant="h4" gutterBottom>
                     Logowanie
                 </Typography>
-                {errorMessage && (
-                    <Typography component="h5" variant="h5" color="error" gutterBottom>
-                        {errorMessage}
-                    </Typography>
-                )}
-                <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 3}}>
+                <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{mt: 3}}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <ValidatedTextField
-                                id="username"
-                                name="username"
+                            <TextField
+                                {...register("username", {
+                                    required: "Nazwa użytkownika jest wymagana"
+                                })}
                                 label="Nazwa użytkownika"
-                                maxLength={64}
+                                fullWidth
                             />
+                            {errors.username && (
+                                <Typography component="h6" color="error"
+                                            gutterBottom> {errors.username.message}</Typography>)}
                         </Grid>
                         <Grid item xs={12}>
-                            <ValidatedTextField
-                                id="password"
-                                name="password"
+                            <TextField
+                                {...register("password", {
+                                    required: "Hasło jest wymagane"
+                                })}
+                                fullWidth
                                 label="Hasło"
                                 type="password"
                                 autoComplete="new-password"
-                                minLength={8}
-                                maxLength={64}
                             />
+                            {errors.password && (
+                                <Typography component="h6" color="error"
+                                            gutterBottom> {errors.password.message}</Typography>)}
                         </Grid>
                     </Grid>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        sx={{mt: 3, mb: 2}}
-                    >
+                    <ReCaptchaV3 setToken={setCaptchaToken}/>
+                    <Button type="submit" fullWidth variant="contained" sx={{mt: 3, mb: 2}}>
                         Zaloguj
                     </Button>
                     <Grid container justifyContent="flex-end">

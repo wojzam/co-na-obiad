@@ -16,10 +16,10 @@ router.post('/register', notEmptyBody(['username', 'password', 'token']), async 
     }
 });
 
-router.post('/login', notEmptyBody(['username', 'password']), async (req, res) => {
+router.post('/login', notEmptyBody(['username', 'password', 'token']), async (req, res) => {
     try {
         const body = matchedData(req);
-        const result = await authService.login(body.username, body.password);
+        const result = await authService.login(body.username, body.password, body.token);
         res.status(result.status).json(result.body);
     } catch (error) {
         res.status(500);
