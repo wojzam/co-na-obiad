@@ -27,7 +27,7 @@ const recipeSchema = new mongoose.Schema({
     versionKey: false
 });
 
-recipeSchema.index({name: 1});
+recipeSchema.index({name: 1}, {collation: {locale: 'en', strength: 2}});
 recipeSchema.index({created_at: 1});
 
 module.exports = mongoose.model('Recipe', recipeSchema);
