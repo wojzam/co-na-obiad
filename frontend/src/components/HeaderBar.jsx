@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {AppBar, Box, Button, Menu, MenuItem} from "@mui/material";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import {useCookies} from "react-cookie";
+import useAuthData from "../hooks/useAuthData.js";
 
 const homeButtonStyle = {
     textTransform: "none",
@@ -31,10 +31,8 @@ const signupButtonStyle = {
 };
 
 export default function HeaderBar() {
-    const [cookies, setCookie, removeCookie] = useCookies(["token", "user"]);
+    const {logout, username} = useAuthData();
     const [anchorEl, setAnchorEl] = useState(null);
-
-    const user = cookies.user;
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -46,8 +44,7 @@ export default function HeaderBar() {
 
     const handleLogout = () => {
         handleClose();
-        removeCookie("token", {path: "/"})
-        removeCookie("user", {path: "/"})
+        logout();
         window.location.href = "/login";
     };
 
@@ -66,17 +63,17 @@ export default function HeaderBar() {
                     <Button href="/recipes" sx={buttonStyle}>
                         Przepisy
                     </Button>
-                    <Button href="/user-recipes" disabled={!user} sx={buttonStyle}>
+                    <Button href="/user-recipes" disabled={!username} sx={buttonStyle}>
                         Moje przepisy
                     </Button>
-                    <Button href="/create-recipe" disabled={!user} sx={buttonStyle}>
+                    <Button href="/create-recipe" disabled={!username} sx={buttonStyle}>
                         Dodaj przepis
                     </Button>
                 </Box>
-                {user ? (
+                {username ? (
                     <Box mr={2}>
                         <Button startIcon={<AccountCircleOutlinedIcon/>} onClick={handleClick} sx={buttonStyle}>
-                            {user}
+                            {username}
                         </Button>
                         <Menu
                             anchorEl={anchorEl}

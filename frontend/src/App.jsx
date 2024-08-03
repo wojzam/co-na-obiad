@@ -1,4 +1,3 @@
-import {useCookies} from "react-cookie";
 import HeaderBar from "./components/HeaderBar";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp.jsx";
@@ -12,12 +11,13 @@ import ThemeSwitcher from "./components/ThemeSwitcher";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {CssBaseline, ThemeProvider} from "@mui/material";
 import {ColorModeContext, useMode} from "./theme";
+import useAuthData from "./hooks/useAuthData.js";
 
 export default function App() {
     const [theme, colorMode] = useMode();
-    const [cookies] = useCookies(["token"]);
+    const {token} = useAuthData();
 
-    const isAuthenticated = cookies.token !== undefined;
+    const isAuthenticated = token !== undefined;
 
     return (
         <ColorModeContext.Provider value={colorMode}>

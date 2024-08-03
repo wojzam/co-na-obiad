@@ -1,5 +1,4 @@
 import {useRef, useState} from "react";
-import {useCookies} from "react-cookie";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
@@ -9,9 +8,10 @@ import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import ValidatedTextField from "../components/ValidatedTextField";
 import ReCAPTCHA from "react-google-recaptcha";
+import useAuthData from "../hooks/useAuthData.js";
 
 export default function SignUp() {
-    const [cookies, setCookie] = useCookies(["token"]);
+    const {login} = useAuthData();
     const [errorMessage, setErrorMessage] = useState("");
     const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
     const captchaRef = useRef(null)
@@ -68,7 +68,7 @@ export default function SignUp() {
                 return response.json();
             })
             .then((data) => {
-                setCookie("token", data.token, {path: "/"});
+                login(data);
                 window.location.href = `/user-recipes`;
             })
             .catch((error) => {

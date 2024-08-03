@@ -1,16 +1,16 @@
 const express = require('express');
 const {query, body, matchedData, validationResult} = require('express-validator');
-const {requireToken, optionalToken} = require('../middlewares/authMiddleware');
+const {requireToken} = require('../middlewares/authMiddleware');
 const router = express.Router();
 const recipesService = require('../services/recipesService');
 
-router.get('/', optionalToken, query(['name', 'include', 'exclude', 'sort']).escape(), async (req, res) => {
+router.get('/', query(['name', 'include', 'exclude', 'creatorId', 'sort']).escape(), async (req, res) => {
     const result = validationResult(req);
     if (!result.isEmpty()) return res.status(400).json({message: result.array()});
     const data = matchedData(req);
 
     try {
-        const result = await recipesService.list(data.name, data.include, data.exclude, req.userId, data.sort);
+        const result = await recipesService.list(data.name, data.include, data.exclude, data.creatorId, data.sort);
         res.status(result.status).json(result.body);
     } catch (err) {
         res.status(500);

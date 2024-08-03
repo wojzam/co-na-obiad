@@ -2,17 +2,17 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import {RecipeForm} from "../components/RecipeForm.jsx";
-import {useCookies} from "react-cookie";
+import useAuthData from "../hooks/useAuthData.js";
 
 export default function CreateRecipe() {
-    const [cookies] = useCookies(["token"]);
+    const {token} = useAuthData();
 
     const onSubmit = (data) => {
         fetch("/api/recipes", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${cookies.token}`,
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
                 name: data.name,

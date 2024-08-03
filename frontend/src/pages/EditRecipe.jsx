@@ -1,13 +1,13 @@
 import {Box, CircularProgress, Container, Typography} from "@mui/material";
 import {RecipeForm} from "../components/RecipeForm.jsx";
-import {useCookies} from "react-cookie";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import BackButton from "../components/BackButton.jsx";
 import axios from "axios";
+import useAuthData from "../hooks/useAuthData.js";
 
 export default function EditRecipe() {
-    const [cookies] = useCookies(["token"]);
+    const {token} = useAuthData();
     const {id} = useParams();
     const [recipe, setRecipe] = useState();
 
@@ -28,7 +28,7 @@ export default function EditRecipe() {
         }, {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${cookies.token}`,
+                Authorization: `Bearer ${token}`,
             },
         })
             .then(() => {
@@ -42,7 +42,7 @@ export default function EditRecipe() {
     const onDelete = () => {
         axios.delete(`/api/recipes/${id}`, {
             headers: {
-                Authorization: `Bearer ${cookies.token}`,
+                Authorization: `Bearer ${token}`,
             }
         })
             .then(response => {

@@ -88,7 +88,10 @@ export default function IngredientEditList({control}) {
                                                                 disablePortal
                                                                 options={ingredients.map((i) => i.name)}
                                                                 value={field.value || null}
-                                                                sx={{ '& .MuiInputBase-root': { padding: 0.5 }, width: 200}}
+                                                                sx={{
+                                                                    '& .MuiInputBase-root': {padding: 0.5},
+                                                                    width: 200
+                                                                }}
                                                                 onChange={(e, v) => field.onChange(v)}
                                                                 renderInput={(params) => <TextField {...params} />}
                                                             />
@@ -102,9 +105,13 @@ export default function IngredientEditList({control}) {
                                                         render={({field}) => (
                                                             <TextField
                                                                 type="number"
-                                                                inputProps={{min: 0, max: 99999, style: {padding: 11.5}}}
+                                                                inputProps={{
+                                                                    min: 0,
+                                                                    max: 99999,
+                                                                    style: {padding: 11.5}
+                                                                }}
                                                                 value={field.value || ""}
-                                                                sx={{ width: 100}}
+                                                                sx={{width: 100}}
                                                                 onChange={(e) => field.onChange(e.target.value)}
                                                             />
                                                         )}
@@ -118,7 +125,10 @@ export default function IngredientEditList({control}) {
                                                             <Autocomplete
                                                                 options={units.map((unit) => unit.name)}
                                                                 value={field.value || null}
-                                                                sx={{ '& .MuiInputBase-root': { padding: 0.5 }, width: 150}}
+                                                                sx={{
+                                                                    '& .MuiInputBase-root': {padding: 0.5},
+                                                                    width: 150
+                                                                }}
                                                                 onChange={(e, v) => field.onChange(v)}
                                                                 renderInput={(params) => <TextField {...params} />}
                                                             />

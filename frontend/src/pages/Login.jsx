@@ -1,5 +1,4 @@
 import {useState} from "react";
-import {useCookies} from "react-cookie";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
@@ -7,9 +6,10 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import ValidatedTextField from "../components/ValidatedTextField";
+import useAuthData from "../hooks/useAuthData.js";
 
 export default function Login() {
-    const [cookies, setCookie] = useCookies(["token", "user"]);
+    const {login} = useAuthData();
     const [errorMessage, setErrorMessage] = useState("");
 
     const handleSubmit = (event) => {
@@ -38,8 +38,7 @@ export default function Login() {
                 return response.json();
             })
             .then((data) => {
-                setCookie("token", data.token, {path: "/"});
-                setCookie("user", data.user, {path: "/"});
+                login(data);
                 window.location.href = `/user-recipes`;
             })
             .catch((error) => {

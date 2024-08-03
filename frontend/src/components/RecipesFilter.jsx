@@ -2,10 +2,11 @@ import {useEffect, useState} from "react";
 import {Box, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 import SearchBar from "./SearchBar";
 import IngredientFilterInput from "./IngredientFilterInput.jsx";
-import {useCookies} from "react-cookie";
+import axios from "axios";
+import useAuthData from "../hooks/useAuthData.js";
 
-export default function RecipeListControls({setRecipes, onlyUser = false}) {
-    const [cookies] = useCookies(["token"]);
+export default function RecipesFilter({setRecipes, onlyUser = false}) {
+    const {userId} = useAuthData();
     const [filter, setFilter] = useState({
         name: "",
         include: [],
@@ -25,17 +26,14 @@ export default function RecipeListControls({setRecipes, onlyUser = false}) {
     }
 
     useEffect(() => {
-        const endpoint =
+        let endpoint =
             `/api/recipes?name=${filter.name}&include=${filter.include}&exclude=${filter.exclude}&sort=${sort}`;
 
-        fetch(endpoint, {
-            headers: {
-                Authorization: (onlyUser && cookies.token) ? `Bearer ${cookies.token}` : '',
-            },
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                setRecipes(data);
+        if (onlyUser && userId) endpoint = endpoint + `&creatorId=${userId}`;
+
+        axios.get(endpoint)
+            .then((response) => {
+                setRecipes(response.data);
             });
     }, [filter, sort]);
 

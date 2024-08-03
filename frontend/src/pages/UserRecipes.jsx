@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useState} from "react";
 import {
     Button,
     Paper,
@@ -12,8 +12,8 @@ import {
     useTheme
 } from "@mui/material";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import { useNavigate } from "react-router-dom";
-import RecipeListControls from "../components/RecipeListControls.jsx";
+import {useNavigate} from "react-router-dom";
+import RecipesFilter from "../components/RecipesFilter.jsx";
 
 const UserRecipes = () => {
     const [recipes, setRecipes] = useState([]);
@@ -32,7 +32,7 @@ const UserRecipes = () => {
     return (
         <>
             <Typography component="h1" variant="h2" fontWeight="medium" gutterBottom>Moje przepisy</Typography>
-            <RecipeListControls setRecipes={setRecipes} onlyUser={true} />
+            <RecipesFilter setRecipes={setRecipes} onlyUser={true}/>
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
@@ -65,7 +65,7 @@ const UserRecipes = () => {
                                     <Button
                                         variant="outlined"
                                         onClick={(e) => handleEditClick(e, recipe.id)}
-                                        startIcon={<EditOutlinedIcon />}
+                                        startIcon={<EditOutlinedIcon/>}
                                     >
                                         Edytuj
                                     </Button>
