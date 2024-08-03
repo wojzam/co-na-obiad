@@ -116,16 +116,22 @@ const validateCategory = async (category) => {
 };
 
 const validateIngredients = async (ingredients) => {
-    const validIngredients = await Ingredient.find({name: {$in: ingredients.map(ing => ing.name)}});
-    return ingredients.map(ing => {
-        const validIng = validIngredients.find(ing => ing.name === ing.name);
-        return {
-            _id: validIng._id,
-            name: validIng.name,
-            value: ing.value,
-            unit: ing.unit
-        };
-    });
+    const ingredientNames = [...new Set(ingredients.map(ing => ing.name))];
+    const validIngredients = await Ingredient.find({name: {$in: ingredientNames}});
+    const validIngredientsMap = new Map(validIngredients.map(ing => [ing.name, ing]));
+
+    return ingredients.reduce((acc, ing) => {
+        const validIng = validIngredientsMap.get(ing.name);
+        if (validIng) {
+            acc.push({
+                _id: validIng._id,
+                name: validIng.name,
+                value: ing.value,
+                unit: ing.unit
+            });
+        }
+        return acc;
+    }, []);
 };
 
 module.exports = {
