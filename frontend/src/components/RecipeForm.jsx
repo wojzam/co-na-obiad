@@ -1,8 +1,8 @@
 import {Autocomplete, Box, Button, Grid, TextField, Typography} from "@mui/material";
-import IngredientEditList from "./IngredientEditList.jsx";
-import {useCategories} from "../hooks/useCachedData.jsx";
+import IngredientEditList from "./IngredientEditList";
+import {useCategories} from "../hooks/useCachedData";
 import {Controller, useForm} from "react-hook-form";
-import DeleteButton from "./DeleteButton.jsx";
+import DeleteButton from "./DeleteButton";
 
 export const RecipeForm = ({onSubmit, onDelete, initialData, isEdit = false}) => {
     const {register, control, handleSubmit, formState: {errors}} = useForm({

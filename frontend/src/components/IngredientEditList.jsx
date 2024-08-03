@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {useIngredients, useUnits} from "../hooks/useCachedData.jsx";
+import {useIngredients, useUnits} from "../hooks/useCachedData";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableHead from "@mui/material/TableHead";

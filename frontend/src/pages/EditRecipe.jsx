@@ -1,10 +1,10 @@
 import {Box, CircularProgress, Container, Typography} from "@mui/material";
-import {RecipeForm} from "../components/RecipeForm.jsx";
+import {RecipeForm} from "../components/RecipeForm";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import BackButton from "../components/BackButton.jsx";
+import BackButton from "../components/BackButton";
 import axios from "axios";
-import useAuthData from "../hooks/useAuthData.js";
+import useAuthData from "../hooks/useAuthData";
 
 export default function EditRecipe() {
     const {token} = useAuthData();

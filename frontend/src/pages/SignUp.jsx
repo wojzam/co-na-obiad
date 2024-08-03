@@ -8,7 +8,7 @@ import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import ValidatedTextField from "../components/ValidatedTextField";
 import ReCAPTCHA from "react-google-recaptcha";
-import useAuthData from "../hooks/useAuthData.js";
+import useAuthData from "../hooks/useAuthData";
 
 export default function SignUp() {
     const {login} = useAuthData();
@@ -55,8 +55,8 @@ export default function SignUp() {
             },
             body: JSON.stringify({
                 username: username,
-                token: captchaToken,
                 password: password,
+                token: captchaToken,
             }),
         })
             .then((response) => {

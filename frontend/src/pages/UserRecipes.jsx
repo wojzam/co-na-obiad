@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import {useNavigate} from "react-router-dom";
-import RecipesFilter from "../components/RecipesFilter.jsx";
+import RecipesFilter from "../components/RecipesFilter";
 
 const UserRecipes = () => {
     const [recipes, setRecipes] = useState([]);

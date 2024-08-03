@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react";
 import {Box, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 import SearchBar from "./SearchBar";
-import IngredientFilterInput from "./IngredientFilterInput.jsx";
+import IngredientFilterInput from "./IngredientFilterInput";
 import axios from "axios";
-import useAuthData from "../hooks/useAuthData.js";
+import useAuthData from "../hooks/useAuthData";
 
 export default function RecipesFilter({setRecipes, onlyUser = false}) {
     const {userId} = useAuthData();

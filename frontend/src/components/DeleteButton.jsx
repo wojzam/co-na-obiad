@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Button} from "@mui/material";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
-import ConfirmationDialog from "./ConfirmationDialog.jsx";
+import ConfirmationDialog from "./ConfirmationDialog";
 
 export default function DeleteButton({onClick}) {
     const [open, setOpen] = useState(false);

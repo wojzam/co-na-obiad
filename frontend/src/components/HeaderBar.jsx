@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {AppBar, Box, Button, Menu, MenuItem} from "@mui/material";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import useAuthData from "../hooks/useAuthData.js";
+import useAuthData from "../hooks/useAuthData";
 
 const homeButtonStyle = {
     textTransform: "none",

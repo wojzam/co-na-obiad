@@ -1,8 +1,8 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import {RecipeForm} from "../components/RecipeForm.jsx";
-import useAuthData from "../hooks/useAuthData.js";
+import {RecipeForm} from "../components/RecipeForm";
+import useAuthData from "../hooks/useAuthData";
 
 export default function CreateRecipe() {
     const {token} = useAuthData();

@@ -1,17 +1,17 @@
 import HeaderBar from "./components/HeaderBar";
 import Login from "./pages/Login";
-import SignUp from "./pages/SignUp.jsx";
-import RecipesBrowser from "./pages/RecipesBrowser.jsx";
-import UserRecipes from "./pages/UserRecipes.jsx";
-import RecipeDetails from "./pages/RecipeDetails.jsx";
-import CreateRecipe from "./pages/CreateRecipe.jsx";
-import EditRecipe from "./pages/EditRecipe.jsx";
-import Healthcheck from "./pages/Healthcheck.jsx";
+import SignUp from "./pages/SignUp";
+import RecipesBrowser from "./pages/RecipesBrowser";
+import UserRecipes from "./pages/UserRecipes";
+import RecipeDetails from "./pages/RecipeDetails";
+import CreateRecipe from "./pages/CreateRecipe";
+import EditRecipe from "./pages/EditRecipe";
+import Healthcheck from "./pages/Healthcheck";
 import ThemeSwitcher from "./components/ThemeSwitcher";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {CssBaseline, ThemeProvider} from "@mui/material";
 import {ColorModeContext, useMode} from "./theme";
-import useAuthData from "./hooks/useAuthData.js";
+import useAuthData from "./hooks/useAuthData";
 
 export default function App() {
     const [theme, colorMode] = useMode();

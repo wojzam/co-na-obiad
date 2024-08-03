@@ -1,5 +1,5 @@
 import {Autocomplete, TextField} from "@mui/material";
-import {useIngredients} from "../hooks/useCachedData.jsx";
+import {useIngredients} from "../hooks/useCachedData";
 
 export default function IngredientFilterInput({onFilterChange, text}) {
     const ingredients = useIngredients();
