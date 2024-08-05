@@ -1,4 +1,4 @@
-import {useRef} from "react";
+import {useRef, useState} from "react";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
@@ -6,50 +6,48 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
+import MessageBox from "../components/MessageBox.jsx";
 import ReCAPTCHA from "react-google-recaptcha";
-import useAuthData from "../hooks/useAuthData";
 import {useForm} from "react-hook-form";
 import {CircularProgress} from "@mui/material";
+import axios from "axios";
 
 export default function SignUp() {
-    const {login} = useAuthData();
-    const {register, handleSubmit, setError, formState: {errors, isSubmitting}, getValues} = useForm({
+    const {register, handleSubmit, setError, formState: {errors, isSubmitting}, getValues, reset} = useForm({
         mode: "all",
         defaultValues: {username: "", password: "", passwordRepeated: ""}
     });
     const captchaRef = useRef(null)
+    const [message, setMessage] = useState("");
 
     const onSubmit = (data) => {
+        setMessage("");
         const captchaToken = captchaRef.current.getValue();
-        captchaRef.current.reset();
+        if (!captchaToken) {
+            setError("root", {message: "Proszę wykonać weryfikację reCAPTCHA"});
+            return;
+        }
 
-        fetch("/api/auth/register", {
-            method: "POST",
+        axios.post("/api/auth/register", {
+            username: data.username,
+            password: data.password,
+            token: captchaToken
+        }, {
             headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                username: data.username,
-                password: data.password,
-                token: captchaToken,
-            }),
+                'Content-Type': 'application/json'
+            }
         })
-            .then((response) => {
-                if (!response.ok) {
-                    return response.text().then((text) => {
-                        throw new Error(Object.values(JSON.parse(text)).join(", "));
-                    });
-                }
-                return response.json();
-            })
-            .then((data) => {
-                login(data);
+            .then(() => {
+                setMessage("Konto utworzone, oczekiwanie na aktywację przez administratora");
+                captchaRef.current.reset();
+                reset();
             })
             .catch((error) => {
-                console.log(error);
-                setError("username", {
-                    message: "Nazwa użytkownika jest już zajęta"
-                })
+                if (error.response.status === 409) {
+                    setError("username", {message: "Nazwa użytkownika jest już zajęta"});
+                } else {
+                    setError("root", {message: "Wystąpił nieoczekiwany błąd"});
+                }
             });
     };
 
@@ -66,6 +64,8 @@ export default function SignUp() {
                 <Typography component="h1" variant="h4" gutterBottom>
                     Rejestracja
                 </Typography>
+                <MessageBox message={message}/>
+                <MessageBox message={errors.root} isError={true}/>
                 <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{mt: 3}}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>

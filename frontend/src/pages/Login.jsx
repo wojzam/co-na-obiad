@@ -9,46 +9,47 @@ import useAuthData from "../hooks/useAuthData";
 import {useForm} from "react-hook-form";
 import {CircularProgress, TextField} from "@mui/material";
 import {ReCaptchaV3} from "../components/ReCaptchaV3.jsx";
+import MessageBox from "../components/MessageBox.jsx";
+import axios from "axios";
 
 export default function Login() {
     const {login} = useAuthData();
-    const {register, control, handleSubmit, formState: {errors, isSubmitting}} = useForm({
+    const {register, control, handleSubmit, setError, formState: {errors, isSubmitting}} = useForm({
         mode: "all",
         defaultValues: {username: "", password: ""}
     });
     const [captchaToken, setCaptchaToken] = useState("");
+    const [message, setMessage] = useState("");
 
     const onSubmit = (data) => {
-        if (!captchaToken) return;
-        fetch("/api/auth/login", {
-            method: "POST",
+        setMessage("");
+        if (!captchaToken) {
+            setMessage("Oczekiwanie na automatyczną weryfikację reCAPTCHA")
+            return;
+        }
+
+        axios.post('/api/auth/login', {
+            username: data.username,
+            password: data.password,
+            token: captchaToken
+        }, {
             headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                username: data.username,
-                password: data.password,
-                token: captchaToken
-            }),
+                'Content-Type': 'application/json'
+            }
         })
             .then((response) => {
-                if (response.status === 401) {
-                    throw new Error("Niepoprawna nazwa użytkownika lub hasło");
-                }
-                if (!response.ok) {
-                    return response.text().then((text) => {
-                        throw new Error(Object.values(JSON.parse(text)).join(", "));
-                    });
-                }
-                return response.json();
-            })
-            .then((data) => {
-                login(data);
+                login(response.data);
             })
             .catch((error) => {
-                console.log(error);
+                if (error.response.status === 401) {
+                    setError("root", {message: "Niepoprawna nazwa użytkownika lub hasło"})
+                } else if (error.response.status === 403) {
+                    setMessage("Konto istnieje, ale oczekuje na aktywację przez administratora");
+                } else {
+                    setError("root", {message: "Wystąpił nieoczekiwany błąd"})
+                }
             });
-    };
+    }
 
     return (
         <Container component="main" maxWidth="xs">
@@ -63,6 +64,8 @@ export default function Login() {
                 <Typography component="h1" variant="h4" gutterBottom>
                     Logowanie
                 </Typography>
+                <MessageBox message={message}/>
+                <MessageBox message={errors.root} isError={true}/>
                 <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{mt: 3}}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
