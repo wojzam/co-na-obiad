@@ -7,12 +7,13 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import useAuthData from "../hooks/useAuthData";
 import {useForm} from "react-hook-form";
-import {TextField} from "@mui/material";
+import {CircularProgress, TextField} from "@mui/material";
 import {ReCaptchaV3} from "../components/ReCaptchaV3.jsx";
 
 export default function Login() {
     const {login} = useAuthData();
-    const {register, control, handleSubmit, formState: {errors}} = useForm({
+    const {register, control, handleSubmit, formState: {errors, isSubmitting}} = useForm({
+        mode: "all",
         defaultValues: {username: "", password: ""}
     });
     const [captchaToken, setCaptchaToken] = useState("");
@@ -71,28 +72,28 @@ export default function Login() {
                                 })}
                                 label="Nazwa użytkownika"
                                 fullWidth
+                                error={!!errors.username}
+                                helperText={errors.username ? errors.username.message : ""}
                             />
-                            {errors.username && (
-                                <Typography component="h6" color="error"
-                                            gutterBottom> {errors.username.message}</Typography>)}
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 {...register("password", {
                                     required: "Hasło jest wymagane"
                                 })}
-                                fullWidth
                                 label="Hasło"
+                                fullWidth
                                 type="password"
                                 autoComplete="new-password"
+                                error={!!errors.password}
+                                helperText={errors.password ? errors.password.message : ""}
                             />
-                            {errors.password && (
-                                <Typography component="h6" color="error"
-                                            gutterBottom> {errors.password.message}</Typography>)}
                         </Grid>
                     </Grid>
                     <ReCaptchaV3 setToken={setCaptchaToken}/>
-                    <Button type="submit" fullWidth variant="contained" sx={{mt: 3, mb: 2}}>
+                    {isSubmitting &&
+                        <Box sx={{display: 'flex', justifyContent: 'center', mt: 2}}> <CircularProgress/> </Box>}
+                    <Button type="submit" fullWidth variant="contained" disabled={isSubmitting} sx={{mt: 3, mb: 2}}>
                         Zaloguj
                     </Button>
                     <Grid container justifyContent="flex-end">

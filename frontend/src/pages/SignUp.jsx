@@ -1,4 +1,4 @@
-import {useRef, useState} from "react";
+import {useRef} from "react";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
@@ -6,47 +6,22 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
-import ValidatedTextField from "../components/ValidatedTextField";
 import ReCAPTCHA from "react-google-recaptcha";
 import useAuthData from "../hooks/useAuthData";
+import {useForm} from "react-hook-form";
+import {CircularProgress} from "@mui/material";
 
 export default function SignUp() {
     const {login} = useAuthData();
-    const [errorMessage, setErrorMessage] = useState("");
-    const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+    const {register, handleSubmit, setError, formState: {errors, isSubmitting}, getValues} = useForm({
+        mode: "all",
+        defaultValues: {username: "", password: "", passwordRepeated: ""}
+    });
     const captchaRef = useRef(null)
 
-    const handlePasswordsChange = (e) => {
-        const password = e.target.form.password.value;
-        const passwordRepeated = e.target.form.passwordRepeated.value;
-        setPasswordErrorMessage(
-            password !== passwordRepeated ? "Hasła nie są identyczne" : ""
-        );
-    };
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        const username = data.get("username")
-        const password = data.get("password");
-        const passwordRepeated = data.get("passwordRepeated");
+    const onSubmit = (data) => {
         const captchaToken = captchaRef.current.getValue();
         captchaRef.current.reset();
-
-        if (username.trim() === "") {
-            setErrorMessage("Nazwa użytkownika jest wymagana");
-            return;
-        }
-
-        if (passwordRepeated.trim() === "") {
-            setErrorMessage("Powtórzone hasło jest wymagane");
-            return;
-        }
-
-        if (password !== passwordRepeated) {
-            setPasswordErrorMessage("Hasła nie są identyczne");
-            return;
-        }
 
         fetch("/api/auth/register", {
             method: "POST",
@@ -54,8 +29,8 @@ export default function SignUp() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                username: username,
-                password: password,
+                username: data.username,
+                password: data.password,
                 token: captchaToken,
             }),
         })
@@ -71,7 +46,10 @@ export default function SignUp() {
                 login(data);
             })
             .catch((error) => {
-                setErrorMessage(error.message);
+                console.log(error);
+                setError("username", {
+                    message: "Nazwa użytkownika jest już zajęta"
+                })
             });
     };
 
@@ -88,44 +66,56 @@ export default function SignUp() {
                 <Typography component="h1" variant="h4" gutterBottom>
                     Rejestracja
                 </Typography>
-                {errorMessage && (
-                    <Typography component="h5" variant="h5" color="error" gutterBottom>
-                        {errorMessage}
-                    </Typography>
-                )}
-                <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 3}}>
+                <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{mt: 3}}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <ValidatedTextField
-                                id="username"
+                            <TextField
+                                {...register("username", {
+                                    required: "Nazwa użytkownika jest wymagana",
+                                    maxLength: {
+                                        value: 64,
+                                        message: "Nazwa użytkownika nie może przekraczać 64 znaków"
+                                    }
+                                })}
                                 label="Nazwa użytkownika"
-                                name="username"
-                                maxLength={64}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <ValidatedTextField
-                                name="password"
-                                label="Hasło"
-                                type="password"
-                                id="password"
-                                autoComplete="new-password"
-                                onChange={handlePasswordsChange}
-                                minLength={8}
-                                maxLength={64}
+                                fullWidth
+                                error={!!errors.username}
+                                helperText={errors.username ? errors.username.message : ""}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                required
+                                {...register("password", {
+                                    required: "Hasło jest wymagane",
+                                    minLength: {
+                                        value: 8,
+                                        message: "Hasło musi mieć przynajmniej 8 znaków"
+                                    },
+                                    maxLength: {
+                                        value: 64,
+                                        message: "Hasło nie może przekraczać 64 znaków"
+                                    }
+                                })}
+                                label="Hasło"
                                 fullWidth
-                                name="passwordRepeated"
-                                label="Powtórz hasło"
                                 type="password"
-                                id="passwordRepeated"
-                                error={passwordErrorMessage !== ""}
-                                helperText={passwordErrorMessage}
-                                onChange={handlePasswordsChange}
+                                autoComplete="new-password"
+                                error={!!errors.password}
+                                helperText={errors.password ? errors.password.message : ""}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                {...register("passwordRepeated", {
+                                    required: "Powtórzone hasło jest wymagane",
+                                    validate: value =>
+                                        value === getValues("password") || "Hasła nie są takie same"
+                                })}
+                                label="Powtórz hasło"
+                                fullWidth
+                                type="password"
+                                error={!!errors.passwordRepeated}
+                                helperText={errors.passwordRepeated ? errors.passwordRepeated.message : ""}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -134,10 +124,13 @@ export default function SignUp() {
                             </Box>
                         </Grid>
                     </Grid>
+                    {isSubmitting &&
+                        <Box sx={{display: 'flex', justifyContent: 'center', mt: 2}}> <CircularProgress/> </Box>}
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
+                        disabled={isSubmitting}
                         sx={{mt: 3, mb: 2}}
                     >
                         Zarejestruj się
