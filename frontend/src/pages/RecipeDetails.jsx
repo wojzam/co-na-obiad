@@ -38,7 +38,7 @@ const RecipeDetails = () => {
                             recipe?.ingredientSections.map((section) => (
                                 <Box key={section._id} mb={2}>
                                     <Typography variant="h6" fontWeight="regular">
-                                        {section.section_name}
+                                        {section.sectionName}
                                     </Typography>
                                     <List>
                                         {section.ingredients.map((ingredient, index) => (

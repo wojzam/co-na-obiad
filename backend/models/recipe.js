@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const ingredientsSectionSchema = new mongoose.Schema({
     _id: {type: Number, required: true},
-    section_name: {type: String, default: ""},
+    sectionName: {type: String, default: ""},
     optional: {type: Boolean, default: false},
     ingredients: [{
         _id: {type: mongoose.Schema.Types.ObjectId, ref: 'Ingredient', required: true},
@@ -20,14 +20,14 @@ const recipeSchema = new mongoose.Schema({
         name: {type: String, required: true},
     },
     ingredientSections: [ingredientsSectionSchema],
-    creator_id: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
-    created_at: {type: Date, default: Date.now},
-    updated_at: {type: Date, default: Date.now},
+    creatorId: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
+    createdAt: {type: Date, default: Date.now},
+    updatedAt: {type: Date, default: Date.now},
 }, {
     versionKey: false
 });
 
 recipeSchema.index({name: 1}, {collation: {locale: 'en', strength: 2}});
-recipeSchema.index({created_at: 1});
+recipeSchema.index({createdAt: 1});
 
 module.exports = mongoose.model('Recipe', recipeSchema);

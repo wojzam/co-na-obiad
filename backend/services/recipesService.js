@@ -21,7 +21,7 @@ const list = async (name, include, exclude, creatorId, sort) => {
     let query = name ? [{name: {$regex: name, $options: 'i'}}] : [];
 
     if (creatorId) {
-        query.push({creator_id: creatorId})
+        query.push({creatorId: creatorId})
     }
 
     if (includeIds.length > 0) {
@@ -41,7 +41,7 @@ const list = async (name, include, exclude, creatorId, sort) => {
     }
 
     const findQuery = query.length > 0 ? {$and: query} : {};
-    const sortQuery = sort === 'date' ? {created_at: -1} : {name: 1};
+    const sortQuery = sort === 'date' ? {createdAt: -1} : {name: 1};
 
     const recipes = await Recipe
         .find(findQuery)
@@ -63,9 +63,9 @@ const create = async (name, category, comment, ingredients, userId) => {
         comment: comment,
         category: await validateCategory(category),
         ingredientSections: [{
-            _id: 1, section_name: "", optional: false, ingredients: await validateIngredients(ingredients)
+            _id: 1, sectionName: "", optional: false, ingredients: await validateIngredients(ingredients)
         }],
-        creator_id: userId
+        creatorId: userId
     });
 
     return CREATED(await newRecipe.save());
@@ -74,15 +74,15 @@ const create = async (name, category, comment, ingredients, userId) => {
 const update = async (id, name, category, comment, ingredients, userId) => {
     const recipe = await Recipe.findById(id);
     if (!recipe) return NOT_FOUND;
-    if (recipe.creator_id.toString() !== userId) ACCESS_DENIED;
+    if (recipe.creatorId.toString() !== userId) ACCESS_DENIED;
 
     recipe.name = name;
     recipe.comment = comment;
     recipe.category = await validateCategory(category);
     recipe.ingredientSections[0] = {
-        _id: 1, section_name: "", optional: false, ingredients: await validateIngredients(ingredients)
+        _id: 1, sectionName: "", optional: false, ingredients: await validateIngredients(ingredients)
     };
-    recipe.updated_at = Date.now();
+    recipe.updatedAt = Date.now();
 
     return OK(await recipe.save());
 }
@@ -90,7 +90,7 @@ const update = async (id, name, category, comment, ingredients, userId) => {
 const softDelete = async (recipeId, userId) => {
     const recipe = await Recipe.findById(recipeId);
     if (!recipe) return NOT_FOUND
-    if (recipe.creator_id.toString() !== userId) return ACCESS_DENIED;
+    if (recipe.creatorId.toString() !== userId) return ACCESS_DENIED;
 
     const deletedRecipe = new DeletedRecipe({recipe: recipe});
     await deletedRecipe.save();
