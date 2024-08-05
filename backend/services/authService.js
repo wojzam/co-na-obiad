@@ -7,10 +7,9 @@ const duplicateErrorCode = 11000;
 const OK = (body) => {
     return {status: 200, body: body}
 };
-const REGISTERED = (body) => {
-    return {status: 201, body: body}
-};
+const REGISTERED = {status: 201, body: {message: 'User account created and awaiting activation'}};
 const UNAUTHORIZED = {status: 401, body: {message: 'Unauthorized'}};
+const ACCOUNT_NOT_ACTIVE = {status: 403, body: {message: 'User account is not active'}};
 const USER_CONFLICT = {status: 409, body: {message: 'User with provided username already exists'}};
 const AUTHORIZED_RESPONSE_BODY = (user) => {
     return {token: generateToken(user), user: user.username, id: user._id}
@@ -33,7 +32,7 @@ const register = async (username, password, token) => {
         const user = new User({username: username, password: hashedPassword});
         await user.save();
 
-        return REGISTERED(AUTHORIZED_RESPONSE_BODY(user));
+        return REGISTERED;
     } catch (error) {
         if (error.code === duplicateErrorCode) return USER_CONFLICT;
         throw error;
@@ -49,6 +48,7 @@ const login = async (username, password, token) => {
     const user = await User.findOne({username: username});
     if (!user) return UNAUTHORIZED;
     if (!await bcrypt.compare(password, user.password)) return UNAUTHORIZED;
+    if (!user.active) return ACCOUNT_NOT_ACTIVE;
 
     return OK(AUTHORIZED_RESPONSE_BODY(user));
 };
