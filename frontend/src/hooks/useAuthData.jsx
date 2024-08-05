@@ -7,12 +7,14 @@ const useAuthData = () => {
         setCookie('token', data.token, {path: '/'});
         setCookie('user', data.user, {path: '/'});
         setCookie('id', data.id, {path: '/'});
+        window.location.href = `/user-recipes`;
     };
 
     const logout = () => {
         removeCookie('token', {path: '/'});
         removeCookie('user', {path: '/'});
         removeCookie('id', {path: '/'});
+        window.location.href = "/login";
     };
 
     const token = cookies.token;

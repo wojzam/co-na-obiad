@@ -69,7 +69,6 @@ export default function SignUp() {
             })
             .then((data) => {
                 login(data);
-                window.location.href = `/user-recipes`;
             })
             .catch((error) => {
                 setErrorMessage(error.message);

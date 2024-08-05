@@ -43,7 +43,6 @@ export default function Login() {
             })
             .then((data) => {
                 login(data);
-                window.location.href = `/user-recipes`;
             })
             .catch((error) => {
                 console.log(error);

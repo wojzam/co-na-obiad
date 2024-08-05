@@ -45,7 +45,6 @@ export default function HeaderBar() {
     const handleLogout = () => {
         handleClose();
         logout();
-        window.location.href = "/login";
     };
 
     return (
