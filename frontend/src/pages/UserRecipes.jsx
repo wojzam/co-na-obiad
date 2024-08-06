@@ -1,6 +1,7 @@
 import {useState} from "react";
 import {
     Button,
+    CircularProgress,
     Paper,
     Table,
     TableBody,
@@ -17,6 +18,7 @@ import RecipesFilter from "../components/RecipesFilter";
 
 const UserRecipes = () => {
     const [recipes, setRecipes] = useState([]);
+    const [isPending, setIsPending] = useState(true);
     const navigate = useNavigate();
     const theme = useTheme();
 
@@ -32,7 +34,7 @@ const UserRecipes = () => {
     return (
         <>
             <Typography component="h1" variant="h2" fontWeight="medium" gutterBottom>Moje przepisy</Typography>
-            <RecipesFilter setRecipes={setRecipes} onlyUser={true}/>
+            <RecipesFilter {...{setRecipes, setIsPending}} onlyUser={true}/>
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
@@ -75,6 +77,8 @@ const UserRecipes = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            {isPending ? <CircularProgress/> :
+                recipes.length === 0 && <Typography variant="h6" component="p">Brak wyników</Typography>}
         </>
     );
 };

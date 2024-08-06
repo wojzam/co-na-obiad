@@ -2,39 +2,33 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import {RecipeForm} from "../components/RecipeForm";
-import useAuthData from "../hooks/useAuthData";
+import MessageBox from "../components/MessageBox.jsx";
+import {useState} from "react";
+import useAuthAxios from "../hooks/useAuthAxios.jsx";
 
 export default function CreateRecipe() {
-    const {token} = useAuthData();
+    const axiosInstance = useAuthAxios();
+    const [errorMessage, setErrorMessage] = useState("");
 
     const onSubmit = (data) => {
-        fetch("/api/recipes", {
-            method: "POST",
+        setErrorMessage("");
+
+        axiosInstance.post("/api/recipes", {
+            name: data.name,
+            comment: data.comment,
+            category: data.category,
+            ingredients: data.ingredients.filter((i) => i.name),
+        }, {
             headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                name: data.name,
-                comment: data.comment,
-                category: data.category,
-                ingredients: data.ingredients.filter((i) => i.name),
-            }),
         })
             .then((response) => {
-                if (!response.ok) {
-                    return response.text().then((text) => {
-                        throw new Error(JSON.parse(text).title);
-                    });
-                }
-                return response.json();
-            })
-            .then((data) => {
                 window.history.pushState({url: "/user-recipes"}, "", "/user-recipes");
-                window.location.href = `/recipes/${data._id}`;
+                window.location.href = `/recipes/${response.data._id}`;
             })
-            .catch((error) => {
-                console.log(error.message);
+            .catch(() => {
+                setErrorMessage("Wystąpił nieoczekiwany błąd");
             });
     }
 
@@ -42,6 +36,7 @@ export default function CreateRecipe() {
         <Container component="main" maxWidth="xs">
             <Box sx={{display: "flex", flexDirection: "column", alignItems: "center",}}>
                 <Typography component="h1" variant="h4" gutterBottom>Nowy przepis</Typography>
+                <MessageBox message={errorMessage} isError={true}/>
                 <RecipeForm onSubmit={onSubmit}/>
             </Box>
         </Container>

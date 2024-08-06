@@ -1,20 +1,10 @@
-import {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
 import {Box, Divider, Grid, List, ListItem, ListItemIcon, ListItemText, Skeleton, Typography} from "@mui/material";
 import CircleIcon from '@mui/icons-material/Circle';
 import BackButton from "../components/BackButton";
+import {useRecipe} from "../hooks/useRecipe.jsx";
 
 const RecipeDetails = () => {
-    const {id} = useParams();
-    const [recipe, setRecipe] = useState();
-
-    useEffect(() => {
-        fetch(`/api/recipes/${id}`, {})
-            .then((response) => response.json())
-            .then((data) => {
-                setRecipe(data);
-            });
-    }, []);
+    const recipe = useRecipe();
 
     return (
         <>

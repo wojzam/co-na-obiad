@@ -5,7 +5,7 @@ import IngredientFilterInput from "./IngredientFilterInput";
 import axios from "axios";
 import useAuthData from "../hooks/useAuthData";
 
-export default function RecipesFilter({setRecipes, onlyUser = false}) {
+export default function RecipesFilter({setRecipes, setIsPending, onlyUser = false}) {
     const {userId} = useAuthData();
     const [filter, setFilter] = useState({
         name: "",
@@ -26,15 +26,20 @@ export default function RecipesFilter({setRecipes, onlyUser = false}) {
     }
 
     useEffect(() => {
+        setIsPending(true);
+
         let endpoint =
             `/api/recipes?name=${filter.name}&include=${filter.include}&exclude=${filter.exclude}&sort=${sort}`;
-
         if (onlyUser && userId) endpoint = endpoint + `&creatorId=${userId}`;
 
         axios.get(endpoint)
             .then((response) => {
                 setRecipes(response.data);
-            });
+                setIsPending(false);
+            }).catch(() => {
+            setRecipes([]);
+            setIsPending(false);
+        });
     }, [filter, sort]);
 
     return (
