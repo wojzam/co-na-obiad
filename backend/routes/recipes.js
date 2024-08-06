@@ -1,15 +1,14 @@
 const express = require('express');
-const {query, body, matchedData, validationResult} = require('express-validator');
-const {requireToken} = require('../middlewares/authMiddleware');
 const router = express.Router();
 const recipesService = require('../services/recipesService');
+const {matchedData, validationResult} = require('express-validator');
+const {filterSchema, recipeSchema} = require('../middlewares/validation/recipeValidation')
+const {requireToken} = require('../middlewares/authMiddleware');
+const {validId} = require("../middlewares/validation/validId");
 
-router.get('/', query(['name', 'include', 'exclude', 'creatorId', 'sort']).escape(), async (req, res) => {
-    const result = validationResult(req);
-    if (!result.isEmpty()) return res.status(400).json({message: result.array()});
-    const data = matchedData(req);
-
+router.get('/', filterSchema, async (req, res) => {
     try {
+        const data = matchedData(req);
         const result = await recipesService.list(data.name, data.include, data.exclude, data.creatorId, data.sort);
         res.status(result.status).json(result.body);
     } catch (err) {
@@ -17,12 +16,9 @@ router.get('/', query(['name', 'include', 'exclude', 'creatorId', 'sort']).escap
     }
 });
 
-router.post('/', requireToken, body(['name', 'category']).trim().notEmpty().escape(), body(['comment']).trim().escape(), body('ingredients').isArray(), async (req, res) => {
-    const result = validationResult(req);
-    if (!result.isEmpty()) return res.status(400).json({message: result.array()});
-    const data = matchedData(req);
-
+router.post('/', requireToken, recipeSchema, async (req, res) => {
     try {
+        const data = matchedData(req);
         const result = await recipesService.create(data.name, data.category, data.comment, data.ingredients, req.userId);
         res.status(result.status).json(result.body);
     } catch (err) {
@@ -57,7 +53,7 @@ router.get('/units', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', validId, async (req, res) => {
     try {
         const result = await recipesService.find(req.params.id);
         res.status(result.status).json(result.body);
@@ -66,21 +62,17 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.put('/:id', requireToken, body(['name', 'category']).trim().notEmpty().escape(), body(['comment']).trim().escape(), body('ingredients').isArray(), async (req, res) => {
-    const result = validationResult(req);
-    if (!result.isEmpty()) return res.status(400).json({message: result.array()});
-    const data = matchedData(req);
-
+router.put('/:id', requireToken, validId, recipeSchema, async (req, res) => {
     try {
+        const data = matchedData(req);
         const result = await recipesService.update(req.params.id, data.name, data.category, data.comment, data.ingredients, req.userId);
         res.status(result.status).json(result.body);
     } catch (err) {
-        console.log(err)
         res.status(500);
     }
 });
 
-router.delete('/:id', requireToken, async (req, res) => {
+router.delete('/:id', requireToken, validId, async (req, res) => {
     try {
         const result = await recipesService.softDelete(req.params.id, req.userId);
         res.status(result.status).json(result.body);

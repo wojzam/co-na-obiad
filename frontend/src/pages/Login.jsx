@@ -71,7 +71,11 @@ export default function Login() {
                         <Grid item xs={12}>
                             <TextField
                                 {...register("username", {
-                                    required: "Nazwa użytkownika jest wymagana"
+                                    required: "Nazwa użytkownika jest wymagana",
+                                    maxLength: {
+                                        value: 64,
+                                        message: "Nazwa użytkownika nie może przekraczać 64 znaków"
+                                    }
                                 })}
                                 label="Nazwa użytkownika"
                                 fullWidth
@@ -82,7 +86,11 @@ export default function Login() {
                         <Grid item xs={12}>
                             <TextField
                                 {...register("password", {
-                                    required: "Hasło jest wymagane"
+                                    required: "Hasło jest wymagane",
+                                    maxLength: {
+                                        value: 64,
+                                        message: "Hasło nie może przekraczać 64 znaków"
+                                    }
                                 })}
                                 label="Hasło"
                                 fullWidth
