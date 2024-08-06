@@ -1,12 +1,14 @@
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const User = require('../models/user');
 
-const requireToken = function (req, res, next) {
+const requireToken = async function (req, res, next) {
     const token = req.header('Authorization');
     if (!token) return res.status(401).json({error: 'Access denied'});
     try {
         const decoded = jwt.verify(token.split(' ')[1], process.env.JWT_SECRET);
-        req.userId = decoded.userId;
+        const user = await User.findById(decoded.userId);
+        if (!user || !user.active) return res.status(401).json({error: 'Access denied'})
+        req.userId = user._id;
         next();
     } catch (error) {
         res.status(401).json({error: 'Invalid token'});

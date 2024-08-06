@@ -74,7 +74,7 @@ const create = async (name, category, comment, ingredients, userId) => {
 const update = async (id, name, category, comment, ingredients, userId) => {
     const recipe = await Recipe.findById(id);
     if (!recipe) return NOT_FOUND;
-    if (recipe.creatorId.toString() !== userId) ACCESS_DENIED;
+    if (!recipe.creatorId.equals(userId)) ACCESS_DENIED;
 
     recipe.name = name;
     recipe.comment = comment;
@@ -90,7 +90,7 @@ const update = async (id, name, category, comment, ingredients, userId) => {
 const softDelete = async (recipeId, userId) => {
     const recipe = await Recipe.findById(recipeId);
     if (!recipe) return NOT_FOUND
-    if (recipe.creatorId.toString() !== userId) return ACCESS_DENIED;
+    if (!recipe.creatorId.equals(userId)) return ACCESS_DENIED;
 
     const deletedRecipe = new DeletedRecipe({recipe: recipe});
     await deletedRecipe.save();
