@@ -87,6 +87,10 @@ export default function Login() {
                             <TextField
                                 {...register("password", {
                                     required: "Hasło jest wymagane",
+                                    minLength: {
+                                        value: 8,
+                                        message: "Hasło musi mieć przynajmniej 8 znaków"
+                                    },
                                     maxLength: {
                                         value: 64,
                                         message: "Hasło nie może przekraczać 64 znaków"
