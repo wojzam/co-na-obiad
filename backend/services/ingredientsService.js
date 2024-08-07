@@ -33,12 +33,15 @@ const create = async (name) => {
     }
 }
 
-const update = async (id, name) => {
+const update = async (id, name, children) => {
     try {
         const ingredient = await Ingredient.findById(id);
         if (!ingredient) return NOT_FOUND;
 
+        const validChildrenId = await Ingredient.find({_id: {$in: children}}).select('_id');
+
         ingredient.name = name;
+        ingredient.children = validChildrenId;
 
         const updatedIngredient = await ingredient.save();
         await updateIngredientNameInRecipes(id, name);

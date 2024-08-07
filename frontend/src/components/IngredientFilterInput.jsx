@@ -5,7 +5,11 @@ export default function IngredientFilterInput({onFilterChange, text}) {
     const ingredients = useIngredients();
 
     const handleInputChange = (event, value) => {
-        const selectedIds = value.map((item) => item._id);
+        const selectedIds = value.flatMap((ing) => {
+            const id = [ing._id];
+            const childrenIds = ing.children ? ing.children.map((c) => c._id) : [];
+            return [...id, ...childrenIds];
+        });
         onFilterChange(text === "Zawiera" ? {include: selectedIds} : {exclude: selectedIds});
     };
 

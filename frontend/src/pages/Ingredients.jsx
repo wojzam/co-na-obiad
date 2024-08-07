@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import {
+    Autocomplete,
     CircularProgress,
     Paper,
     Table,
@@ -29,13 +30,25 @@ const Ingredients = () => {
     useEffect(() => {
         axios.get('/api/ingredients')
             .then((response) => {
-                setIngredients(response.data);
+                setIngredients(convertChildrenToParent(response.data));
                 setIsPending(false);
             }).catch(() => {
             setIngredients([]);
             setIsPending(false);
         });
     }, []);
+
+    function convertChildrenToParent(data) {
+        data.forEach(ing => {
+            if (ing.children) {
+                ing.children.forEach(child => {
+                    data.find(i => i._id === child._id).parent = ing._id;
+                });
+                delete ing.children;
+            }
+        });
+        return data;
+    }
 
     const handleAdd = () => {
         setErrorMessage("");
@@ -57,11 +70,15 @@ const Ingredients = () => {
             });
     };
 
-    const handleSave = (id, name) => {
+    const handleSave = (id) => {
         setErrorMessage("");
 
+        const ingredient = ingredients.find(ingredient => ingredient._id === id);
+        const children = ingredients.filter(ingredient => ingredient.parent === id).map((ing) => ing._id);
+
         axiosInstance.put(`/api/ingredients/${id}`, {
-            name: name.trim(),
+            name: ingredient.name.trim(),
+            children: children
         }, {
             headers: {
                 "Content-Type": "application/json"
@@ -77,10 +94,23 @@ const Ingredients = () => {
             });
     };
 
-    const handleInputChange = (id, value) => {
+    const handleNameChange = (id, value) => {
         setIngredients(ingredients.map(ingredient =>
             ingredient._id === id ? {...ingredient, name: value} : ingredient
         ));
+    };
+
+    const handleParentChange = (id, value) => {
+        if (value) {
+            const parentId = ingredients.find(ingredient => ingredient.name === value)._id;
+            setIngredients(ingredients.map(ingredient =>
+                ingredient._id === id ? {...ingredient, parent: parentId} : ingredient
+            ));
+        } else {
+            setIngredients(ingredients.map(ingredient =>
+                ingredient._id === id ? {...ingredient, parent: null} : ingredient
+            ));
+        }
     };
 
     return (
@@ -103,6 +133,7 @@ const Ingredients = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell>Nazwa</TableCell>
+                            <TableCell>Nadrzędny składnik</TableCell>
                             <TableCell align="right"></TableCell>
                         </TableRow>
                     </TableHead>
@@ -116,12 +147,26 @@ const Ingredients = () => {
                                 <TableCell>
                                     <TextField
                                         value={ingredient.name}
-                                        onChange={(e) => handleInputChange(ingredient._id, e.target.value)}
+                                        onChange={(e) => handleNameChange(ingredient._id, e.target.value)}
+                                    />
+                                </TableCell>
+                                <TableCell>
+                                    <Autocomplete
+                                        sx={{width: 300}}
+                                        defaultValue={ingredients.find(ing => ing._id === ingredient?.parent)?.name || null}
+                                        options={ingredients.map((ing) => ing.name)}
+                                        filterSelectedOptions
+                                        onChange={(e, v) => handleParentChange(ingredient._id, v)}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                            />
+                                        )}
                                     />
                                 </TableCell>
                                 <TableCell align="right">
                                     <Button variant="outlined"
-                                            onClick={() => handleSave(ingredient._id, ingredient.name)}>Zapisz</Button>
+                                            onClick={() => handleSave(ingredient._id)}>Zapisz</Button>
                                 </TableCell>
                             </TableRow>
                         ))}
