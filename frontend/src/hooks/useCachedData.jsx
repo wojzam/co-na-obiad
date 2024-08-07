@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 
-const useCachedData = (name) => {
+const useCachedData = (name, endpoint) => {
     const [data, setData] = useState([]);
 
     function expirationDate() {
@@ -23,7 +23,7 @@ const useCachedData = (name) => {
             }
         }
 
-        axios.get(`/api/recipes/${name}`)
+        axios.get(endpoint)
             .then((response) => {
                 localStorage.setItem(name, JSON.stringify(response.data));
                 localStorage.setItem(`${name}Expiration`, expirationDate().toISOString());
@@ -35,13 +35,13 @@ const useCachedData = (name) => {
 };
 
 export const useCategories = () => {
-    return useCachedData("categories");
+    return useCachedData("categories", `/api/recipes/categories`);
 };
 
 export const useIngredients = () => {
-    return useCachedData("ingredients");
+    return useCachedData("ingredients", `/api/ingredients`);
 };
 
 export const useUnits = () => {
-    return useCachedData("units");
+    return useCachedData("units", `/api/ingredients/units`);
 };

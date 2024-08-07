@@ -9,10 +9,17 @@ const requireToken = async function (req, res, next) {
         const user = await User.findById(decoded.userId);
         if (!user || !user.active) return res.status(401).json({error: 'Access denied'})
         req.userId = user._id;
+        req.user = user;
         next();
     } catch (error) {
         res.status(401).json({error: 'Invalid token'});
     }
 }
 
-module.exports = {requireToken};
+const requireAdmin = async function (req, res, next) {
+    const user = req.user;
+    if (!user || !user.isAdmin()) return res.status(401).json({error: 'Access denied'})
+    next();
+}
+
+module.exports = {requireToken, requireAdmin};

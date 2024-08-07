@@ -2,7 +2,6 @@ const Recipe = require("../models/recipe");
 const recipeDto = require("../dto/recipeDto");
 const DishCategory = require("../models/dishCategory");
 const Ingredient = require("../models/ingredient");
-const Unit = require('../models/unit');
 const DeletedRecipe = require("../models/deletedRecipe");
 
 const OK = (body = {message: "OK"}) => {
@@ -103,14 +102,6 @@ const listCategories = async () => {
     return OK(await DishCategory.find());
 }
 
-const listIngredients = async () => {
-    return OK(await Ingredient.find().sort({name: 1}));
-}
-
-const listUnits = async () => {
-    return OK(await Unit.find());
-}
-
 const validateCategory = async (category) => {
     return await DishCategory.find({name: category}).then(c => c[0]);
 };
@@ -141,6 +132,4 @@ module.exports = {
     update,
     softDelete,
     listCategories,
-    listIngredients,
-    listUnits,
 }

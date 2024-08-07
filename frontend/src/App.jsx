@@ -6,6 +6,7 @@ import UserRecipes from "./pages/UserRecipes";
 import RecipeDetails from "./pages/RecipeDetails";
 import CreateRecipe from "./pages/CreateRecipe";
 import EditRecipe from "./pages/EditRecipe";
+import Ingredients from "./pages/Ingredients";
 import Healthcheck from "./pages/Healthcheck";
 import ThemeSwitcher from "./components/ThemeSwitcher";
 import {Navigate, Route, Routes} from "react-router-dom";
@@ -37,6 +38,7 @@ export default function App() {
                         <Route path="/recipes/:id" element={<RecipeDetails/>}/>
                         <Route path="/create-recipe" element={<CreateRecipe/>}/>
                         <Route path="/edit-recipe/:id" element={<EditRecipe/>}/>
+                        <Route path="/ingredients" element={<Ingredients/>}/>
                         <Route path="/healthcheck" element={<Healthcheck/>}/>
                     </Routes>
                 </main>
