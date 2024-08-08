@@ -114,7 +114,7 @@ export default function Login() {
                     <Grid container justifyContent="flex-end">
                         <Grid item>
                             <Link href="/signup" variant="body2">
-                                Nie masz konta? Zarejetruj się
+                                Nie masz konta? Zarejestruj się
                             </Link>
                         </Grid>
                     </Grid>
