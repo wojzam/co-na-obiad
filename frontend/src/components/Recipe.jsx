@@ -1,6 +1,6 @@
 import {Box, Link, Typography, useTheme} from "@mui/material";
 
-export default function Recipe({id, name, category, ingredients, optional}) {
+export default function Recipe({id, name, category, ingredients, additionalIngredients}) {
     const theme = useTheme();
     return (
         <Link href={`/recipes/${id}`} color="inherit" underline="none" width="100%">
@@ -73,7 +73,7 @@ export default function Recipe({id, name, category, ingredients, optional}) {
                     fontWeight="light"
                     align="center"
                 >
-                    {optional}
+                    {additionalIngredients}
                 </Typography>
             </Box>
         </Link>

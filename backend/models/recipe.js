@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const ingredientsSectionSchema = new mongoose.Schema({
     _id: {type: Number, required: true},
     sectionName: {type: String, default: ""},
-    optional: {type: Boolean, default: false},
     ingredients: [{
         _id: {type: mongoose.Schema.Types.ObjectId, ref: 'Ingredient', required: true},
         name: {type: String, required: true},

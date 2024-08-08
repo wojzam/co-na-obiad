@@ -62,7 +62,7 @@ const create = async (name, category, comment, ingredients, userId) => {
         comment: comment,
         category: await validateCategory(category),
         ingredientSections: [{
-            _id: 1, sectionName: "", optional: false, ingredients: await validateIngredients(ingredients)
+            _id: 1, sectionName: "", ingredients: await validateIngredients(ingredients)
         }],
         creatorId: userId
     });
@@ -79,7 +79,7 @@ const update = async (id, name, category, comment, ingredients, userId) => {
     recipe.comment = comment;
     recipe.category = await validateCategory(category);
     recipe.ingredientSections[0] = {
-        _id: 1, sectionName: "", optional: false, ingredients: await validateIngredients(ingredients)
+        _id: 1, sectionName: "", ingredients: await validateIngredients(ingredients)
     };
     recipe.updatedAt = Date.now();
 
