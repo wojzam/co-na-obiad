@@ -2,6 +2,7 @@ import {useState} from "react";
 import {AppBar, Box, Button, Menu, MenuItem} from "@mui/material";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import useAuthData from "../hooks/useAuthData";
+import MobileMenu from './MobileMenu';
 
 const homeButtonStyle = {
     textTransform: "none",
@@ -58,7 +59,9 @@ export default function HeaderBar() {
                 <Button href="/" sx={homeButtonStyle}>
                     Co Na Obiad
                 </Button>
-                <Box display="flex" sx={{gap: 2}}>
+
+                {/* Desktop view */}
+                <Box display={{xs: 'none', md: 'flex'}} sx={{gap: 2}}>
                     <Button href="/recipes" sx={buttonStyle}>
                         Przepisy
                     </Button>
@@ -69,40 +72,45 @@ export default function HeaderBar() {
                         Dodaj przepis
                     </Button>
                 </Box>
-                {username ? (
-                    <Box mr={2}>
-                        <Button startIcon={<AccountCircleOutlinedIcon/>} onClick={handleClick} sx={buttonStyle}>
-                            {username}
-                        </Button>
-                        <Menu
-                            anchorEl={anchorEl}
-                            open={Boolean(anchorEl)}
-                            onClose={handleClose}
-                        >
-                            <MenuItem onClick={handleClose}>Moje konto</MenuItem>
-                            <MenuItem onClick={handleLogout}>Wyloguj</MenuItem>
-                        </Menu>
-                    </Box>
-                ) : (
-                    <Box display="flex" sx={{gap: 2}}>
-                        <Button
-                            variant="outlined"
-                            color="inherit"
-                            href="/login"
-                            sx={loginButtonStyle}
-                        >
-                            Logowanie
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="light"
-                            href="/signup"
-                            sx={signupButtonStyle}
-                        >
-                            Rejestracja
-                        </Button>
-                    </Box>
-                )}
+                <Box display={{xs: 'none', md: 'flex'}}>
+                    {username ? (
+                        <Box mr={2}>
+                            <Button startIcon={<AccountCircleOutlinedIcon/>} onClick={handleClick} sx={buttonStyle}>
+                                {username}
+                            </Button>
+                            <Menu
+                                anchorEl={anchorEl}
+                                open={Boolean(anchorEl)}
+                                onClose={handleClose}
+                            >
+                                <MenuItem onClick={handleClose}>Moje konto</MenuItem>
+                                <MenuItem onClick={handleLogout}>Wyloguj</MenuItem>
+                            </Menu>
+                        </Box>
+                    ) : (
+                        <Box display="flex" sx={{gap: 2}}>
+                            <Button
+                                variant="outlined"
+                                color="inherit"
+                                href="/login"
+                                sx={loginButtonStyle}
+                            >
+                                Logowanie
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="light"
+                                href="/signup"
+                                sx={signupButtonStyle}
+                            >
+                                Rejestracja
+                            </Button>
+                        </Box>
+                    )}
+                </Box>
+
+                {/* Mobile Menu */}
+                <MobileMenu/>
             </Box>
         </AppBar>
     );

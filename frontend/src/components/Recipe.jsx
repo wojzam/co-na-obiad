@@ -22,15 +22,59 @@ export default function Recipe({id, name, category, ingredients, optional}) {
                 }}
             >
                 <Box display="flex" flexDirection="column" justifyContent="center">
-                    <Typography component="h2" variant="h4" fontWeight="bold" align="center">
+                    <Typography
+                        component="h2"
+                        sx={{
+                            fontSize: {
+                                xs: theme.typography.h5.fontSize,
+                                lg: theme.typography.h4.fontSize,
+                            }
+                        }}
+                        fontWeight="bold"
+                        align="center"
+                    >
                         {name}
                     </Typography>
-                    <Typography variant="h7" fontWeight="light" align="center">
+                    <Typography
+                        sx={{
+                            fontSize: {
+                                xs: theme.typography.subtitle2.fontSize,
+                                lg: theme.typography.subtitle1.fontSize,
+                            }
+                        }}
+                        fontWeight="light"
+                        align="center"
+                    >
                         {category}
                     </Typography>
                 </Box>
-                <Typography mt={2} variant="h6" align="center">{ingredients}</Typography>
-                <Typography mt={2} variant="h6" fontWeight="light" align="center">{optional}</Typography>
+                <Typography
+                    mt={2}
+                    sx={{
+                        fontSize: {
+                            xs: theme.typography.body1.fontSize,
+                            sm: theme.typography.body1.fontSize,
+                            lg: theme.typography.h6.fontSize,
+                        }
+                    }}
+                    align="center"
+                >
+                    {ingredients}
+                </Typography>
+                <Typography
+                    mt={2}
+                    sx={{
+                        fontSize: {
+                            xs: theme.typography.body1.fontSize,
+                            sm: theme.typography.body1.fontSize,
+                            lg: theme.typography.h6.fontSize,
+                        }
+                    }}
+                    fontWeight="light"
+                    align="center"
+                >
+                    {optional}
+                </Typography>
             </Box>
         </Link>
     );

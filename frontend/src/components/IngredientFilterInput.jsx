@@ -36,7 +36,8 @@ export default function IngredientFilterInput({onFilterChange, text}) {
                 display: "flex",
                 alignItems: "center",
                 height: 50,
-                width: 300,
+                width: "auto",
+                minWidth: 300
             }}
             multiple
             id="tags-outlined"

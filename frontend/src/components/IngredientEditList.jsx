@@ -61,7 +61,7 @@ export default function IngredientEditList({control}) {
             <DragDropContext onDragEnd={handleDragEnd}>
                 <Droppable droppableId="ingredients">
                     {(provided) => (
-                        <Table sx={{minWidth: 650}} ref={provided.innerRef} {...provided.droppableProps} size={"small"}>
+                        <Table ref={provided.innerRef} {...provided.droppableProps} size={"small"}>
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Nazwa</TableCell>
@@ -90,7 +90,8 @@ export default function IngredientEditList({control}) {
                                                                 value={field.value || null}
                                                                 sx={{
                                                                     '& .MuiInputBase-root': {padding: 0.5},
-                                                                    width: 200
+                                                                    width: {xs: '100%', sm: 220},
+
                                                                 }}
                                                                 onChange={(e, v) => field.onChange(v)}
                                                                 renderInput={(params) => <TextField {...params} />}
@@ -111,7 +112,7 @@ export default function IngredientEditList({control}) {
                                                                     style: {padding: 11.5}
                                                                 }}
                                                                 value={field.value || ""}
-                                                                sx={{width: 100}}
+                                                                sx={{width: {xs: '100%', sm: 80}}}
                                                                 onChange={(e) => field.onChange(e.target.value)}
                                                             />
                                                         )}
@@ -127,7 +128,7 @@ export default function IngredientEditList({control}) {
                                                                 value={field.value || null}
                                                                 sx={{
                                                                     '& .MuiInputBase-root': {padding: 0.5},
-                                                                    width: 150
+                                                                    width: {xs: '100%', sm: 150}
                                                                 }}
                                                                 onChange={(e, v) => field.onChange(v)}
                                                                 renderInput={(params) => <TextField {...params} />}

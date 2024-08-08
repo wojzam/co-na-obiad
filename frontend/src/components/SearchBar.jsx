@@ -23,7 +23,8 @@ export default function SearchBar({onFilterChange}) {
                 display: "flex",
                 alignItems: "center",
                 height: 50,
-                width: 300,
+                width: "auto",
+                minWidth: 300
             }}
         >
             <InputBase

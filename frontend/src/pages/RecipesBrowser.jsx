@@ -9,7 +9,7 @@ const RecipesBrowser = () => {
 
     return (
         <>
-            <Typography component="h1" variant="h2" fontWeight="medium" gutterBottom> Przepisy </Typography>
+            <Typography component="h1" variant="h3" fontWeight="medium" gutterBottom> Przepisy </Typography>
             <RecipesFilter {...{setRecipes, setIsPending}} />
             {isPending ? <CircularProgress/> :
                 recipes.length > 0 ? (

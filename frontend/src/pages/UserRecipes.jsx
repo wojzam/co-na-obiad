@@ -31,17 +31,25 @@ const UserRecipes = () => {
         navigate(`/edit-recipe/${id}`);
     };
 
+    const hideOnSmallerScreen = {
+        display: {
+            xs: 'none',
+            sm: 'none',
+            md: 'table-cell',
+        }
+    }
+
     return (
         <>
-            <Typography component="h1" variant="h2" fontWeight="medium" gutterBottom>Moje przepisy</Typography>
+            <Typography component="h1" variant="h3" fontWeight="medium" gutterBottom>Moje przepisy</Typography>
             <RecipesFilter {...{setRecipes, setIsPending}} onlyUser={true}/>
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
                         <TableRow>
                             <TableCell>Nazwa</TableCell>
-                            <TableCell>Kategoria</TableCell>
-                            <TableCell>Składniki</TableCell>
+                            <TableCell sx={hideOnSmallerScreen}>Kategoria</TableCell>
+                            <TableCell sx={hideOnSmallerScreen}>Składniki</TableCell>
                             <TableCell align="right"></TableCell>
                         </TableRow>
                     </TableHead>
@@ -61,8 +69,8 @@ const UserRecipes = () => {
                                         {recipe.name}
                                     </Typography>
                                 </TableCell>
-                                <TableCell>{recipe.category}</TableCell>
-                                <TableCell>{recipe.ingredients}</TableCell>
+                                <TableCell sx={hideOnSmallerScreen}>{recipe.category}</TableCell>
+                                <TableCell sx={hideOnSmallerScreen}>{recipe.ingredients}</TableCell>
                                 <TableCell align="right">
                                     <Button
                                         variant="outlined"

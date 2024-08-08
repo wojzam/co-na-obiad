@@ -18,7 +18,7 @@ export const RecipeForm = ({onSubmit, onDelete, initialData, isEdit = false}) =>
 
     return (
         <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{mt: 3}}>
-            <Grid container spacing={2} sx={{mb: 2}}>
+            <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <TextField
                         {...register("name", {

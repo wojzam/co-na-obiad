@@ -1,9 +1,10 @@
 import {useEffect, useState} from "react";
-import {Box, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
+import {Box} from "@mui/material";
 import SearchBar from "./SearchBar";
 import IngredientFilterInput from "./IngredientFilterInput";
 import axios from "axios";
 import useAuthData from "../hooks/useAuthData";
+import SortInput from "./SortInput";
 
 export default function RecipesFilter({setRecipes, setIsPending, onlyUser = false}) {
     const {userId} = useAuthData();
@@ -20,10 +21,6 @@ export default function RecipesFilter({setRecipes, setIsPending, onlyUser = fals
             ...newFilter
         }));
     };
-
-    const handleSortChange = (event) => {
-        setSort(event.target.value);
-    }
 
     useEffect(() => {
         setIsPending(true);
@@ -45,34 +42,24 @@ export default function RecipesFilter({setRecipes, setIsPending, onlyUser = fals
     return (
         <Box
             display="flex"
-            flex-direction="row"
+            flexDirection={{xs: "column", sm: "column", md: "row"}}
             justifyContent="space-between"
-            alignItems="end"
+            alignItems="flex-start"
             width="100%"
             mb="2em"
+            gap="1em"
         >
-            <Box display="flex"
-                 flex-direction="row" gap="1em">
-
+            <Box
+                display="flex"
+                flexDirection={{xs: "column", sm: "column", md: "row"}}
+                gap="1em"
+                width="100%"
+            >
                 <SearchBar filter={filter} onFilterChange={handleFilterChange}/>
                 <IngredientFilterInput onFilterChange={handleFilterChange} text={"Zawiera"}/>
                 <IngredientFilterInput onFilterChange={handleFilterChange} text={"Nie zawiera"}/>
             </Box>
-            <Box>
-                <FormControl sx={{m: 1, minWidth: 120}}>
-                    <InputLabel id="sort-label">Sortowanie</InputLabel>
-                    <Select
-                        labelId="sort-label"
-                        id="sort-select"
-                        value={sort}
-                        label="Sortuj po"
-                        onChange={handleSortChange}
-                    >
-                        <MenuItem value="name">Nazwa</MenuItem>
-                        <MenuItem value="date">Data</MenuItem>
-                    </Select>
-                </FormControl>
-            </Box>
+            <SortInput sort={sort} setSort={setSort}/>
         </Box>
     );
 }
