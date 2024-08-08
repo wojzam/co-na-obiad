@@ -5,13 +5,29 @@ export default function IngredientFilterInput({onFilterChange, text}) {
     const ingredients = useIngredients();
 
     const handleInputChange = (event, value) => {
-        const selectedIds = value.flatMap((ing) => {
-            const id = [ing._id];
-            const childrenIds = ing.children ? ing.children.map((c) => c._id) : [];
-            return [...id, ...childrenIds];
-        });
-        onFilterChange(text === "Zawiera" ? {include: selectedIds} : {exclude: selectedIds});
+        const idsArray = extractChildrenIds(value);
+        onFilterChange(text === "Zawiera" ? {include: idsArray} : {exclude: idsArray});
     };
+
+    function extractChildrenIds(ingredientsInput) {
+        const selectedIds = new Set();
+        const ingredientMap = new Map(ingredients.map(ing => [ing._id, ing]));
+
+        const traverseAndCollectIds = (item) => {
+            if (!item || !ingredientMap.has(item._id)) return;
+
+            const ingredient = ingredientMap.get(item._id);
+            if (selectedIds.has(ingredient._id)) return;
+            selectedIds.add(ingredient._id);
+
+            if (ingredient.children) {
+                ingredient.children.forEach(child => traverseAndCollectIds(child));
+            }
+        };
+
+        ingredientsInput.forEach(ing => traverseAndCollectIds(ing));
+        return Array.from(selectedIds);
+    }
 
     return (
         <Autocomplete
