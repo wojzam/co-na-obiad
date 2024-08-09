@@ -1,8 +1,9 @@
 const Recipe = require("../models/recipe");
-const recipeDto = require("../dto/recipeDto");
+const DeletedRecipe = require("../models/deletedRecipe");
 const DishCategory = require("../models/dishCategory");
 const Ingredient = require("../models/ingredient");
-const DeletedRecipe = require("../models/deletedRecipe");
+const User = require("../models/user");
+const recipeDto = require("../dto/recipeDto");
 
 const OK = (body = {message: "OK"}) => {
     return {status: 200, body: body}
@@ -53,7 +54,16 @@ const list = async (name, include, exclude, creatorId, sort) => {
 const find = async (id) => {
     const recipe = await Recipe.findById(id);
     if (!recipe) return NOT_FOUND;
-    return OK(recipe);
+    return OK(await appendCreatorUsername(recipe));
+}
+
+async function appendCreatorUsername(recipe) {
+    const creator = await User.findById(recipe.creatorId).select('username');
+    const recipeObj = recipe.toObject();
+
+    recipeObj.creator = creator.username;
+    recipeObj.creatorId = undefined;
+    return recipeObj;
 }
 
 const create = async (name, category, comment, ingredientSections, userId) => {

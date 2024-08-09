@@ -23,15 +23,16 @@ const RecipeDetails = () => {
             <BackButton/>
             <Box my="2em" width="100%">
                 <Box mb={2}>
-                    <Typography variant="subtitle1" fontWeight="regular" sx={{
-                        textAlign: {
-                            xs: 'center',
-                            sm: 'center',
-                            md: 'left',
-                        }
-                    }}>
-                        {recipe ? recipe?.category.name : <Skeleton width={100}/>}
-                    </Typography>
+                    <Box display="flex" sx={{justifyContent: {xs: "center", sm: 'center', md: 'left'}}}>
+                        <Typography variant="subtitle1" fontWeight="regular" gutterBottom sx={{
+                            display: 'inline-block',
+                            backgroundColor: "lightgray",
+                            borderRadius: "5px",
+                            px: 1.5
+                        }}>
+                            {recipe ? recipe?.category.name : <Skeleton width={100}/>}
+                        </Typography>
+                    </Box>
                     <Typography sx={{
                         fontSize: {
                             xs: theme.typography.h3.fontSize,
@@ -43,8 +44,17 @@ const RecipeDetails = () => {
                             sm: 'center',
                             md: 'left',
                         }
-                    }} fontWeight="medium" gutterBottom>
+                    }} fontWeight="medium">
                         {recipe ? recipe?.name : <Skeleton width={300}/>}
+                    </Typography>
+                    <Typography variant="subtitle1" fontWeight="light" gutterBottom sx={{
+                        textAlign: {
+                            xs: 'center',
+                            sm: 'center',
+                            md: 'left',
+                        }
+                    }}>
+                        {recipe ? "Autor: " + recipe?.creator : <Skeleton width={100}/>}
                     </Typography>
                     <Divider/>
                 </Box>
