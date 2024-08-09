@@ -15,7 +15,7 @@ const recipeDto = (recipe) => {
     return {
         id: recipe._id,
         name: recipe.name,
-        category: recipe.category.name,
+        categories: recipe.categories.map(c => c.name).join(", "),
         ingredients: formatIngredients(ingredients),
         additionalIngredients: formatIngredients(additionalIngredients),
     };

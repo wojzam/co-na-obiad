@@ -19,7 +19,7 @@ router.get('/', filterSchema, async (req, res) => {
 router.post('/', requireToken, recipeSchema, async (req, res) => {
     try {
         const data = matchedData(req);
-        const result = await recipesService.create(data.name, data.category, data.comment, data.ingredientSections, req.userId);
+        const result = await recipesService.create(data.name, data.categories, data.comment, data.ingredientSections, req.userId);
         res.status(result.status).json(result.body);
     } catch (err) {
         res.status(500);
@@ -47,7 +47,7 @@ router.get('/:id', validId, async (req, res) => {
 router.put('/:id', requireToken, validId, recipeSchema, async (req, res) => {
     try {
         const data = matchedData(req);
-        const result = await recipesService.update(req.params.id, data.name, data.category, data.comment, data.ingredientSections, req.userId);
+        const result = await recipesService.update(req.params.id, data.name, data.categories, data.comment, data.ingredientSections, req.userId);
         res.status(result.status).json(result.body);
     } catch (err) {
         res.status(500);

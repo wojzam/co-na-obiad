@@ -40,10 +40,14 @@ const recipeSchema = [checkSchema({
         }, in: ['body'], trim: true, escape: true, isLength: {
             options: {max: 100}, errorMessage: 'Name cannot exceed 100 characters',
         },
-    }, category: {
+    }, categories: {
+        optional: true, in: ['body'], isArray: {
+            options: {max: 16}, errorMessage: 'Categories must be an array with maximum of 16 items',
+        },
+    }, 'categories.*': {
         notEmpty: {
-            errorMessage: 'Category is required',
-        }, in: ['body'], trim: true, escape: true, isLength: {
+            errorMessage: 'Category name is required',
+        }, trim: true, escape: true, isLength: {
             options: {max: 50}, errorMessage: 'Category cannot exceed 50 characters',
         },
     }, comment: {

@@ -66,11 +66,11 @@ async function appendCreatorUsername(recipe) {
     return recipeObj;
 }
 
-const create = async (name, category, comment, ingredientSections, userId) => {
+const create = async (name, categories, comment, ingredientSections, userId) => {
     const newRecipe = new Recipe({
         name: name,
         comment: comment,
-        category: await validateCategory(category),
+        categories: await validateCategories(categories),
         ingredientSections: await validateSections(ingredientSections),
         creatorId: userId
     });
@@ -78,14 +78,14 @@ const create = async (name, category, comment, ingredientSections, userId) => {
     return CREATED(await newRecipe.save());
 }
 
-const update = async (id, name, category, comment, ingredientSections, userId) => {
+const update = async (id, name, categories, comment, ingredientSections, userId) => {
     const recipe = await Recipe.findById(id);
     if (!recipe) return NOT_FOUND;
     if (!recipe.creatorId.equals(userId)) ACCESS_DENIED;
 
     recipe.name = name;
     recipe.comment = comment;
-    recipe.category = await validateCategory(category);
+    recipe.categories = await validateCategories(categories);
     recipe.ingredientSections = await validateSections(ingredientSections);
     recipe.updatedAt = Date.now();
 
@@ -105,11 +105,11 @@ const softDelete = async (recipeId, userId) => {
 }
 
 const listCategories = async () => {
-    return OK(await DishCategory.find());
+    return OK(await DishCategory.find().sort({name: 1}));
 }
 
-const validateCategory = async (category) => {
-    return await DishCategory.find({name: category}).then(c => c[0]);
+const validateCategories = async (categoryNames) => {
+    return await DishCategory.find({name: {$in: categoryNames}}).sort({name: 1});
 };
 
 function validateSections(ingredientSections) {

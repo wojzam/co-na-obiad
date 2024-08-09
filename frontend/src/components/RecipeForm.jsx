@@ -11,7 +11,7 @@ export const RecipeForm = ({onSubmit, onDelete, initialData, isEdit = false}) =>
         mode: "all",
         defaultValues: {
             name: initialData?.name || "",
-            category: initialData?.category || "Obiad",
+            categories: initialData?.categories || [],
             comment: initialData?.comment || "",
             ingredientSections: initialData?.ingredientSections || [{sectionName: "", ingredients: []}]
         }
@@ -74,16 +74,17 @@ export const RecipeForm = ({onSubmit, onDelete, initialData, isEdit = false}) =>
                 </Grid>
                 <Grid item xs={12}>
                     <Controller
-                        name="category"
+                        name="categories"
                         control={control}
-                        render={({field: {onChange, value}}) => (<Autocomplete
-                            disablePortal
-                            value={value || null}
-                            options={categories.map(category => category.name)}
-                            onChange={(e, v) => onChange(v)}
-                            disableClearable
-                            renderInput={(params) => <TextField {...params} label="Kategoria"/>}
-                        />)}
+                        render={({field: {onChange, value}}) => (
+                            <Autocomplete
+                                multiple
+                                disablePortal
+                                value={value || []}
+                                options={categories.map(categories => categories.name)}
+                                onChange={(e, v) => onChange(v)}
+                                renderInput={(params) => <TextField {...params} label="Kategorie"/>}
+                            />)}
                     />
                 </Grid>
                 <Grid item xs={12}>

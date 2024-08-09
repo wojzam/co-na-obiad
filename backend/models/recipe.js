@@ -14,10 +14,10 @@ const ingredientsSectionSchema = new mongoose.Schema({
 const recipeSchema = new mongoose.Schema({
     name: {type: String, required: true},
     comment: {type: String, default: ""},
-    category: {
-        _id: {type: Number, ref: 'DishCategory', required: true},
+    categories: [{
+        _id: {type: mongoose.Schema.Types.ObjectId, ref: 'DishCategory', required: true},
         name: {type: String, required: true},
-    },
+    }],
     ingredientSections: [ingredientsSectionSchema],
     creatorId: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
     createdAt: {type: Date, default: Date.now},

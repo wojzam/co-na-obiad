@@ -48,7 +48,7 @@ const UserRecipes = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell>Nazwa</TableCell>
-                            <TableCell sx={hideOnSmallerScreen}>Kategoria</TableCell>
+                            <TableCell sx={hideOnSmallerScreen}>Kategorie</TableCell>
                             <TableCell sx={hideOnSmallerScreen}>Składniki</TableCell>
                             <TableCell align="right"></TableCell>
                         </TableRow>
@@ -69,7 +69,7 @@ const UserRecipes = () => {
                                         {recipe.name}
                                     </Typography>
                                 </TableCell>
-                                <TableCell sx={hideOnSmallerScreen}>{recipe.category}</TableCell>
+                                <TableCell sx={hideOnSmallerScreen}>{recipe.categories}</TableCell>
                                 <TableCell sx={hideOnSmallerScreen}>
                                     {recipe.ingredients}{recipe.additionalIngredients && `, ${recipe.additionalIngredients}`} </TableCell>
                                 <TableCell align="right">

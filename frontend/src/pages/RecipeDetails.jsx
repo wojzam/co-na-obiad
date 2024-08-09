@@ -23,15 +23,20 @@ const RecipeDetails = () => {
             <BackButton/>
             <Box my="2em" width="100%">
                 <Box mb={2}>
-                    <Box display="flex" sx={{justifyContent: {xs: "center", sm: 'center', md: 'left'}}}>
-                        <Typography variant="subtitle1" fontWeight="regular" gutterBottom sx={{
-                            display: 'inline-block',
-                            backgroundColor: "lightgray",
-                            borderRadius: "5px",
-                            px: 1.5
-                        }}>
-                            {recipe ? recipe?.category.name : <Skeleton width={100}/>}
-                        </Typography>
+                    <Box display="flex" gap={1} flexWrap="wrap"
+                         sx={{justifyContent: {xs: "center", sm: 'center', md: 'left'}}}>
+                        {recipe ? recipe?.categories.map(category => (
+                                <Typography key={category._id} variant="subtitle1" fontWeight="regular" gutterBottom sx={{
+                                    display: 'inline-block',
+                                    backgroundColor: "lightgray",
+                                    borderRadius: "5px",
+                                    px: 1.5,
+                                    whiteSpace: "nowrap",
+                                }}>
+                                    {category.name}
+                                </Typography>
+                            ))
+                            : <Skeleton width={100}/>}
                     </Box>
                     <Typography sx={{
                         fontSize: {
