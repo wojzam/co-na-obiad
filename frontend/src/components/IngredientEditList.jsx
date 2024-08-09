@@ -12,20 +12,24 @@ import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 import Button from "@mui/material/Button";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {DragDropContext, Draggable, Droppable} from "@hello-pangea/dnd";
 import {Controller, useFieldArray, useWatch} from "react-hook-form";
+import {Paper} from "@mui/material";
 
-export default function IngredientEditList({control}) {
+const MAX_LENGTH = 50;
+
+export default function IngredientEditList({register, control, errors, sectionIndex, handleRemove}) {
     const ingredients = useIngredients();
     const units = useUnits();
     const {fields, append, remove, move} = useFieldArray({
         control,
-        name: "ingredients"
+        name: `ingredientSections[${sectionIndex}].ingredients`
     });
 
     const watchedIngredients = useWatch({
         control,
-        name: "ingredients",
+        name: `ingredientSections[${sectionIndex}].ingredients`,
     });
 
     useEffect(() => {
@@ -34,17 +38,17 @@ export default function IngredientEditList({control}) {
         }
     }, []);
 
-    useEffect(() => {
-        if (watchedIngredients.length > 0) {
-            const lastIngredient = watchedIngredients[watchedIngredients.length - 1];
-            if (lastIngredient && lastIngredient.name) {
-                handleAddRow();
-            }
+    const handleIngredientNameChange = (field, value, index) => {
+        field.onChange(value);
+        if (index === watchedIngredients.length - 1 && value) {
+            handleAddRow();
         }
-    }, [watchedIngredients]);
+    }
 
     const handleAddRow = () => {
-        append({name: null, value: "", unit: null});
+        if (watchedIngredients.length < MAX_LENGTH) {
+            append({name: null, value: "", unit: null});
+        }
     };
 
     const handleRemoveRow = (index) => {
@@ -57,7 +61,32 @@ export default function IngredientEditList({control}) {
     };
 
     return (
-        <Box>
+        <Paper sx={{mb: 4}}>
+            <Box display={sectionIndex > 0 ? 'flex' : 'none'} justifyContent="center" gap={10} pt={3} px={2} mt={5}
+                 mb={2}>
+                <TextField
+                    {...register(`ingredientSections[${sectionIndex}].sectionName`, {
+                        required: sectionIndex > 0 && "Nazwa sekcji jest wymagana",
+                        maxLength: {
+                            value: 10,
+                            message: "Nazwa sekcji nie może przekraczać 100 znaków"
+                        }
+                    })}
+                    label="Nazwa sekcji"
+                    fullWidth
+                    error={!!errors?.ingredientSections?.[sectionIndex]?.sectionName}
+                    helperText={errors?.ingredientSections?.[sectionIndex]?.sectionName?.message ?? ""}
+                />
+                <Button
+                    variant="text"
+                    startIcon={<DeleteOutlineIcon/>}
+                    onClick={() => handleRemove(sectionIndex)}
+                    sx={{flexGrow: 1, minWidth: 150}}
+                    color="error"
+                >
+                    Usuń sekcję
+                </Button>
+            </Box>
             <DragDropContext onDragEnd={handleDragEnd}>
                 <Droppable droppableId="ingredients">
                     {(provided) => (
@@ -81,7 +110,7 @@ export default function IngredientEditList({control}) {
                                             >
                                                 <TableCell>
                                                     <Controller
-                                                        name={`ingredients[${index}].name`}
+                                                        name={`ingredientSections[${sectionIndex}].ingredients[${index}].name`}
                                                         control={control}
                                                         render={({field}) => (
                                                             <Autocomplete
@@ -91,9 +120,8 @@ export default function IngredientEditList({control}) {
                                                                 sx={{
                                                                     '& .MuiInputBase-root': {padding: 0.5},
                                                                     width: {xs: '100%', sm: 220},
-
                                                                 }}
-                                                                onChange={(e, v) => field.onChange(v)}
+                                                                onChange={(e, v) => handleIngredientNameChange(field, v, index)}
                                                                 renderInput={(params) => <TextField {...params} />}
                                                             />
                                                         )}
@@ -101,14 +129,14 @@ export default function IngredientEditList({control}) {
                                                 </TableCell>
                                                 <TableCell align="right">
                                                     <Controller
-                                                        name={`ingredients[${index}].value`}
+                                                        name={`ingredientSections[${sectionIndex}].ingredients[${index}].value`}
                                                         control={control}
                                                         render={({field}) => (
                                                             <TextField
                                                                 type="number"
                                                                 inputProps={{
                                                                     min: 0,
-                                                                    max: 99999,
+                                                                    max: 9999,
                                                                     style: {padding: 11.5}
                                                                 }}
                                                                 value={field.value || ""}
@@ -120,7 +148,7 @@ export default function IngredientEditList({control}) {
                                                 </TableCell>
                                                 <TableCell align="right">
                                                     <Controller
-                                                        name={`ingredients[${index}].unit`}
+                                                        name={`ingredientSections[${sectionIndex}].ingredients[${index}].unit`}
                                                         control={control}
                                                         render={({field}) => (
                                                             <Autocomplete
@@ -151,14 +179,17 @@ export default function IngredientEditList({control}) {
                     )}
                 </Droppable>
             </DragDropContext>
-            <Button
-                variant="outlined"
-                startIcon={<AddCircleOutlineIcon/>}
-                onClick={handleAddRow}
-                sx={{mt: 2}}
-            >
-                Dodaj składnik
-            </Button>
-        </Box>
+            <Box display="flex" justifyContent="center" px={2} py={3}>
+                <Button
+                    variant="outlined"
+                    startIcon={<AddCircleOutlineIcon/>}
+                    onClick={handleAddRow}
+                    fullWidth
+                    disabled={watchedIngredients.length >= MAX_LENGTH}
+                >
+                    Dodaj składnik
+                </Button>
+            </Box>
+        </Paper>
     );
 }

@@ -13,12 +13,7 @@ export default function CreateRecipe() {
     const onSubmit = (data) => {
         setErrorMessage("");
 
-        axiosInstance.post("/api/recipes", {
-            name: data.name,
-            comment: data.comment,
-            category: data.category,
-            ingredients: data.ingredients.filter((i) => i.name),
-        }, {
+        axiosInstance.post("/api/recipes", data, {
             headers: {
                 "Content-Type": "application/json"
             },

@@ -16,12 +16,7 @@ export default function EditRecipe() {
     const onSubmit = (data) => {
         setErrorMessage("");
 
-        axiosInstance.put(`/api/recipes/${id}`, {
-            name: data.name,
-            comment: data.comment,
-            category: data.category,
-            ingredients: data.ingredients.filter((i) => i.name)
-        }, {
+        axiosInstance.put(`/api/recipes/${id}`, data, {
             headers: {
                 "Content-Type": "application/json"
             },
@@ -59,11 +54,7 @@ export default function EditRecipe() {
                             name: recipe.name,
                             category: recipe.category.name,
                             comment: recipe.comment,
-                            ingredients: recipe.ingredientSections[0].ingredients.map(i => ({
-                                name: i?.name || "",
-                                value: i?.value || "",
-                                unit: i?.unit || null
-                            }))
+                            ingredientSections: recipe.ingredientSections
                         }}/> : <CircularProgress/>}
                 </Box>
             </Container></>

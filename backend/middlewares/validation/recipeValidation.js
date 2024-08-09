@@ -91,19 +91,55 @@ const recipeSchema = [checkSchema({
             errorMessage: 'Comment cannot exceed 10000 characters',
         },
     },
-    ingredients: {
+    ingredientSections: {
         in: ['body'],
         isArray: {
-            options: {max: 100},
-            errorMessage: 'Ingredients must be an array with maximum of 100 items',
+            options: {max: 5},
+            errorMessage: 'Ingredient section must be an array with maximum of 5 items',
         }
     },
-    'ingredients.*': {
-        in: ['body'],
+    'ingredientSections.*.sectionName': {
+        optional: true,
+        trim: true,
+        escape: true,
         isLength: {
-            options: {max: 255},
-            errorMessage: 'Each ingredient cannot exceed 255 characters',
+            options: {max: 100},
+            errorMessage: 'Section name cannot exceed 100 characters',
+        },
+    },
+    'ingredientSections.*.ingredients': {
+        isArray: {
+            options: {max: 50},
+            errorMessage: 'Ingredients must be an array with a maximum of 50 items',
         }
+    },
+    'ingredientSections.*.ingredients.*.name': {
+        notEmpty: {
+            errorMessage: 'Ingredient name is required',
+        },
+        trim: true,
+        escape: true,
+        isLength: {
+            options: {max: 100},
+            errorMessage: 'Ingredient name cannot exceed 100 characters',
+        },
+    },
+    'ingredientSections.*.ingredients.*.value': {
+        optional: true,
+        isFloat: {
+            options: {min: 0, max: 9999},
+            errorMessage: 'Ingredient value must be a number between 0-9999',
+        },
+        toFloat: true,
+    },
+    'ingredientSections.*.ingredients.*.unit': {
+        optional: true,
+        trim: true,
+        escape: true,
+        isLength: {
+            options: {max: 20},
+            errorMessage: 'Unit cannot exceed 20 characters',
+        },
     },
 }), validRequest];
 

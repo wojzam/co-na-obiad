@@ -1,8 +1,10 @@
 import {Autocomplete, Box, Button, CircularProgress, Grid, TextField, Typography} from "@mui/material";
 import IngredientEditList from "./IngredientEditList";
 import {useCategories} from "../hooks/useCachedData";
-import {Controller, useForm} from "react-hook-form";
+import {Controller, useFieldArray, useForm, useWatch} from "react-hook-form";
 import DeleteButton from "./DeleteButton";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import React from "react";
 
 export const RecipeForm = ({onSubmit, onDelete, initialData, isEdit = false}) => {
     const {register, control, handleSubmit, formState: {errors, isSubmitting}} = useForm({
@@ -11,13 +13,49 @@ export const RecipeForm = ({onSubmit, onDelete, initialData, isEdit = false}) =>
             name: initialData?.name || "",
             category: initialData?.category || "Obiad",
             comment: initialData?.comment || "",
-            ingredients: initialData?.ingredients || []
+            ingredientSections: initialData?.ingredientSections || [{sectionName: "", ingredients: []}]
         }
     });
+
+    const {fields: sectionFields, append: appendSection, remove: removeSection} = useFieldArray({
+        control,
+        name: "ingredientSections"
+    });
+
+    const watchedSection = useWatch({
+        control,
+        name: `ingredientSections`,
+    });
+
     const categories = useCategories();
 
+    const handleAddSection = () => {
+        appendSection({sectionName: "", ingredients: []});
+    };
+
+    const handleRemoveSection = (index) => {
+        removeSection(index);
+    };
+
+    const filterData = (data) => {
+        data.ingredientSections = filterIngredientSections(data);
+        onSubmit(data);
+    };
+
+    function filterIngredientSections(data) {
+        return data.ingredientSections.map((section) => ({
+            ...section,
+            ingredients: section.ingredients.map((ingredient) => {
+                const filteredIngredient = {name: ingredient.name};
+                if (ingredient.value || ingredient.value === 0) filteredIngredient.value = ingredient.value;
+                if (ingredient.unit) filteredIngredient.unit = ingredient.unit;
+                return filteredIngredient;
+            }).filter((ingredient) => ingredient.name),
+        }));
+    }
+
     return (
-        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{mt: 3}}>
+        <Box component="form" noValidate onSubmit={handleSubmit(filterData)} sx={{mt: 3}}>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <TextField
@@ -30,9 +68,9 @@ export const RecipeForm = ({onSubmit, onDelete, initialData, isEdit = false}) =>
                         })}
                         label="Nazwa"
                         fullWidth
+                        error={!!errors.name}
+                        helperText={errors.name ? errors.name.message : ""}
                     />
-                    {errors.name && (
-                        <Typography component="h6" color="error" gutterBottom> {errors.name.message}</Typography>)}
                 </Grid>
                 <Grid item xs={12}>
                     <Controller
@@ -60,15 +98,29 @@ export const RecipeForm = ({onSubmit, onDelete, initialData, isEdit = false}) =>
                         fullWidth
                         multiline
                         rows={12}
+                        error={!!errors.comment}
+                        helperText={errors.comment ? errors.comment.message : ""}
                     />
-                    {errors.comment && (
-                        <Typography component="h6" color="error" gutterBottom> {errors.comment.message}</Typography>)}
                 </Grid>
                 <Grid item xs={12}>
                     <Typography variant="h5" marginTop={3} fontWeight="medium" gutterBottom>
                         Składniki:
                     </Typography>
-                    <IngredientEditList control={control}/>
+                    {sectionFields.map((section, index) => (
+                        <Box key={section.id}>
+                            <IngredientEditList register={register} control={control} errors={errors}
+                                                sectionIndex={index} handleRemove={handleRemoveSection}/>
+                        </Box>
+                    ))}
+                    <Button
+                        variant="outlined"
+                        startIcon={<AddCircleOutlineIcon/>}
+                        onClick={handleAddSection}
+                        fullWidth
+                        disabled={watchedSection.length >= 5}
+                    >
+                        Dodaj sekcję składników
+                    </Button>
                 </Grid>
             </Grid>
             {isSubmitting &&

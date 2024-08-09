@@ -56,21 +56,19 @@ const find = async (id) => {
     return OK(recipe);
 }
 
-const create = async (name, category, comment, ingredients, userId) => {
+const create = async (name, category, comment, ingredientSections, userId) => {
     const newRecipe = new Recipe({
         name: name,
         comment: comment,
         category: await validateCategory(category),
-        ingredientSections: [{
-            _id: 1, sectionName: "", ingredients: await validateIngredients(ingredients)
-        }],
+        ingredientSections: await validateSections(ingredientSections),
         creatorId: userId
     });
 
     return CREATED(await newRecipe.save());
 }
 
-const update = async (id, name, category, comment, ingredients, userId) => {
+const update = async (id, name, category, comment, ingredientSections, userId) => {
     const recipe = await Recipe.findById(id);
     if (!recipe) return NOT_FOUND;
     if (!recipe.creatorId.equals(userId)) ACCESS_DENIED;
@@ -78,9 +76,7 @@ const update = async (id, name, category, comment, ingredients, userId) => {
     recipe.name = name;
     recipe.comment = comment;
     recipe.category = await validateCategory(category);
-    recipe.ingredientSections[0] = {
-        _id: 1, sectionName: "", ingredients: await validateIngredients(ingredients)
-    };
+    recipe.ingredientSections = await validateSections(ingredientSections);
     recipe.updatedAt = Date.now();
 
     return OK(await recipe.save());
@@ -105,6 +101,16 @@ const listCategories = async () => {
 const validateCategory = async (category) => {
     return await DishCategory.find({name: category}).then(c => c[0]);
 };
+
+function validateSections(ingredientSections) {
+    return Promise.all(
+        ingredientSections.map(async (section, index) => ({
+            _id: index + 1,
+            sectionName: section.sectionName,
+            ingredients: await validateIngredients(section.ingredients),
+        }))
+    );
+}
 
 const validateIngredients = async (ingredients) => {
     const ingredientNames = [...new Set(ingredients.map(ing => ing.name))];
