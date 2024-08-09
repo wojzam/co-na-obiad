@@ -70,7 +70,8 @@ const UserRecipes = () => {
                                     </Typography>
                                 </TableCell>
                                 <TableCell sx={hideOnSmallerScreen}>{recipe.category}</TableCell>
-                                <TableCell sx={hideOnSmallerScreen}>{recipe.ingredients}</TableCell>
+                                <TableCell sx={hideOnSmallerScreen}>
+                                    {recipe.ingredients}{recipe.additionalIngredients && `, ${recipe.additionalIngredients}`} </TableCell>
                                 <TableCell align="right">
                                     <Button
                                         variant="outlined"
