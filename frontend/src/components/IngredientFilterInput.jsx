@@ -10,23 +10,25 @@ export default function IngredientFilterInput({onFilterChange, text}) {
     };
 
     function extractChildrenIds(ingredientsInput) {
-        const selectedIds = new Set();
         const ingredientMap = new Map(ingredients.map(ing => [ing._id, ing]));
 
-        const traverseAndCollectIds = (item) => {
+        const traverseAndCollectIds = (item, collectedIds) => {
             if (!item || !ingredientMap.has(item._id)) return;
 
             const ingredient = ingredientMap.get(item._id);
-            if (selectedIds.has(ingredient._id)) return;
-            selectedIds.add(ingredient._id);
+            if (collectedIds.has(ingredient._id)) return;
+            collectedIds.add(ingredient._id);
 
             if (ingredient.children) {
-                ingredient.children.forEach(child => traverseAndCollectIds(child));
+                ingredient.children.forEach(child => traverseAndCollectIds(child, collectedIds));
             }
         };
 
-        ingredientsInput.forEach(ing => traverseAndCollectIds(ing));
-        return Array.from(selectedIds);
+        return ingredientsInput.map(ing => {
+            const collectedIds = new Set();
+            traverseAndCollectIds(ing, collectedIds);
+            return Array.from(collectedIds);
+        });
     }
 
     return (

@@ -14,8 +14,8 @@ const ACCESS_DENIED = {status: 403, body: {message: 'Access denied'}};
 const NOT_FOUND = {status: 404, body: {message: 'Recipe not found'}};
 
 const list = async (name, include, exclude, creatorId, sort) => {
-    const includeIds = include ? include.split(",") : [];
-    const excludeIds = exclude ? exclude.split(",") : [];
+    const includeIds = include ? include.map(i => i.split(",")) : [];
+    const excludeIds = exclude ? exclude.map(i => i.split(",")) : [];
 
     let query = name ? [{name: {$regex: name, $options: 'i'}}] : [];
 
@@ -25,17 +25,17 @@ const list = async (name, include, exclude, creatorId, sort) => {
 
     if (includeIds.length > 0) {
         query.push({
-            $or: [
-                {'ingredientSections.ingredients._id': {$in: includeIds}}
-            ]
+            $and: includeIds.map(children => ({
+                'ingredientSections.ingredients._id': {$in: children}
+            }))
         });
     }
 
     if (excludeIds.length > 0) {
         query.push({
-            $and: [
-                {'ingredientSections.ingredients._id': {$nin: excludeIds}}
-            ]
+            $and: excludeIds.map(children => ({
+                'ingredientSections.ingredients._id': {$nin: children}
+            }))
         });
     }
 

@@ -25,15 +25,17 @@ export default function RecipesFilter({setRecipes, setIsPending, onlyUser = fals
     useEffect(() => {
         setIsPending(true);
 
-        let endpoint =
-            `/api/recipes?name=${filter.name}&include=${filter.include}&exclude=${filter.exclude}&sort=${sort}`;
+        let endpoint = `/api/recipes?name=${filter.name}` +
+            filter.include.map(i => `&include[]=${i}`).join("") +
+            filter.exclude.map(i => `&exclude[]=${i}`).join("") +
+            `&sort=${sort}`;
         if (onlyUser && userId) endpoint = endpoint + `&creatorId=${userId}`;
 
         axios.get(endpoint)
             .then((response) => {
                 setRecipes(response.data);
                 setIsPending(false);
-            }).catch(() => {
+            }).catch((error) => {
             setRecipes([]);
             setIsPending(false);
         });
