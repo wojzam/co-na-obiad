@@ -68,7 +68,7 @@ export default function IngredientEditList({register, control, errors, sectionIn
                     {...register(`ingredientSections[${sectionIndex}].sectionName`, {
                         required: sectionIndex > 0 && "Nazwa sekcji jest wymagana",
                         maxLength: {
-                            value: 10,
+                            value: 100,
                             message: "Nazwa sekcji nie może przekraczać 100 znaków"
                         }
                     })}
