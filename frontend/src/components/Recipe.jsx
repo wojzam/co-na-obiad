@@ -32,6 +32,7 @@ export default function Recipe({id, name, categories, ingredients, additionalIng
                         }}
                         fontWeight="bold"
                         align="center"
+                        gutterBottom
                     >
                         {name}
                     </Typography>
