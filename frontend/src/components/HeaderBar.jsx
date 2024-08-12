@@ -83,7 +83,7 @@ export default function HeaderBar() {
                                 open={Boolean(anchorEl)}
                                 onClose={handleClose}
                             >
-                                <MenuItem onClick={handleClose}>Moje konto</MenuItem>
+                                <MenuItem onClick={() => window.location.href = '/user-profile'}>Moje konto</MenuItem>
                                 <MenuItem onClick={handleLogout}>Wyloguj</MenuItem>
                             </Menu>
                         </Box>

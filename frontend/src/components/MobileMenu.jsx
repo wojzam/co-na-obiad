@@ -92,7 +92,7 @@ export default function MobileMenu() {
                                         {username}
                                     </Button>
                                     <Button
-                                        onClick={() => window.location.href = '/my-account'}
+                                        onClick={() => window.location.href = '/user-profile'}
                                         sx={buttonStyle}
                                     >
                                         Moje konto

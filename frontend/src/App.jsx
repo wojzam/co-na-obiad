@@ -6,6 +6,7 @@ import UserRecipes from "./pages/UserRecipes";
 import RecipeDetails from "./pages/RecipeDetails";
 import CreateRecipe from "./pages/CreateRecipe";
 import EditRecipe from "./pages/EditRecipe";
+import UserProfile from "./pages/UserProfile";
 import Ingredients from "./pages/Ingredients";
 import Healthcheck from "./pages/Healthcheck";
 import ThemeSwitcher from "./components/ThemeSwitcher";
@@ -38,6 +39,7 @@ export default function App() {
                         <Route path="/recipes/:id" element={<RecipeDetails/>}/>
                         <Route path="/create-recipe" element={<CreateRecipe/>}/>
                         <Route path="/edit-recipe/:id" element={<EditRecipe/>}/>
+                        <Route path="/user-profile" element={<UserProfile/>}/>
                         <Route path="/ingredients" element={<Ingredients/>}/>
                         <Route path="/healthcheck" element={<Healthcheck/>}/>
                     </Routes>
