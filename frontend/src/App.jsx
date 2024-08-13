@@ -42,6 +42,7 @@ export default function App() {
                         <Route path="/user-profile" element={<UserProfile/>}/>
                         <Route path="/ingredients" element={<Ingredients/>}/>
                         <Route path="/healthcheck" element={<Healthcheck/>}/>
+                        <Route path="*" element={<Navigate replace to="/" />} />
                     </Routes>
                 </main>
             </ThemeProvider>
