@@ -24,7 +24,8 @@ export default function SortInput({sort, setSort}) {
                     onChange={handleSortChange}
                 >
                     <MenuItem value="name">Nazwa</MenuItem>
-                    <MenuItem value="date">Data</MenuItem>
+                    <MenuItem value="date_desc">Od najnowszych</MenuItem>
+                    <MenuItem value="date_asc">Od najstarszych</MenuItem>
                 </Select>
             </FormControl>
         </Box>

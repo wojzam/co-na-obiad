@@ -41,7 +41,18 @@ const list = async (name, include, exclude, creatorId, sort) => {
     }
 
     const findQuery = query.length > 0 ? {$and: query} : {};
-    const sortQuery = sort === 'date' ? {createdAt: -1} : {name: 1};
+    let sortQuery;
+    switch (sort) {
+        case 'date_desc':
+            sortQuery = {createdAt: -1};
+            break;
+        case 'date_asc':
+            sortQuery = {createdAt: 1};
+            break;
+        default:
+            sortQuery = {name: 1};
+            break;
+    }
 
     const recipes = await Recipe
         .find(findQuery)
