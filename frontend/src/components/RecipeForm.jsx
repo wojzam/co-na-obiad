@@ -12,7 +12,7 @@ export const RecipeForm = ({onSubmit, onDelete, initialData, isEdit = false}) =>
         defaultValues: {
             name: initialData?.name || "",
             categories: initialData?.categories || [],
-            comment: initialData?.comment || "",
+            preparation: initialData?.preparation || "",
             ingredientSections: initialData?.ingredientSections || [{sectionName: "", ingredients: []}]
         }
     });
@@ -89,18 +89,18 @@ export const RecipeForm = ({onSubmit, onDelete, initialData, isEdit = false}) =>
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
-                        {...register("comment", {
+                        {...register("preparation", {
                             maxLength: {
                                 value: 10000,
-                                message: "Komentarz nie może przekraczać 10000 znaków"
+                                message: "Przygotowanie nie może przekraczać 10000 znaków"
                             }
                         })}
-                        label="Komentarz"
+                        label="Przygotowanie"
                         fullWidth
                         multiline
                         rows={12}
-                        error={!!errors.comment}
-                        helperText={errors.comment ? errors.comment.message : ""}
+                        error={!!errors.preparation}
+                        helperText={errors.preparation ? errors.preparation.message : ""}
                     />
                 </Grid>
                 <Grid item xs={12}>

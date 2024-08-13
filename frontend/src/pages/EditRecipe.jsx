@@ -53,7 +53,7 @@ export default function EditRecipe() {
                         <RecipeForm onSubmit={onSubmit} onDelete={onDelete} isEdit={true} initialData={{
                             name: recipe.name,
                             categories: recipe.categories.map(c => c.name),
-                            comment: recipe.comment,
+                            preparation: recipe.preparation,
                             ingredientSections: recipe.ingredientSections
                         }}/> : <CircularProgress/>}
                 </Box>

@@ -66,10 +66,10 @@ async function appendCreatorUsername(recipe) {
     return recipeObj;
 }
 
-const create = async (name, categories, comment, ingredientSections, userId) => {
+const create = async (name, categories, preparation, ingredientSections, userId) => {
     const newRecipe = new Recipe({
         name: name,
-        comment: comment,
+        preparation: preparation,
         categories: await validateCategories(categories),
         ingredientSections: await validateSections(ingredientSections),
         creatorId: userId
@@ -78,13 +78,13 @@ const create = async (name, categories, comment, ingredientSections, userId) => 
     return CREATED(await newRecipe.save());
 }
 
-const update = async (id, name, categories, comment, ingredientSections, userId) => {
+const update = async (id, name, categories, preparation, ingredientSections, userId) => {
     const recipe = await Recipe.findById(id);
     if (!recipe) return NOT_FOUND;
     if (!recipe.creatorId.equals(userId)) ACCESS_DENIED;
 
     recipe.name = name;
-    recipe.comment = comment;
+    recipe.preparation = preparation;
     recipe.categories = await validateCategories(categories);
     recipe.ingredientSections = await validateSections(ingredientSections);
     recipe.updatedAt = Date.now();

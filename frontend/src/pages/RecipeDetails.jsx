@@ -102,10 +102,10 @@ const RecipeDetails = () => {
                         )}
                     </Grid>
                     <Grid item sm={8} md={5} lg={8} xl={10}>
-                        {recipe?.comment && (
+                        {recipe?.preparation && (
                             <>
                                 <Typography marginTop={3} variant="h5" fontWeight="medium" gutterBottom>
-                                    Komentarz:
+                                    Przygotowanie:
                                 </Typography>
                                 <Typography sx={{
                                     fontSize: {
@@ -114,7 +114,7 @@ const RecipeDetails = () => {
                                         lg: theme.typography.h6.fontSize,
                                     }
                                 }} fontWeight="regular" style={{whiteSpace: 'pre-line'}}>
-                                    {recipe.comment}
+                                    {recipe.preparation}
                                 </Typography>
                             </>
                         )}

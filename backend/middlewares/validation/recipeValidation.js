@@ -50,11 +50,11 @@ const recipeSchema = [checkSchema({
         }, trim: true, escape: true, isLength: {
             options: {max: 50}, errorMessage: 'Category cannot exceed 50 characters',
         },
-    }, comment: {
+    }, preparation: {
         optional: true, in: ['body'], trim: true, customSanitizer: {
             options: (value) => customEscape(value),
         }, isLength: {
-            options: {max: 10000}, errorMessage: 'Comment cannot exceed 10000 characters',
+            options: {max: 10000}, errorMessage: 'Preparation cannot exceed 10000 characters',
         },
     }, ingredientSections: {
         in: ['body'], isArray: {
