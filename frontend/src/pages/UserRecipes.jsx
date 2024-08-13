@@ -15,6 +15,10 @@ import {
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import {useNavigate} from "react-router-dom";
 import RecipesFilter from "../components/RecipesFilter";
+import truncateText from "../utils/truncateText";
+
+const maxNameLength = 80;
+const maxIngredientsLength = 200;
 
 const UserRecipes = () => {
     const [recipes, setRecipes] = useState([]);
@@ -65,13 +69,21 @@ const UserRecipes = () => {
                                 }}
                             >
                                 <TableCell>
-                                    <Typography component="h4" fontWeight="bold">
-                                        {recipe.name}
+                                    <Typography component="h4" fontWeight="bold"
+                                                sx={{
+                                                    wordBreak: 'break-word',
+                                                    overflowWrap: 'break-word',
+                                                }}>
+                                        {truncateText(recipe.name, maxNameLength)}
                                     </Typography>
                                 </TableCell>
                                 <TableCell sx={hideOnSmallerScreen}>{recipe.categories}</TableCell>
                                 <TableCell sx={hideOnSmallerScreen}>
-                                    {recipe.ingredients}{recipe.additionalIngredients && `, ${recipe.additionalIngredients}`} </TableCell>
+                                    {truncateText(
+                                        recipe.ingredients +
+                                        (recipe.additionalIngredients && `, ${recipe.additionalIngredients}`),
+                                        maxIngredientsLength)}
+                                </TableCell>
                                 <TableCell align="right">
                                     <Button
                                         variant="outlined"

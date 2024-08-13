@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Box, Button, Drawer, IconButton} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
@@ -27,6 +27,21 @@ const signupButtonStyle = {
 export default function MobileMenu() {
     const {logout, username} = useAuthData();
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const [menuHeight, setMenuHeight] = useState('100vh');
+
+    useEffect(() => {
+        const handleResize = () => {
+            const height = window.innerHeight;
+            setMenuHeight(`${height}px`);
+        };
+
+        handleResize();
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     const toggleDrawer = (open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -59,7 +74,7 @@ export default function MobileMenu() {
                 onClose={toggleDrawer(false)}
             >
                 <Box
-                    sx={{width: 250}}
+                    sx={{width: 250, height: menuHeight}}
                     role="presentation"
                     onClick={toggleDrawer(false)}
                     onKeyDown={toggleDrawer(false)}
@@ -68,7 +83,7 @@ export default function MobileMenu() {
                         display="flex"
                         flexDirection="column"
                         justifyContent="space-between"
-                        height="100vh"
+                        height="100%"
                         p={2}
                     >
                         <Box display="flex" flexDirection="column" gap={2} p={2}>

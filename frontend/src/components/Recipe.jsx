@@ -1,4 +1,7 @@
 import {Box, Link, Typography, useTheme} from "@mui/material";
+import truncateText from "../utils/truncateText";
+
+const maxTextLength = 200;
 
 export default function Recipe({id, name, categories, ingredients, additionalIngredients}) {
     const theme = useTheme();
@@ -10,14 +13,12 @@ export default function Recipe({id, name, categories, ingredients, additionalIng
                     px: 5,
                     py: 2,
                     height: "100%",
-                    border: "solid",
-                    borderColor: "transparent",
                     borderRadius: 8,
                     background: theme.palette.neutral.main,
                     boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.16)",
                     "&:hover": {
                         background: theme.palette.neutral.darker,
-                        borderColor: "#d1d1d1",
+                        boxShadow: "3px 9px 12px rgba(0, 0, 0, 0.50)",
                     },
                 }}
             >
@@ -28,7 +29,9 @@ export default function Recipe({id, name, categories, ingredients, additionalIng
                             fontSize: {
                                 xs: theme.typography.h5.fontSize,
                                 lg: theme.typography.h4.fontSize,
-                            }
+                            },
+                            wordBreak: 'break-word',
+                            overflowWrap: 'break-word',
                         }}
                         fontWeight="bold"
                         align="center"
@@ -67,7 +70,7 @@ export default function Recipe({id, name, categories, ingredients, additionalIng
                     }}
                     align="center"
                 >
-                    {ingredients}
+                    {truncateText(ingredients, maxTextLength)}
                 </Typography>
                 <Typography
                     mt={2}
@@ -81,7 +84,7 @@ export default function Recipe({id, name, categories, ingredients, additionalIng
                     fontWeight="light"
                     align="center"
                 >
-                    {additionalIngredients}
+                    {truncateText(additionalIngredients, maxTextLength)}
                 </Typography>
             </Box>
         </Link>

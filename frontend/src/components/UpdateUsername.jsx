@@ -46,7 +46,7 @@ const UpdateUsername = () => {
             onSubmit={handleSubmit(onSubmit)}
             sx={{mt: 5, width: '100%'}}
         >
-            <Typography component="h2" variant="h5" gutterBottom> Zmień nazwę użytkownika </Typography>
+            <Typography component="h2" variant="h6" gutterBottom> Zmień nazwę użytkownika </Typography>
             <MessageBox message={message}/>
             <MessageBox message={errors.root} isError={true}/>
             <Controller

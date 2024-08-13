@@ -48,7 +48,9 @@ const RecipeDetails = () => {
                             xs: 'center',
                             sm: 'center',
                             md: 'left',
-                        }
+                        },
+                        wordBreak: 'break-word',
+                        overflowWrap: 'break-word',
                     }} fontWeight="medium">
                         {recipe ? recipe?.name : <Skeleton width={300}/>}
                     </Typography>
@@ -101,7 +103,7 @@ const RecipeDetails = () => {
                             <Skeleton width={600}/>
                         )}
                     </Grid>
-                    <Grid item sm={8} md={5} lg={8} xl={10}>
+                    <Grid item sm={8} md={8} lg={8} xl={10}>
                         {recipe?.preparation && (
                             <>
                                 <Typography marginTop={3} variant="h5" fontWeight="medium" gutterBottom>
@@ -112,7 +114,9 @@ const RecipeDetails = () => {
                                         xs: theme.typography.body1.fontSize,
                                         sm: theme.typography.body1.fontSize,
                                         lg: theme.typography.h6.fontSize,
-                                    }
+                                    },
+                                    wordBreak: 'break-word',
+                                    overflowWrap: 'break-word',
                                 }} fontWeight="regular" style={{whiteSpace: 'pre-line'}}>
                                     {recipe.preparation}
                                 </Typography>
