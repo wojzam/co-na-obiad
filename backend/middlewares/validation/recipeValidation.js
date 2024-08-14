@@ -30,6 +30,14 @@ const filterSchema = [checkSchema({
         optional: true, in: ['query'], trim: true, escape: true, isLength: {
             options: {max: 20}, errorMessage: 'Sort cannot exceed 20 characters'
         },
+    }, page: {
+        optional: true, in: ['query'], trim: true, escape: true, isInt: {
+            options: {min: 1, max: 10000}, errorMessage: 'Page must be a number between 1-10000'
+        }
+    }, pageSize: {
+        optional: true, in: ['query'], trim: true, escape: true, isInt: {
+            options: {min: 1, max: 100}, errorMessage: 'Page size must be a number between 1-100'
+        }
     },
 }), validRequest];
 

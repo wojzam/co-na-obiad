@@ -1,7 +1,9 @@
 import {useState} from "react";
 import {
+    Box,
     Button,
     CircularProgress,
+    Grow,
     Paper,
     Table,
     TableBody,
@@ -14,7 +16,7 @@ import {
 } from "@mui/material";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import {useNavigate} from "react-router-dom";
-import RecipesFilter from "../components/RecipesFilter";
+import RecipesFetcher from "../components/RecipesFetcher";
 import truncateText from "../utils/truncateText";
 
 const maxNameLength = 80;
@@ -46,7 +48,7 @@ const UserRecipes = () => {
     return (
         <>
             <Typography component="h1" variant="h3" fontWeight="medium" gutterBottom>Moje przepisy</Typography>
-            <RecipesFilter {...{setRecipes, setIsPending}} onlyUser={true}/>
+            <RecipesFetcher {...{setRecipes, isPending, setIsPending}} onlyUser={true}/>
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
@@ -98,8 +100,13 @@ const UserRecipes = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            {isPending ? <CircularProgress/> :
-                recipes.length === 0 && <Typography variant="h6" component="p">Brak wyników</Typography>}
+            {isPending ?
+                <Box display="flex" justifyContent="center" width="100%" mt={7}>
+                    <CircularProgress size={100}/>
+                </Box> : recipes && recipes.length === 0 &&
+                <Grow in timeout={500}>
+                    <Typography mt={2} variant="h5" component="p">Brak wyników</Typography>
+                </Grow>}
         </>
     );
 };

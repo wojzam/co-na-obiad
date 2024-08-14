@@ -14,14 +14,14 @@ const CREATED = (body) => {
 const ACCESS_DENIED = {status: 403, body: {message: 'Access denied'}};
 const NOT_FOUND = {status: 404, body: {message: 'Recipe not found'}};
 
-const list = async (name, include, exclude, creatorId, sort) => {
+const list = async (name, include, exclude, creatorId, sort, page = 1, pageSize = 10) => {
     const includeIds = include ? include.map(i => i.split(",")) : [];
     const excludeIds = exclude ? exclude.map(i => i.split(",")) : [];
 
     let query = name ? [{name: {$regex: name, $options: 'i'}}] : [];
 
     if (creatorId) {
-        query.push({creatorId: creatorId})
+        query.push({creatorId: creatorId});
     }
 
     if (includeIds.length > 0) {
@@ -41,6 +41,7 @@ const list = async (name, include, exclude, creatorId, sort) => {
     }
 
     const findQuery = query.length > 0 ? {$and: query} : {};
+
     let sortQuery;
     switch (sort) {
         case 'date_desc':
@@ -57,7 +58,9 @@ const list = async (name, include, exclude, creatorId, sort) => {
     const recipes = await Recipe
         .find(findQuery)
         .collation({locale: 'en', strength: 2})
-        .sort(sortQuery);
+        .sort(sortQuery)
+        .skip((page - 1) * pageSize)
+        .limit(pageSize);
 
     return OK(recipes?.map(recipe => recipeDto(recipe)));
 }

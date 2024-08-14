@@ -1,7 +1,7 @@
 import {useState} from "react";
-import {CircularProgress, Grid, Grow, Typography} from "@mui/material";
+import {Box, CircularProgress, Grid, Grow, Typography} from "@mui/material";
 import Recipe from "../components/Recipe";
-import RecipesFilter from "../components/RecipesFilter";
+import RecipesFetcher from "../components/RecipesFetcher.jsx";
 
 const RecipesBrowser = () => {
     const [recipes, setRecipes] = useState([]);
@@ -10,20 +10,23 @@ const RecipesBrowser = () => {
     return (
         <>
             <Typography component="h1" variant="h3" fontWeight="medium" gutterBottom> Przepisy </Typography>
-            <RecipesFilter {...{setRecipes, setIsPending}} />
-            {isPending ? <CircularProgress/> :
-                recipes.length > 0 ? (
-                        <Grid container spacing={3} columns={{sm: 2, md: 8, lg: 8, xl: 12}} alignItems="stretch">
-                            {recipes && recipes.map((recipe, index) => (
-                                <Grow in={recipes != null} timeout={500} key={index}>
-                                    <Grid item sm={2} md={4} lg={4} xl={4} key={index} width="100%">
-                                        <Recipe key={recipe._id} {...recipe} />
-                                    </Grid>
-                                </Grow>
-                            ))}
-                        </Grid>)
-                    : <Typography variant="h6" component="p">Brak wyników</Typography>
-            }
+            <RecipesFetcher {...{setRecipes, isPending, setIsPending}}/>
+            {recipes && <Grid container spacing={3} columns={{sm: 2, md: 8, lg: 8, xl: 12}} alignItems="stretch">
+                {recipes.map(recipe => (
+                    <Grow in timeout={400} key={recipe.id}>
+                        <Grid item sm={2} md={4} lg={4} xl={4} width="100%">
+                            <Recipe key={recipe.id} {...recipe} />
+                        </Grid>
+                    </Grow>
+                ))}
+            </Grid>}
+            {isPending ?
+                <Box display="flex" justifyContent="center" width="100%" mt={7}>
+                    <CircularProgress size={100}/>
+                </Box> : recipes && recipes.length === 0 &&
+                <Grow in timeout={500}>
+                    <Typography mt={2} variant="h5" component="p">Brak wyników</Typography>
+                </Grow>}
         </>
     );
 };

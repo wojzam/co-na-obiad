@@ -1,10 +1,6 @@
 import {Box, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 
-export default function SortInput({sort, setSort}) {
-    const handleSortChange = (event) => {
-        setSort(event.target.value);
-    }
-
+export default function SortInput({sort, handleSortChange}) {
     return (
         <Box sx={{
             p: "2px 4px",

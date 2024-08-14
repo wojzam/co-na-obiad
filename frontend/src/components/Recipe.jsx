@@ -40,8 +40,9 @@ export default function Recipe({id, name, categories, ingredients, additionalIng
                         {name}
                     </Typography>
                     <Box display="flex" gap={1} flexWrap="wrap" justifyContent="center">
-                        {categories.split(',').map(category => (
+                        {categories.split(',').map((category, index) => (
                             <Typography
+                                key={index}
                                 sx={{
                                     fontSize: {
                                         xs: theme.typography.subtitle2.fontSize,
