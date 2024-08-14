@@ -26,12 +26,16 @@ const RecipeDetails = () => {
                     <Box display="flex" gap={1} flexWrap="wrap"
                          sx={{justifyContent: {xs: "center", sm: 'center', md: 'left'}}}>
                         {recipe ? recipe?.categories.map(category => (
-                                <Typography key={category._id} variant="subtitle1" fontWeight="regular" gutterBottom sx={{
+                                <Typography key={category._id} fontWeight="regular" gutterBottom sx={{
                                     display: 'inline-block',
                                     backgroundColor: "lightgray",
                                     borderRadius: "5px",
                                     px: 1.5,
                                     whiteSpace: "nowrap",
+                                    fontSize: {
+                                        xs: theme.typography.subtitle2.fontSize,
+                                        lg: theme.typography.subtitle1.fontSize,
+                                    },
                                 }}>
                                     {category.name}
                                 </Typography>
@@ -40,7 +44,7 @@ const RecipeDetails = () => {
                     </Box>
                     <Typography sx={{
                         fontSize: {
-                            xs: theme.typography.h3.fontSize,
+                            xs: theme.typography.h4.fontSize,
                             sm: theme.typography.h3.fontSize,
                             lg: theme.typography.h2.fontSize,
                         },
@@ -54,12 +58,16 @@ const RecipeDetails = () => {
                     }} fontWeight="medium">
                         {recipe ? recipe?.name : <Skeleton width={300}/>}
                     </Typography>
-                    <Typography variant="subtitle1" fontWeight="light" gutterBottom sx={{
+                    <Typography fontWeight="light" gutterBottom sx={{
                         textAlign: {
                             xs: 'center',
                             sm: 'center',
                             md: 'left',
-                        }
+                        },
+                        fontSize: {
+                            xs: theme.typography.subtitle2.fontSize,
+                            lg: theme.typography.subtitle1.fontSize,
+                        },
                     }}>
                         {recipe ? "Autor: " + recipe?.creator : <Skeleton width={100}/>}
                     </Typography>
@@ -67,7 +75,12 @@ const RecipeDetails = () => {
                 </Box>
                 <Grid container spacing={8} columns={{sm: 8, md: 8, lg: 12, xl: 14}}>
                     <Grid item sm={8} md={3} lg={3} xl={3} minWidth={300}>
-                        <Typography variant="h5" marginTop={3} fontWeight="medium" gutterBottom>
+                        <Typography marginTop={3} fontWeight="medium" gutterBottom sx={{
+                            fontSize: {
+                                xs: theme.typography.h6.fontSize,
+                                lg: theme.typography.h5.fontSize,
+                            },
+                        }}>
                             Składniki:
                         </Typography>
                         {recipe ? (
@@ -106,7 +119,12 @@ const RecipeDetails = () => {
                     <Grid item sm={8} md={8} lg={8} xl={10}>
                         {recipe?.preparation && (
                             <>
-                                <Typography marginTop={3} variant="h5" fontWeight="medium" gutterBottom>
+                                <Typography marginTop={3} fontWeight="medium" gutterBottom sx={{
+                                    fontSize: {
+                                        xs: theme.typography.h6.fontSize,
+                                        lg: theme.typography.h5.fontSize,
+                                    },
+                                }}>
                                     Przygotowanie:
                                 </Typography>
                                 <Typography sx={{

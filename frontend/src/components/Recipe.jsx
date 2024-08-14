@@ -27,8 +27,8 @@ export default function Recipe({id, name, categories, ingredients, additionalIng
                         component="h2"
                         sx={{
                             fontSize: {
-                                xs: theme.typography.h5.fontSize,
-                                lg: theme.typography.h4.fontSize,
+                                xs: theme.typography.h6.fontSize,
+                                lg: theme.typography.h5.fontSize,
                             },
                             wordBreak: 'break-word',
                             overflowWrap: 'break-word',
@@ -43,11 +43,8 @@ export default function Recipe({id, name, categories, ingredients, additionalIng
                         {categories.split(',').map((category, index) => (
                             <Typography
                                 key={index}
+                                variant="subtitle2"
                                 sx={{
-                                    fontSize: {
-                                        xs: theme.typography.subtitle2.fontSize,
-                                        lg: theme.typography.subtitle1.fontSize,
-                                    },
                                     display: 'inline-block',
                                     backgroundColor: "lightgray",
                                     borderRadius: "5px",
@@ -64,9 +61,9 @@ export default function Recipe({id, name, categories, ingredients, additionalIng
                     mt={2}
                     sx={{
                         fontSize: {
-                            xs: theme.typography.body1.fontSize,
-                            sm: theme.typography.body1.fontSize,
-                            lg: theme.typography.h6.fontSize,
+                            xs: theme.typography.body2.fontSize,
+                            sm: theme.typography.body2.fontSize,
+                            lg: theme.typography.body1.fontSize,
                         }
                     }}
                     align="center"
@@ -77,9 +74,9 @@ export default function Recipe({id, name, categories, ingredients, additionalIng
                     mt={2}
                     sx={{
                         fontSize: {
-                            xs: theme.typography.body1.fontSize,
-                            sm: theme.typography.body1.fontSize,
-                            lg: theme.typography.h6.fontSize,
+                            xs: theme.typography.body2.fontSize,
+                            sm: theme.typography.body2.fontSize,
+                            lg: theme.typography.body1.fontSize,
                         }
                     }}
                     fontWeight="light"
