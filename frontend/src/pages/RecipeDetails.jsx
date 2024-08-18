@@ -28,7 +28,7 @@ const RecipeDetails = () => {
                         {recipe ? recipe?.categories.map(category => (
                                 <Typography key={category._id} fontWeight="regular" gutterBottom sx={{
                                     display: 'inline-block',
-                                    backgroundColor: "lightgray",
+                                    backgroundColor: theme.palette.lightGrey.main,
                                     borderRadius: "5px",
                                     px: 1.5,
                                     whiteSpace: "nowrap",

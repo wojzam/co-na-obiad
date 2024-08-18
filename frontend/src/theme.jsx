@@ -22,6 +22,9 @@ export const themeSettings = (mode) => {
                     background: {
                         default: "#fcfcfc",
                     },
+                    lightGrey: {
+                        main: "lightgray"
+                    }
                 }
                 : {
                     // dark mode
@@ -32,12 +35,15 @@ export const themeSettings = (mode) => {
                         main: teal[500],
                     },
                     neutral: {
-                        main: "#473931",
-                        darker: "#2e2929",
+                        main: "#392d26",
+                        darker: "#232020",
                     },
                     background: {
                         default: "#473931",
                     },
+                    lightGrey: {
+                        main: "#605c5a"
+                    }
                 }),
             light: {
                 main: grey.A100,

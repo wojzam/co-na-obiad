@@ -1,33 +1,30 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Button, Drawer, IconButton} from '@mui/material';
+import {Box, Button, Drawer, IconButton, useTheme} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import useAuthData from '../hooks/useAuthData';
-
-const buttonStyle = {
-    fontSize: 18,
-    color: "black",
-    whiteSpace: "nowrap",
-};
-
-const loginButtonStyle = {
-    width: "100%",
-    borderRadius: 3,
-    fontSize: 18,
-    color: "black",
-};
-
-const signupButtonStyle = {
-    width: "100%",
-    borderRadius: 3,
-    fontSize: 18,
-    color: "black",
-};
 
 export default function MobileMenu() {
     const {logout, username} = useAuthData();
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [menuHeight, setMenuHeight] = useState('100vh');
+    const theme = useTheme();
+
+    const buttonStyle = {
+        fontSize: 18, color: theme.palette.primary.main, whiteSpace: "nowrap",
+    };
+
+    const loginButtonStyle = {
+        width: "100%", borderRadius: 3, fontSize: 18, color: theme.palette.primary.main,
+    };
+
+    const signupButtonStyle = {
+        width: "100%",
+        borderRadius: 3,
+        fontSize: 18,
+        color: theme.palette.primary.main,
+        backgroundColor: theme.palette.neutral.darker,
+    };
 
     useEffect(() => {
         const handleResize = () => {
@@ -55,14 +52,13 @@ export default function MobileMenu() {
         logout();
     };
 
-    return (
-        <>
+    return (<>
             <Box display={{xs: 'flex', md: 'none'}}>
                 <IconButton
                     edge="start"
-                    color="black"
                     aria-label="menu"
                     onClick={toggleDrawer(true)}
+                    sx={{color: "black"}}
                 >
                     <MenuIcon/>
                 </IconButton>
@@ -74,7 +70,7 @@ export default function MobileMenu() {
                 onClose={toggleDrawer(false)}
             >
                 <Box
-                    sx={{width: 250, height: menuHeight}}
+                    sx={{width: 250, height: menuHeight, backgroundColor: theme.palette.background.default}}
                     role="presentation"
                     onClick={toggleDrawer(false)}
                     onKeyDown={toggleDrawer(false)}
@@ -98,12 +94,10 @@ export default function MobileMenu() {
                             </Button>
                         </Box>
                         <Box display="flex" flexDirection="column" gap={2} p={2}>
-                            {username ? (
-                                <>
+                            {username ? (<>
                                     <Button
                                         startIcon={<AccountCircleOutlinedIcon/>}
-                                        disabled={true}
-                                        sx={{'&.Mui-disabled': {color: 'black',},}}>
+                                        disabled={true}>
                                         {username}
                                     </Button>
                                     <Button
@@ -118,9 +112,7 @@ export default function MobileMenu() {
                                     >
                                         Wyloguj
                                     </Button>
-                                </>
-                            ) : (
-                                <>
+                                </>) : (<>
                                     <Button
                                         variant="outlined"
                                         color="inherit"
@@ -137,12 +129,10 @@ export default function MobileMenu() {
                                     >
                                         Rejestracja
                                     </Button>
-                                </>
-                            )}
+                                </>)}
                         </Box>
                     </Box>
                 </Box>
             </Drawer>
-        </>
-    );
+        </>);
 }

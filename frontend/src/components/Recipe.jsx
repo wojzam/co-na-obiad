@@ -46,7 +46,7 @@ export default function Recipe({id, name, categories, ingredients, additionalIng
                                 variant="subtitle2"
                                 sx={{
                                     display: 'inline-block',
-                                    backgroundColor: "lightgray",
+                                    backgroundColor: theme.palette.lightGrey.main,
                                     borderRadius: "5px",
                                     px: 1.5,
                                     whiteSpace: "nowrap",
