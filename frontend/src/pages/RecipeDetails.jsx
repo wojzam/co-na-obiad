@@ -46,7 +46,6 @@ const RecipeDetails = () => {
                         fontSize: {
                             xs: theme.typography.h4.fontSize,
                             sm: theme.typography.h3.fontSize,
-                            lg: theme.typography.h2.fontSize,
                         },
                         textAlign: {
                             xs: 'center',
@@ -129,9 +128,8 @@ const RecipeDetails = () => {
                                 </Typography>
                                 <Typography sx={{
                                     fontSize: {
-                                        xs: theme.typography.body1.fontSize,
+                                        xs: theme.typography.body2.fontSize,
                                         sm: theme.typography.body1.fontSize,
-                                        lg: theme.typography.h6.fontSize,
                                     },
                                     wordBreak: 'break-word',
                                     overflowWrap: 'break-word',
