@@ -3,6 +3,7 @@ import {Controller, useFormContext} from "react-hook-form";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import React from "react";
+import IngredientValueInput from "./IngredientValueInput.jsx";
 
 const IngredientValueUnit = ({ingredients, units, name, watchedIngredients, handleAddRow}) => {
     const {control} = useFormContext();
@@ -52,23 +53,7 @@ const IngredientValueUnit = ({ingredients, units, name, watchedIngredients, hand
                 />
             </TableCell>
             <TableCell align="right">
-                <Controller
-                    name={`${name}.value`}
-                    control={control}
-                    render={({field}) => (
-                        <TextField
-                            type="number"
-                            inputProps={{
-                                min: 0,
-                                max: 9999,
-                                style: {padding: 11.5}
-                            }}
-                            value={field.value || ""}
-                            sx={{width: {xs: '100%', sm: 80}}}
-                            onChange={(e) => field.onChange(e.target.value)}
-                        />
-                    )}
-                />
+                <IngredientValueInput name={`${name}.value`}/>
             </TableCell>
             <TableCell align="right">
                 <Controller

@@ -83,9 +83,14 @@ const recipeSchema = [checkSchema({
             options: {max: 100}, errorMessage: 'Ingredient name cannot exceed 100 characters',
         },
     }, 'ingredientSections.*.ingredients.*.value': {
-        optional: true, isFloat: {
-            options: {min: 0, max: 9999}, errorMessage: 'Ingredient value must be a number between 0-9999',
-        }, toFloat: true,
+        optional: {options: {nullable: true, checkFalsy: true}}, trim: true, customSanitizer: {
+            options: (value) => customEscape(value),
+        }, isLength: {
+            options: {max: 7}, errorMessage: 'Ingredient value cannot exceed 7 characters',
+        }, matches: {
+            options: /^(\d+([.,]\d+)?|\d+\/\d+|\d+\s\d+\/\d+|\d+([.,]\d+)?\s*-\s*\d+([.,]\d+)?)$/,
+            errorMessage: 'Ingredient value does not match the expected format'
+        }
     }, 'ingredientSections.*.ingredients.*.unit': {
         optional: true, trim: true, escape: true, isLength: {
             options: {max: 20}, errorMessage: 'Unit cannot exceed 20 characters',
