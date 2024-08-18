@@ -3,6 +3,7 @@ import {AppBar, Box, Button, Menu, MenuItem} from "@mui/material";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import useAuthData from "../hooks/useAuthData";
 import MobileMenu from './MobileMenu';
+import truncateText from "../utils/truncateText";
 
 const homeButtonStyle = {
     textTransform: "none",
@@ -30,6 +31,8 @@ const signupButtonStyle = {
     fontSize: 16,
     color: "black",
 };
+
+const maxUsernameLength = 27;
 
 export default function HeaderBar() {
     const {logout, username} = useAuthData();
@@ -76,7 +79,7 @@ export default function HeaderBar() {
                     {username ? (
                         <Box mr={2}>
                             <Button startIcon={<AccountCircleOutlinedIcon/>} onClick={handleClick} sx={buttonStyle}>
-                                {username}
+                                {truncateText(username, maxUsernameLength)}
                             </Button>
                             <Menu
                                 anchorEl={anchorEl}
