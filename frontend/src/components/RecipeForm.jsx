@@ -85,6 +85,7 @@ export const RecipeForm = ({onSubmit, onDelete, initialData, isEdit = false}) =>
                                 value={value || []}
                                 options={categories.map(categories => categories.name)}
                                 getOptionDisabled={() => (value.length >= MAX_CATEGORIES)}
+                                filterSelectedOptions
                                 onChange={(e, v) => onChange(v)}
                                 renderInput={(params) => <TextField {...params} label="Kategorie"/>}
                             />)}

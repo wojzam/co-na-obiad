@@ -60,6 +60,13 @@ export default function IngredientEditList({register, control, errors, sectionIn
         move(result.source.index, result.destination.index);
     };
 
+    const filterOptionsWithPolishLetters = (options, {inputValue}) => {
+        return options.filter((option) =>
+            option.toLowerCase().includes(inputValue.toLowerCase()) ||
+            option.toLowerCase().localeCompare(inputValue.toLowerCase(), 'pl', {sensitivity: 'base'}) === 0
+        );
+    };
+
     return (
         <Paper sx={{mb: 4}}>
             <Box display={sectionIndex > 0 ? 'flex' : 'none'} justifyContent="center" gap={10} pt={3} px={2} mt={5}
@@ -116,6 +123,8 @@ export default function IngredientEditList({register, control, errors, sectionIn
                                                             <Autocomplete
                                                                 disablePortal
                                                                 options={ingredients.map((i) => i.name)}
+                                                                filterSelectedOptions
+                                                                filterOptions={filterOptionsWithPolishLetters}
                                                                 value={field.value || null}
                                                                 sx={{
                                                                     '& .MuiInputBase-root': {padding: 0.5},

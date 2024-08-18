@@ -31,6 +31,13 @@ export default function IngredientFilterInput({onFilterChange, text}) {
         });
     }
 
+    const filterNamesWithPolishLetters = (options, {inputValue}) => {
+        return options.filter((option) =>
+            option.name.toLowerCase().includes(inputValue.toLowerCase()) ||
+            option.name.toLowerCase().localeCompare(inputValue.toLowerCase(), 'pl', {sensitivity: 'base'}) === 0
+        );
+    };
+
     return (
         <Autocomplete
             sx={{
@@ -42,10 +49,10 @@ export default function IngredientFilterInput({onFilterChange, text}) {
                 minWidth: 300
             }}
             multiple
-            id="tags-outlined"
             options={ingredients}
             getOptionLabel={(option) => option.name}
             filterSelectedOptions
+            filterOptions={filterNamesWithPolishLetters}
             onChange={handleInputChange}
             renderInput={(params) => (
                 <TextField
