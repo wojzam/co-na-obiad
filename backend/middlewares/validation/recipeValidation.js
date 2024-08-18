@@ -50,7 +50,7 @@ const recipeSchema = [checkSchema({
         },
     }, categories: {
         optional: true, in: ['body'], isArray: {
-            options: {max: 16}, errorMessage: 'Categories must be an array with maximum of 16 items',
+            options: {max: 10}, errorMessage: 'Categories must be an array with maximum of 10 items',
         },
     }, 'categories.*': {
         notEmpty: {
@@ -74,7 +74,7 @@ const recipeSchema = [checkSchema({
         },
     }, 'ingredientSections.*.ingredients': {
         isArray: {
-            options: {max: 50}, errorMessage: 'Ingredients must be an array with a maximum of 50 items',
+            options: {max: 30}, errorMessage: 'Ingredients must be an array with a maximum of 30 items',
         }
     }, 'ingredientSections.*.ingredients.*.name': {
         notEmpty: {

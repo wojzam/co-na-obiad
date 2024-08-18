@@ -6,6 +6,8 @@ import DeleteButton from "./DeleteButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import React from "react";
 
+const MAX_CATEGORIES = 10;
+
 export const RecipeForm = ({onSubmit, onDelete, initialData, isEdit = false}) => {
     const {register, control, handleSubmit, formState: {errors, isSubmitting}} = useForm({
         mode: "all",
@@ -82,6 +84,7 @@ export const RecipeForm = ({onSubmit, onDelete, initialData, isEdit = false}) =>
                                 disablePortal
                                 value={value || []}
                                 options={categories.map(categories => categories.name)}
+                                getOptionDisabled={() => (value.length >= MAX_CATEGORIES)}
                                 onChange={(e, v) => onChange(v)}
                                 renderInput={(params) => <TextField {...params} label="Kategorie"/>}
                             />)}

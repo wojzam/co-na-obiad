@@ -17,7 +17,7 @@ import {DragDropContext, Draggable, Droppable} from "@hello-pangea/dnd";
 import {Controller, useFieldArray, useWatch} from "react-hook-form";
 import {Paper} from "@mui/material";
 
-const MAX_LENGTH = 50;
+const MAX_LENGTH = 30;
 
 export default function IngredientEditList({register, control, errors, sectionIndex, handleRemove}) {
     const ingredients = useIngredients();
