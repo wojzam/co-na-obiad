@@ -1,11 +1,11 @@
 import {Box, CircularProgress, Container, Typography} from "@mui/material";
-import {RecipeForm} from "../components/RecipeForm";
+import {RecipeForm} from "../components/forms/RecipeForm";
 import {useParams} from "react-router-dom";
 import {useState} from "react";
 import BackButton from "../components/BackButton";
-import {useRecipe} from "../hooks/useRecipe.jsx";
-import MessageBox from "../components/MessageBox.jsx";
-import useAuthAxios from "../hooks/useAuthAxios.jsx";
+import {useRecipe} from "../hooks/useRecipe";
+import MessageBox from "../components/MessageBox";
+import useAuthAxios from "../hooks/useAuthAxios";
 
 export default function EditRecipe() {
     const {id} = useParams();

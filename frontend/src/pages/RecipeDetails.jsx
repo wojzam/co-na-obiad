@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import CircleIcon from '@mui/icons-material/Circle';
 import BackButton from "../components/BackButton";
-import {useRecipe} from "../hooks/useRecipe.jsx";
+import {useRecipe} from "../hooks/useRecipe";
 
 const RecipeDetails = () => {
     const recipe = useRecipe();

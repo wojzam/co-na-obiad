@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {Box, Button, TextField, Typography} from '@mui/material';
-import useAuthAxios from "../hooks/useAuthAxios.jsx";
-import MessageBox from "./MessageBox.jsx";
+import useAuthAxios from "../../hooks/useAuthAxios";
+import MessageBox from "../MessageBox";
 
 const UpdatePassword = () => {
     const axiosInstance = useAuthAxios();

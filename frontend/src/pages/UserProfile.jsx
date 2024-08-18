@@ -1,7 +1,7 @@
 import React from 'react';
 import {Box, Container, Typography} from '@mui/material';
-import UpdatePassword from "../components/UpdatePassword.jsx";
-import UpdateUsername from "../components/UpdateUsername.jsx";
+import UpdatePassword from "../components/forms/UpdatePassword";
+import UpdateUsername from "../components/forms/UpdateUsername";
 
 const UserProfile = () => {
 

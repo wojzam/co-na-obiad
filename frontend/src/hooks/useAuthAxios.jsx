@@ -1,4 +1,4 @@
-import useAuthData from "./useAuthData.jsx";
+import useAuthData from "./useAuthData";
 import axios from "axios";
 
 const useAuthAxios = () => {

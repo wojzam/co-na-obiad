@@ -8,8 +8,8 @@ import Container from "@mui/material/Container";
 import useAuthData from "../hooks/useAuthData";
 import {useForm} from "react-hook-form";
 import {CircularProgress, TextField} from "@mui/material";
-import {ReCaptchaV3} from "../components/ReCaptchaV3.jsx";
-import MessageBox from "../components/MessageBox.jsx";
+import {ReCaptchaV3} from "../components/ReCaptchaV3";
+import MessageBox from "../components/MessageBox";
 import axios from "axios";
 
 export default function Login() {

@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
-import MessageBox from "../components/MessageBox.jsx";
+import MessageBox from "../components/MessageBox";
 import ReCAPTCHA from "react-google-recaptcha";
 import {useForm} from "react-hook-form";
 import {CircularProgress} from "@mui/material";

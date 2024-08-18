@@ -16,8 +16,8 @@ import {
 import axios from "axios";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import useAuthAxios from "../hooks/useAuthAxios.jsx";
-import MessageBox from "../components/MessageBox.jsx";
+import useAuthAxios from "../hooks/useAuthAxios";
+import MessageBox from "../components/MessageBox";
 
 const Ingredients = () => {
     const axiosInstance = useAuthAxios();

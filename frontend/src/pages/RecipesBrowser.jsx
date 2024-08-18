@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {Box, CircularProgress, Grid, Grow, Typography} from "@mui/material";
 import Recipe from "../components/Recipe";
-import RecipesFetcher from "../components/RecipesFetcher.jsx";
+import RecipesFetcher from "../components/RecipesFetcher";
 
 const RecipesBrowser = () => {
     const [recipes, setRecipes] = useState([]);

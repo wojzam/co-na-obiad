@@ -1,9 +1,9 @@
 import {Controller, useForm} from "react-hook-form";
 import {Box, Button, TextField, Typography} from "@mui/material";
 import React, {useState} from "react";
-import useAuthData from "../hooks/useAuthData.jsx";
-import useAuthAxios from "../hooks/useAuthAxios.jsx";
-import MessageBox from "./MessageBox.jsx";
+import useAuthData from "../../hooks/useAuthData";
+import useAuthAxios from "../../hooks/useAuthAxios";
+import MessageBox from "../MessageBox";
 import {useCookies} from "react-cookie";
 
 const UpdateUsername = () => {

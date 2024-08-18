@@ -1,10 +1,10 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import {RecipeForm} from "../components/RecipeForm";
-import MessageBox from "../components/MessageBox.jsx";
+import {RecipeForm} from "../components/forms/RecipeForm";
+import MessageBox from "../components/MessageBox";
 import {useState} from "react";
-import useAuthAxios from "../hooks/useAuthAxios.jsx";
+import useAuthAxios from "../hooks/useAuthAxios";
 
 export default function CreateRecipe() {
     const axiosInstance = useAuthAxios();
