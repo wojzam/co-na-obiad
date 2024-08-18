@@ -53,86 +53,86 @@ export default function MobileMenu() {
     };
 
     return (<>
-            <Box display={{xs: 'flex', md: 'none'}}>
-                <IconButton
-                    edge="start"
-                    aria-label="menu"
-                    onClick={toggleDrawer(true)}
-                    sx={{color: "black"}}
-                >
-                    <MenuIcon/>
-                </IconButton>
-            </Box>
+        <Box display={{xs: 'flex', md: 'none'}}>
+            <IconButton
+                edge="start"
+                aria-label="menu"
+                onClick={toggleDrawer(true)}
+                sx={{color: "black"}}
+            >
+                <MenuIcon/>
+            </IconButton>
+        </Box>
 
-            <Drawer
-                anchor="right"
-                open={drawerOpen}
-                onClose={toggleDrawer(false)}
+        <Drawer
+            anchor="right"
+            open={drawerOpen}
+            onClose={toggleDrawer(false)}
+        >
+            <Box
+                sx={{width: 250, height: menuHeight, backgroundColor: theme.palette.background.default}}
+                role="presentation"
+                onClick={toggleDrawer(false)}
+                onKeyDown={toggleDrawer(false)}
             >
                 <Box
-                    sx={{width: 250, height: menuHeight, backgroundColor: theme.palette.background.default}}
-                    role="presentation"
-                    onClick={toggleDrawer(false)}
-                    onKeyDown={toggleDrawer(false)}
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="space-between"
+                    height="100%"
+                    p={2}
                 >
-                    <Box
-                        display="flex"
-                        flexDirection="column"
-                        justifyContent="space-between"
-                        height="100%"
-                        p={2}
-                    >
-                        <Box display="flex" flexDirection="column" gap={2} p={2}>
-                            <Button href="/recipes" sx={buttonStyle}>
-                                Przepisy
+                    <Box display="flex" flexDirection="column" gap={2} p={2}>
+                        <Button href="/recipes" sx={buttonStyle}>
+                            Przepisy
+                        </Button>
+                        <Button href="/user-recipes" disabled={!username} sx={buttonStyle}>
+                            Moje przepisy
+                        </Button>
+                        <Button href="/create-recipe" disabled={!username} sx={buttonStyle}>
+                            Dodaj przepis
+                        </Button>
+                    </Box>
+                    <Box display="flex" flexDirection="column" gap={2} p={2}>
+                        {username ? (<>
+                            <Button
+                                startIcon={<AccountCircleOutlinedIcon/>}
+                                disabled={true}>
+                                {username}
                             </Button>
-                            <Button href="/user-recipes" disabled={!username} sx={buttonStyle}>
-                                Moje przepisy
+                            <Button
+                                onClick={() => window.location.href = '/user-profile'}
+                                sx={buttonStyle}
+                            >
+                                Moje konto
                             </Button>
-                            <Button href="/create-recipe" disabled={!username} sx={buttonStyle}>
-                                Dodaj przepis
+                            <Button
+                                onClick={handleLogout}
+                                sx={buttonStyle}
+                            >
+                                Wyloguj
                             </Button>
-                        </Box>
-                        <Box display="flex" flexDirection="column" gap={2} p={2}>
-                            {username ? (<>
-                                    <Button
-                                        startIcon={<AccountCircleOutlinedIcon/>}
-                                        disabled={true}>
-                                        {username}
-                                    </Button>
-                                    <Button
-                                        onClick={() => window.location.href = '/user-profile'}
-                                        sx={buttonStyle}
-                                    >
-                                        Moje konto
-                                    </Button>
-                                    <Button
-                                        onClick={handleLogout}
-                                        sx={buttonStyle}
-                                    >
-                                        Wyloguj
-                                    </Button>
-                                </>) : (<>
-                                    <Button
-                                        variant="outlined"
-                                        color="inherit"
-                                        href="/login"
-                                        sx={loginButtonStyle}
-                                    >
-                                        Logowanie
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="light"
-                                        href="/signup"
-                                        sx={signupButtonStyle}
-                                    >
-                                        Rejestracja
-                                    </Button>
-                                </>)}
-                        </Box>
+                        </>) : (<>
+                            <Button
+                                variant="outlined"
+                                color="inherit"
+                                href="/login"
+                                sx={loginButtonStyle}
+                            >
+                                Logowanie
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="light"
+                                href="/signup"
+                                sx={signupButtonStyle}
+                            >
+                                Rejestracja
+                            </Button>
+                        </>)}
                     </Box>
                 </Box>
-            </Drawer>
-        </>);
+            </Box>
+        </Drawer>
+    </>);
 }
