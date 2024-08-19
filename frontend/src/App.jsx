@@ -1,3 +1,6 @@
+import {Navigate, Route, Routes} from "react-router-dom";
+import {CssBaseline, ThemeProvider} from "@mui/material";
+import {ColorModeContext, useMode} from "./theme";
 import HeaderBar from "./components/HeaderBar";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
@@ -10,9 +13,6 @@ import UserProfile from "./pages/UserProfile";
 import Ingredients from "./pages/Ingredients";
 import Healthcheck from "./pages/Healthcheck";
 import ThemeSwitcher from "./components/ThemeSwitcher";
-import {Navigate, Route, Routes} from "react-router-dom";
-import {CssBaseline, ThemeProvider} from "@mui/material";
-import {ColorModeContext, useMode} from "./theme";
 import useAuthData from "./hooks/useAuthData";
 
 export default function App() {

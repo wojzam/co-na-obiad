@@ -1,5 +1,5 @@
 import {createContext, useEffect, useMemo, useState} from "react";
-import {createTheme} from "@mui/material/styles";
+import createTheme from "@mui/material/styles/createTheme";
 import {grey, teal} from "@mui/material/colors";
 
 export const themeSettings = (mode) => {
