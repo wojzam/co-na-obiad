@@ -1,18 +1,7 @@
-import {
-    Box,
-    Divider,
-    Grid,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    Skeleton,
-    Typography,
-    useTheme
-} from "@mui/material";
-import CircleIcon from '@mui/icons-material/Circle';
+import {Box, Divider, Grid, Skeleton, Typography, useTheme} from "@mui/material";
 import BackButton from "../components/BackButton";
 import {useRecipe} from "../hooks/useRecipe";
+import IngredientList from "../components/IngredientList.jsx";
 
 const RecipeDetails = () => {
     const recipe = useRecipe();
@@ -72,50 +61,11 @@ const RecipeDetails = () => {
                     </Typography>
                     <Divider/>
                 </Box>
-                <Grid container spacing={8} columns={{sm: 8, md: 8, lg: 12, xl: 14}}>
-                    <Grid item sm={8} md={3} lg={3} xl={3} minWidth={300}>
-                        <Typography marginTop={3} fontWeight="medium" gutterBottom sx={{
-                            fontSize: {
-                                xs: theme.typography.h6.fontSize,
-                                lg: theme.typography.h5.fontSize,
-                            },
-                        }}>
-                            Składniki:
-                        </Typography>
-                        {recipe ? (
-                            recipe?.ingredientSections.map((section) => (
-                                <Box key={section._id} mt={section._id > 1 ? 5 : 0}>
-                                    <Typography variant="h6" fontWeight="regular">
-                                        {section.sectionName}{section.sectionName && ":"}
-                                    </Typography>
-                                    <List>
-                                        {section.ingredients.map((ingredient, index) => (
-                                            <ListItem key={index} disableGutters style={{margin: 0, padding: 1}}>
-                                                <ListItemIcon style={{minWidth: 0, marginRight: 8}}>
-                                                    <CircleIcon
-                                                        style={{fontSize: 8, color: theme.palette.primary.main}}/>
-                                                </ListItemIcon>
-                                                <ListItemText
-                                                    disableTypography
-                                                    primary={<Typography variant="body1" fontWeight="medium"
-                                                                         color={theme.palette.primary.main}>
-                                                        {ingredient.name}
-                                                        <span>&nbsp;&nbsp;</span>
-                                                        <span style={{fontWeight: 'lighter'}}>
-                                                            {ingredient.value} {ingredient.unit}
-                                                        </span>
-                                                    </Typography>}
-                                                />
-                                            </ListItem>
-                                        ))}
-                                    </List>
-                                </Box>
-                            ))
-                        ) : (
-                            <Skeleton width={600}/>
-                        )}
+                <Grid container spacing={8} columns={{xs: 8, sm: 8, md: 8, lg: 13, xl: 15}}>
+                    <Grid item xs={8} sm={8} md={8} lg={3} xl={4} minWidth={300}>
+                        <IngredientList ingredientSections={recipe?.ingredientSections}/>
                     </Grid>
-                    <Grid item sm={8} md={8} lg={8} xl={10}>
+                    <Grid item xs={8} sm={8} md={8} lg={9} xl={11}>
                         {recipe?.preparation && (
                             <>
                                 <Typography marginTop={3} fontWeight="medium" gutterBottom sx={{

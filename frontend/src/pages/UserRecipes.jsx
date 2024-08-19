@@ -20,7 +20,7 @@ import RecipesFetcher from "../components/RecipesFetcher";
 import truncateText from "../utils/truncateText";
 
 const maxNameLength = 80;
-const maxIngredientsLength = 200;
+const maxIngredientsLength = 100;
 
 const UserRecipes = () => {
     const [recipes, setRecipes] = useState([]);
@@ -54,8 +54,8 @@ const UserRecipes = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell>Nazwa</TableCell>
-                            <TableCell sx={hideOnSmallerScreen}>Kategorie</TableCell>
-                            <TableCell sx={hideOnSmallerScreen}>Składniki</TableCell>
+                            <TableCell align="right" sx={hideOnSmallerScreen}>Kategorie</TableCell>
+                            <TableCell align="right" sx={hideOnSmallerScreen}>Składniki</TableCell>
                             <TableCell align="right"></TableCell>
                         </TableRow>
                     </TableHead>
@@ -70,7 +70,7 @@ const UserRecipes = () => {
                                     cursor: 'pointer'
                                 }}
                             >
-                                <TableCell>
+                                <TableCell sx={{minWidth: 250}}>
                                     <Typography component="h4" fontWeight="bold"
                                                 sx={{
                                                     wordBreak: 'break-word',
@@ -79,8 +79,8 @@ const UserRecipes = () => {
                                         {truncateText(recipe.name, maxNameLength)}
                                     </Typography>
                                 </TableCell>
-                                <TableCell sx={hideOnSmallerScreen}>{recipe.categories}</TableCell>
-                                <TableCell sx={hideOnSmallerScreen}>
+                                <TableCell align="right" sx={hideOnSmallerScreen}>{recipe.categories}</TableCell>
+                                <TableCell align="right" sx={hideOnSmallerScreen}>
                                     {truncateText(
                                         recipe.ingredients +
                                         (recipe.additionalIngredients && `, ${recipe.additionalIngredients}`),

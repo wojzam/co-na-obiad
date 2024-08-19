@@ -68,7 +68,7 @@ export default function RecipesFetcher({setRecipes, isPending, setIsPending, onl
         fetchRecipes();
     }, [filter, sort, pages]);
 
-    const reachedBottom = (threshold = 5) => {
+    const reachedBottom = (threshold = 100) => {
         return document.body.scrollHeight <= window.scrollY + window.innerHeight + threshold;
     }
 

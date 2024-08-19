@@ -20,3 +20,9 @@ body,
     align-items: start;
     padding: 20vh 10vw 10vh;
 }
+
+@media (max-width: 900px) {
+    .content {
+        padding: 15vh 3vw 5vh;
+    }
+}
