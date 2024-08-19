@@ -68,12 +68,13 @@ const RecipeDetails = () => {
                     <Grid item xs={8} sm={8} md={8} lg={9} xl={11}>
                         {recipe?.preparation && (
                             <>
-                                <Typography marginTop={3} fontWeight="medium" gutterBottom sx={{
-                                    fontSize: {
-                                        xs: theme.typography.h6.fontSize,
-                                        lg: theme.typography.h5.fontSize,
-                                    },
-                                }}>
+                                <Typography marginTop={3} fontWeight="medium" gutterBottom
+                                            sx={{
+                                                fontSize: {
+                                                    xs: theme.typography.h6.fontSize,
+                                                    lg: theme.typography.h5.fontSize,
+                                                },
+                                            }}>
                                     Przygotowanie:
                                 </Typography>
                                 <Typography sx={{

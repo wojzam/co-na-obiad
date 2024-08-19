@@ -11,6 +11,7 @@ import {
     Typography,
     useTheme
 } from "@mui/material";
+import {formatFraction} from "../utils/formatFraction";
 
 const IngredientList = ({ingredientSections}) => {
     const theme = useTheme();
@@ -73,7 +74,7 @@ const IngredientList = ({ingredientSections}) => {
                                                 {ingredient.name}
                                                 <span>&nbsp;&nbsp;</span>
                                                 <span style={{fontWeight: 'lighter'}}>
-                                                            {ingredient.value} {ingredient.unit}
+                                                            {formatFraction(ingredient.value)} {ingredient.unit}
                                                         </span>
                                             </Typography>}
                                         />

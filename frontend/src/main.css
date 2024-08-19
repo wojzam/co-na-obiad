@@ -23,6 +23,6 @@ body,
 
 @media (max-width: 900px) {
     .content {
-        padding: 15vh 3vw 5vh;
+        padding: 15vh 5vw 5vh;
     }
 }

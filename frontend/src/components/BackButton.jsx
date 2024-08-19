@@ -1,6 +1,6 @@
 import React from "react";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import {IconButton, Typography} from "@mui/material";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import {Button} from "@mui/material";
 
 export default function BackButton() {
     const goBack = () => {
@@ -8,9 +8,12 @@ export default function BackButton() {
     };
 
     return (
-        <IconButton onClick={goBack}>
-            <ArrowBackIcon/>
-            <Typography variant="h6">Wróć</Typography>
-        </IconButton>
+        <Button onClick={goBack} startIcon={<ArrowBackIosIcon/>} sx={{
+            '& .MuiButton-startIcon': {
+                marginRight: '0px',
+            },
+        }}>
+            Wróć
+        </Button>
     );
 }
