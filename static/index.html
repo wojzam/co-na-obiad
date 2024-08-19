@@ -7,21 +7,34 @@
     <script>
         const frontendUrl = "https://co-na-obiad.onrender.com/healthcheck";
         const backendUrl = "https://co-na-obiad-backend.onrender.com/healthcheck";
+        const retryDelay = 2000;
+        let countdownTime = 60;
 
-        function pingServices() {
-            fetch(frontendUrl, {method: 'HEAD', mode: 'no-cors'})
-                .then(() => console.log('Frontend Ok'))
-                .catch(error => console.error('Error pinging frontend:', error));
-
-            fetch(backendUrl, {method: 'HEAD', mode: 'no-cors'})
-                .then(() => console.log('Backend Ok'))
-                .catch(error => console.error('Error pinging backend:', error));
+        function ping(url) {
+            fetch(url, {method: 'HEAD', mode: 'no-cors', signal: AbortSignal.timeout(retryDelay)})
+                .then(() => console.log('Ok ' + url))
+                .catch(() => {
+                    setTimeout(() => ping(url), retryDelay);
+                });
         }
 
-        window.onload = pingServices;
+        function updateCountdown() {
+            const countdownElement = document.getElementById('countdown');
+            countdownElement.textContent = countdownTime;
+            if (countdownTime > 0) {
+                countdownTime--;
+                setTimeout(updateCountdown, 1000);
+            }
+        }
+
+        window.onload = () => {
+            ping(backendUrl);
+            ping(frontendUrl);
+            updateCountdown();
+        };
     </script>
 </head>
 <body>
-<p>Redirecting ...</p>
+<p style="font-size:30px">Redirecting in <span id="countdown">60</span> seconds...</p>
 </body>
 </html>
