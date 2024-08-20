@@ -1,5 +1,7 @@
 import React, {useEffect} from "react";
 import {useIngredients, useUnits} from "../../hooks/useCachedData";
+import {useFieldArray, useFormContext, useWatch} from "react-hook-form";
+import {DragDropContext, Draggable, Droppable} from "@hello-pangea/dnd";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableHead from "@mui/material/TableHead";
@@ -8,14 +10,13 @@ import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import {DragDropContext, Draggable, Droppable} from "@hello-pangea/dnd";
-import {useFieldArray, useFormContext, useWatch} from "react-hook-form";
-import {Paper} from "@mui/material";
-import IngredientValueUnit from "./IngredientValueUnit";
+import {Chip, Divider, Paper} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import AddIcon from '@mui/icons-material/Add';
+import IngredientValueUnit from "./IngredientValueUnit";
 
 const MAX_LENGTH = 30;
 
@@ -34,8 +35,12 @@ export default function IngredientEditList({sectionIndex, handleRemove}) {
     });
 
     const handleAddRow = () => {
+        handleAddRowWithType("")
+    };
+
+    const handleAddRowWithType = (type = "") => {
         if (watchedIngredients.length < MAX_LENGTH) {
-            append({name: null, value: "", unit: null});
+            append({name: null, value: "", unit: null, type: type});
         }
     };
 
@@ -95,28 +100,41 @@ export default function IngredientEditList({sectionIndex, handleRemove}) {
                             </TableHead>
                             <TableBody>
                                 {fields.map((field, index) => (
-                                    <Draggable key={field.id} draggableId={field.id} index={index}>
-                                        {(provided) => (
-                                            <TableRow
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                                {...provided.dragHandleProps}
-                                            >
-                                                <IngredientValueUnit {...{
-                                                    ingredients,
-                                                    units,
-                                                    watchedIngredients,
-                                                    handleAddRow
-                                                }}
-                                                                     name={`ingredientSections[${sectionIndex}].ingredients[${index}]`}
-                                                />
-                                                <TableCell align="right">
-                                                    <IconButton onClick={() => handleRemoveRow(index)}>
-                                                        <ClearIcon/>
-                                                    </IconButton>
-                                                </TableCell>
-                                            </TableRow>)}
-                                    </Draggable>
+                                    <React.Fragment key={field.id}>
+                                        <Draggable draggableId={field.id} index={index}>
+                                            {(provided) => (
+                                                <>
+                                                    <TableRow>
+                                                        <TableCell colSpan={4}>
+                                                            {field.type === "alt" &&
+                                                                <Divider> <Chip label="LUB" size="small"/></Divider>}
+                                                            {field.type === "opt" &&
+                                                                <Divider> <Chip label="OPCJONALNIE"
+                                                                                size="small"/></Divider>}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                    <TableRow
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        {...provided.dragHandleProps}
+                                                    >
+                                                        <IngredientValueUnit {...{
+                                                            ingredients,
+                                                            units,
+                                                            watchedIngredients,
+                                                            handleAddRow
+                                                        }} name={`ingredientSections[${sectionIndex}].ingredients[${index}]`}
+                                                        />
+                                                        <TableCell align="right">
+                                                            <IconButton onClick={() => handleRemoveRow(index)}>
+                                                                <ClearIcon/>
+                                                            </IconButton>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                </>
+                                            )}
+                                        </Draggable>
+                                    </React.Fragment>
                                 ))}
                                 {provided.placeholder}
                             </TableBody>
@@ -124,16 +142,39 @@ export default function IngredientEditList({sectionIndex, handleRemove}) {
                     )}
                 </Droppable>
             </DragDropContext>
-            <Box display="flex" justifyContent="center" px={2} py={3}>
-                <Button
-                    variant="outlined"
-                    startIcon={<AddCircleOutlineIcon/>}
-                    onClick={handleAddRow}
-                    fullWidth
-                    disabled={watchedIngredients.length >= MAX_LENGTH}
-                >
-                    Dodaj składnik
-                </Button>
+            <Box px={2} py={3}>
+                <Box display="flex" justifyContent="center">
+                    <Button
+                        variant="outlined"
+                        startIcon={<AddCircleOutlineIcon/>}
+                        onClick={handleAddRow}
+                        fullWidth
+                        disabled={watchedIngredients.length >= MAX_LENGTH}
+                        sx={{fontSize: 15}}
+                    >
+                        Dodaj składnik
+                    </Button>
+                </Box>
+                <Box display="flex" justifyContent="center" gap={2} pt={2}>
+                    <Button
+                        variant="outlined"
+                        startIcon={<AddIcon/>}
+                        onClick={() => handleAddRowWithType("alt")}
+                        fullWidth
+                        disabled={watchedIngredients.length >= MAX_LENGTH}
+                    >
+                        Alternatywny składnik
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        startIcon={<AddIcon/>}
+                        onClick={() => handleAddRowWithType("opt")}
+                        fullWidth
+                        disabled={watchedIngredients.length >= MAX_LENGTH}
+                    >
+                        Opcjonalny składnik
+                    </Button>
+                </Box>
             </Box>
         </Paper>
     );

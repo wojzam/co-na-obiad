@@ -52,6 +52,7 @@ export const RecipeForm = ({onSubmit, onDelete, initialData, isEdit = false}) =>
                 const filteredIngredient = {name: ingredient.name};
                 if (ingredient.value || ingredient.value === 0) filteredIngredient.value = ingredient.value.trim();
                 if (ingredient.unit) filteredIngredient.unit = ingredient.unit;
+                if (ingredient.type) filteredIngredient.type = ingredient.type;
                 return filteredIngredient;
             }).filter((ingredient) => ingredient.name),
         }));

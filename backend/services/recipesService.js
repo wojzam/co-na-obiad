@@ -148,7 +148,8 @@ const validateIngredients = async (ingredients) => {
                 _id: validIng._id,
                 name: validIng.name,
                 value: ing.value,
-                unit: ing.unit
+                unit: ing.unit,
+                type: ing.type
             });
         }
         return acc;

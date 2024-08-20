@@ -7,7 +7,8 @@ const ingredientsSectionSchema = new mongoose.Schema({
         _id: {type: mongoose.Schema.Types.ObjectId, ref: 'Ingredient', required: true},
         name: {type: String, required: true},
         value: {type: String},
-        unit: {type: String}
+        unit: {type: String},
+        type: {type: String}
     }]
 });
 

@@ -95,6 +95,12 @@ const recipeSchema = [checkSchema({
         optional: true, trim: true, escape: true, isLength: {
             options: {max: 20}, errorMessage: 'Unit cannot exceed 20 characters',
         },
+    }, 'ingredientSections.*.ingredients.*.type': {
+        optional: {options: {nullable: true, checkFalsy: true}}, trim: true, escape: true, isLength: {
+            options: {max: 3}, errorMessage: 'Type cannot exceed 3 characters',
+        }, isIn: {
+            options: [['', 'alt', 'opt']], errorMessage: 'Type must be either "alt", "opt" or empty',
+        }
     },
 }), validRequest];
 
