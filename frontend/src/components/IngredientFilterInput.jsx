@@ -1,10 +1,15 @@
 import {Autocomplete, TextField} from "@mui/material";
 import {useIngredients} from "../hooks/useCachedData";
+import {useState} from "react";
+
+const MAX_INGREDIENTS = 20;
 
 export default function IngredientFilterInput({onFilterChange, text}) {
     const ingredients = useIngredients();
+    const [selectedIngredients, setSelectedIngredients] = useState([]);
 
     const handleInputChange = (event, value) => {
+        setSelectedIngredients(value)
         const idsArray = extractChildrenIds(value);
         onFilterChange(text === "Zawiera" ? {include: idsArray} : {exclude: idsArray});
     };
@@ -46,11 +51,13 @@ export default function IngredientFilterInput({onFilterChange, text}) {
                 alignItems: "center",
                 height: 50,
                 width: "auto",
-                minWidth: 300
+                minWidth: 200
             }}
             multiple
+            value={selectedIngredients}
             options={ingredients}
             getOptionLabel={(option) => option.name}
+            getOptionDisabled={() => (selectedIngredients.length >= MAX_INGREDIENTS)}
             filterSelectedOptions
             filterOptions={filterNamesWithPolishLetters}
             onChange={handleInputChange}
