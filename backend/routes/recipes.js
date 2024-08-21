@@ -9,7 +9,7 @@ const {validId} = require("../middlewares/validation/validId");
 router.get('/', filterSchema, async (req, res) => {
     try {
         const data = matchedData(req);
-        const result = await recipesService.list(data.name, data.include, data.exclude, data.creatorId, data.sort, data.page, data.pageSize);
+        const result = await recipesService.list(data.name, data.include, data.exclude, data.categories, data.creatorId, data.sort, data.page, data.pageSize);
         res.status(result.status).json(result.body);
     } catch (err) {
         res.status(500);

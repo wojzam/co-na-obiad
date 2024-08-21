@@ -24,7 +24,7 @@ export default function SearchBar({onFilterChange}) {
                 alignItems: "center",
                 height: 50,
                 width: "auto",
-                minWidth: 300
+                minWidth: 200
             }}
         >
             <InputBase

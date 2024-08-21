@@ -22,6 +22,14 @@ const filterSchema = [checkSchema({
         trim: true, escape: true, isLength: {
             options: {max: 2500}, errorMessage: 'Exclude cannot exceed 2500 characters',
         },
+    }, categories: {
+        optional: true, in: ['query'], isArray: {
+            options: {max: 10}, errorMessage: 'Categories must be an array with maximum of 10 items',
+        }
+    }, 'categories.*': {
+        trim: true, escape: true, isLength: {
+            options: {max: 20}, errorMessage: 'Category cannot exceed 20 characters',
+        },
     }, creatorId: {
         optional: true, in: ['query'], trim: true, escape: true, isLength: {
             options: {max: 24}, errorMessage: 'Creator ID cannot exceed 24 characters'

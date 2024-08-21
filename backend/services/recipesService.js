@@ -14,9 +14,10 @@ const CREATED = (body) => {
 const ACCESS_DENIED = {status: 403, body: {message: 'Access denied'}};
 const NOT_FOUND = {status: 404, body: {message: 'Recipe not found'}};
 
-const list = async (name, include, exclude, creatorId, sort, page = 1, pageSize = 10) => {
+const list = async (name, include, exclude, categories, creatorId, sort, page = 1, pageSize = 10) => {
     const includeIds = include ? include.map(i => i.split(",")) : [];
     const excludeIds = exclude ? exclude.map(i => i.split(",")) : [];
+    const categoriesNames = categories ? categories : [];
 
     let query = name ? [{name: {$regex: name, $options: 'i'}}] : [];
 
@@ -36,6 +37,14 @@ const list = async (name, include, exclude, creatorId, sort, page = 1, pageSize 
         query.push({
             $and: excludeIds.map(children => ({
                 'ingredientSections.ingredients._id': {$nin: children}
+            }))
+        });
+    }
+
+    if (categoriesNames.length > 0) {
+        query.push({
+            $and: categoriesNames.map(children => ({
+                'categories.name': {$in: children}
             }))
         });
     }
