@@ -1,4 +1,3 @@
-import {useState} from "react";
 import {
     Box,
     Checkbox,
@@ -12,23 +11,11 @@ import {
     useTheme
 } from "@mui/material";
 import {formatFraction} from "../utils/formatFraction";
+import useIngredientCheckbox from "../hooks/useIngredientCheckbox.jsx";
 
 const IngredientList = ({ingredientSections}) => {
     const theme = useTheme();
-    const [checked, setChecked] = useState([]);
-
-    const handleToggle = (index) => () => {
-        const currentIndex = checked.indexOf(index);
-        const newChecked = [...checked];
-
-        if (currentIndex === -1) {
-            newChecked.push(index);
-        } else {
-            newChecked.splice(currentIndex, 1);
-        }
-
-        setChecked(newChecked);
-    };
+    const [checked, handleToggle] = useIngredientCheckbox();
 
     const getItemIndex = (sectionIndex, index) => `${sectionIndex}-${index}`;
 
