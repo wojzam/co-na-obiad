@@ -56,7 +56,7 @@ const IngredientList = ({ingredientSections}) => {
             </Typography>
             {ingredientSections ? (
                 ingredientSections.map((section, sectionIndex) => (
-                    <Box key={section._id} mt={section._id > 1 ? 5 : 0}>
+                    <Box key={sectionIndex} mt={sectionIndex > 0 ? 5 : 0}>
                         <Typography variant="h6" fontWeight="medium"
                                     textAlign={{xs: 'center', sm: 'center', md: 'start'}}>
                             {section.sectionName}{section.sectionName && ":"}
@@ -70,16 +70,18 @@ const IngredientList = ({ingredientSections}) => {
                                     else return null;
                                 }
 
+                                const key = getItemIndex(sectionIndex, index);
+
                                 return (
-                                    <ListItem key={index} disableGutters style={{marginLeft: 0, padding: 1}}>
+                                    <ListItem key={key} disableGutters style={{marginLeft: 0, padding: 1}}>
                                         <ListItemButton role={undefined}
-                                                        onClick={handleToggle(getItemIndex(sectionIndex, index))}
+                                                        onClick={handleToggle(key)}
                                                         dense
                                                         disableGutters>
                                             <ListItemIcon>
                                                 <Checkbox
                                                     edge="start"
-                                                    checked={checked.indexOf(getItemIndex(sectionIndex, index)) !== -1}
+                                                    checked={checked.indexOf(key) !== -1}
                                                     tabIndex={-1}
                                                     disableRipple
                                                 />
@@ -92,12 +94,14 @@ const IngredientList = ({ingredientSections}) => {
                                                                 paddingRight={{xs: 7, sm: 7, md: 0}}
                                                                 color={theme.palette.primary.main}>
                                                         {getIngredientDesc(ingredient)}
-                                                        {collectAltIngredients(index, section).map((alt) => (<>
-                                                        <span style={{fontWeight: 'lighter'}}>
-                                                            <br/>lub<span>&nbsp;</span>
-                                                        </span>
-                                                            {getIngredientDesc(alt)}
-                                                        </>))}
+                                                        {collectAltIngredients(index, section).map((alt, altIndex) => (
+                                                            <span key={`${key}-${altIndex}`}>
+                                                                <span style={{fontWeight: 'lighter'}}>
+                                                                    <br/>lub<span>&nbsp;</span>
+                                                                </span>
+                                                                {getIngredientDesc(alt)}
+                                                            </span>
+                                                        ))}
                                                     </Typography>
                                                 }
                                             />
