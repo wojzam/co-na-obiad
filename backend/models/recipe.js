@@ -13,7 +13,7 @@ const ingredientsSectionSchema = new mongoose.Schema({
 });
 
 const recipeSchema = new mongoose.Schema({
-    name: {type: String, required: true, index: {collation: {locale: 'en', strength: 2}}},
+    name: {type: String, required: true, index: {collation: {locale: 'pl', strength: 1}}},
     preparation: {type: String, default: ""},
     categories: [{
         _id: {type: mongoose.Schema.Types.ObjectId, ref: 'DishCategory', required: true},

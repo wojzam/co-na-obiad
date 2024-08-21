@@ -66,7 +66,7 @@ const list = async (name, include, exclude, categories, creatorId, sort, page = 
 
     const recipes = await Recipe
         .find(findQuery)
-        .collation({locale: 'en', strength: 2})
+        .collation({locale: 'pl', strength: 1})
         .sort(sortQuery)
         .skip((page - 1) * pageSize)
         .limit(pageSize);
@@ -128,7 +128,7 @@ const softDelete = async (recipeId, userId) => {
 }
 
 const listCategories = async () => {
-    return OK(await DishCategory.find().sort({name: 1}));
+    return OK(await DishCategory.find().collation({locale: 'pl', strength: 1}).sort({name: 1}));
 }
 
 const validateCategories = async (categoryNames) => {
