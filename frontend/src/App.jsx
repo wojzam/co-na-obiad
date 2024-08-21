@@ -4,6 +4,7 @@ import {ColorModeContext, useMode} from "./theme";
 import HeaderBar from "./components/HeaderBar";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import MainPage from "./pages/MainPage";
 import RecipesBrowser from "./pages/RecipesBrowser";
 import UserRecipes from "./pages/UserRecipes";
 import RecipeDetails from "./pages/RecipeDetails";
@@ -29,7 +30,7 @@ export default function App() {
                 <ThemeSwitcher/>
                 <main className="content">
                     <Routes>
-                        <Route path="/" element={<RecipesBrowser/>}/>
+                        <Route path="/" element={<MainPage/>}/>
                         <Route path="/login"
                                element={isAuthenticated ? <Navigate to="/user-recipes" replace/> : <Login/>}/>
                         <Route path="/signup"
