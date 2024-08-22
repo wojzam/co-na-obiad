@@ -5,7 +5,7 @@ import IngredientFilterInput from "./IngredientFilterInput";
 import axios from "axios";
 import useAuthData from "../hooks/useAuthData";
 import SortInput from "./SortInput";
-import debounce from "../utils/debunce";
+import debounce from "../utils/debounce";
 import {useCategories} from "../hooks/useCachedData.jsx";
 
 const pageSize = 30;
