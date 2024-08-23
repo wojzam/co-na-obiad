@@ -1,7 +1,8 @@
 import {Box, Divider, Grid, Skeleton, Typography, useTheme} from "@mui/material";
 import BackButton from "../components/BackButton";
 import {useRecipe} from "../hooks/useRecipe";
-import IngredientList from "../components/IngredientList.jsx";
+import IngredientList from "../components/IngredientList";
+import CategoryLink from "../components/CategoryLink";
 
 const RecipeDetails = () => {
     const recipe = useRecipe();
@@ -15,19 +16,7 @@ const RecipeDetails = () => {
                     <Box display="flex" gap={1} flexWrap="wrap"
                          sx={{justifyContent: {xs: "center", sm: 'center', md: 'left'}}}>
                         {recipe ? recipe?.categories.map(category => (
-                                <Typography key={category._id} fontWeight="regular" gutterBottom sx={{
-                                    display: 'inline-block',
-                                    backgroundColor: theme.palette.lightGrey.main,
-                                    borderRadius: "5px",
-                                    px: 1.5,
-                                    whiteSpace: "nowrap",
-                                    fontSize: {
-                                        xs: theme.typography.subtitle2.fontSize,
-                                        lg: theme.typography.subtitle1.fontSize,
-                                    },
-                                }}>
-                                    {category.name}
-                                </Typography>
+                                <CategoryLink key={category._id} category={category}/>
                             ))
                             : <Skeleton width={100}/>}
                     </Box>
