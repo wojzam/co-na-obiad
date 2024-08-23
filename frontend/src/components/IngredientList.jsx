@@ -11,7 +11,7 @@ import {
     useTheme
 } from "@mui/material";
 import {formatFraction} from "../utils/formatFraction";
-import useIngredientCheckbox from "../hooks/useIngredientCheckbox.jsx";
+import useIngredientCheckbox from "../hooks/useIngredientCheckbox";
 
 const IngredientList = ({ingredientSections}) => {
     const theme = useTheme();

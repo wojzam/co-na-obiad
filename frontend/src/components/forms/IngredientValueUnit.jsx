@@ -3,7 +3,7 @@ import {Controller, useFormContext} from "react-hook-form";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import React from "react";
-import IngredientValueInput from "./IngredientValueInput.jsx";
+import IngredientValueInput from "./IngredientValueInput";
 
 const IngredientValueUnit = ({ingredients, units, name, watchedIngredients, handleAddRow}) => {
     const {control} = useFormContext();
