@@ -3,7 +3,6 @@ import {styled} from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
 import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
 import {Zoom} from "@mui/material";
 
 const ImageButton = styled(ButtonBase)(({theme}) => ({
@@ -80,43 +79,42 @@ const ImageMarked = styled('span')(({theme}) => ({
     transition: theme.transitions.create('opacity'),
 }));
 
-export default function ImageButtonGrid({images}) {
+export default function ImageButtonGrid({images, onClick}) {
     return (
         <Grid container spacing={3} columns={{xs: 4, sm: 8, md: 12, lg: 12, xl: 16}} alignItems="stretch">
             {images.map((image, index) => (
                 <Grid item xs={4} sm={4} md={4} lg={4} xl={4} key={image.title}>
-                    <Link href="/recipes">
-                        <Zoom in={true} style={{transitionDelay: `${index * 20}ms`}}>
-                            <ImageButton
-                                focusRipple
-                                style={{
-                                    width: "100%",
-                                }}
-                            >
-                                <ImageSrc
-                                    className="image-src"
-                                    style={{backgroundImage: `url(${image.url})`}}
-                                />
-                                <ImageBackdrop className="MuiImageBackdrop-root"/>
-                                <Image>
-                                    <Typography
-                                        component="h2"
-                                        variant="h5"
-                                        fontWeight="bold"
-                                        color="inherit"
-                                        sx={{
-                                            position: 'relative',
-                                            p: 4,
-                                            pt: 2,
-                                        }}
-                                    >
-                                        {image.title}
-                                        <ImageMarked className="MuiImageMarked-root"/>
-                                    </Typography>
-                                </Image>
-                            </ImageButton>
-                        </Zoom>
-                    </Link>
+                    <Zoom in={true} style={{transitionDelay: `${index * 20}ms`}}>
+                        <ImageButton
+                            focusRipple
+                            onClick={() => onClick(image)}
+                            style={{
+                                width: "100%",
+                            }}
+                        >
+                            <ImageSrc
+                                className="image-src"
+                                style={{backgroundImage: `url(${image.path})`}}
+                            />
+                            <ImageBackdrop className="MuiImageBackdrop-root"/>
+                            <Image>
+                                <Typography
+                                    component="h2"
+                                    variant="h5"
+                                    fontWeight="bold"
+                                    color="inherit"
+                                    sx={{
+                                        position: 'relative',
+                                        p: 4,
+                                        pt: 2,
+                                    }}
+                                >
+                                    {image.title}
+                                    <ImageMarked className="MuiImageMarked-root"/>
+                                </Typography>
+                            </Image>
+                        </ImageButton>
+                    </Zoom>
                 </Grid>
             ))}
         </Grid>

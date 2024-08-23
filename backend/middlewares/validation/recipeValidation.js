@@ -12,7 +12,7 @@ const filterSchema = [checkSchema({
         }
     }, 'include.*': {
         trim: true, escape: true, isLength: {
-            options: {max: 2500}, errorMessage: 'Include cannot exceed 2500 characters',
+            options: {max: 30}, errorMessage: 'Include item cannot exceed 30 characters',
         },
     }, exclude: {
         optional: true, in: ['query'], isArray: {
@@ -20,7 +20,7 @@ const filterSchema = [checkSchema({
         }
     }, 'exclude.*': {
         trim: true, escape: true, isLength: {
-            options: {max: 2500}, errorMessage: 'Exclude cannot exceed 2500 characters',
+            options: {max: 30}, errorMessage: 'Exclude item cannot exceed 30 characters',
         },
     }, categories: {
         optional: true, in: ['query'], isArray: {

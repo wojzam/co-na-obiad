@@ -1,13 +1,26 @@
 import ImageButtonGrid from "../components/ImageButtonGrid";
 import {Divider, Paper, Typography} from "@mui/material";
 import Box from "@mui/material/Box";
+import useSearchState from "../hooks/useSearchState.jsx";
+import {useNavigate} from "react-router-dom";
+
+const defaultFilter = {name: "", include: [], exclude: [], categories: []};
+
+const defaultSort = "name";
 
 const MainPage = () => {
+    const {save} = useSearchState({id: "/recipes"});
+    const navigate = useNavigate();
+
+    const onClick = (image) => {
+        save({filter: image.filter, sort: defaultSort});
+        navigate("/recipes");
+    }
 
     return (
         <>
             <Typography variant="h3" component="h1" fontWeight="bold" color="primary" textAlign="center" width="100%"
-            mt={{xs:3, sm:3, md:0}}>
+                        mt={{xs: 3, sm: 3, md: 0}}>
                 Co na obiad
             </Typography>
             <Typography variant="subtitle1" color="textSecondary" textAlign="center" width="100%">
@@ -16,7 +29,7 @@ const MainPage = () => {
             <Box display="flex" justifyContent="center" width="100%">
                 <Divider width="80%" sx={{my: 5, borderColor: 'primary.main'}}/>
             </Box>
-            <ImageButtonGrid images={images}/>
+            <ImageButtonGrid images={images} onClick={onClick}/>
             <Paper sx={{mt: 10, width: "100%", padding: 4}}>
                 <Typography variant="h5" component="h1" fontWeight="medium" color="primary" width="100%">
                     Witaj w "Co na Obiad"!
@@ -58,95 +71,114 @@ const MainPage = () => {
 
 export default MainPage;
 
+
 const images = [
     {
-        url: '/public/img/all_recipes.jpg',
+        path: '/public/img/all_recipes.jpg',
         title:
             'Wszystkie przepisy',
+        filter: {...defaultFilter}
     },
     {
-        url: '/public/img/dinner.jpg',
+        path: '/public/img/dinner.jpg',
         title:
             'Dania główne',
+        filter: {...defaultFilter, categories: ['Dania główne']}
     },
     {
-        url: '/public/img/wege.jpg',
+        path: '/public/img/wege.jpg',
         title:
             'Wegetariańskie',
+        filter: {...defaultFilter, exclude: ["Mięso"]}
     },
     {
-        url: '/public/img/meat.jpg',
+        path: '/public/img/meat.jpg',
         title:
             'Mięsne',
+        filter: {...defaultFilter, include: ["Mięso"]}
     },
     {
-        url: '/public/img/pasta.jpg',
+        path: '/public/img/pasta.jpg',
         title:
             'Makarony',
+        filter: {...defaultFilter, include: ["Makaron"]}
     },
     {
-        url: '/public/img/flour.jpg',
+        path: '/public/img/flour.jpg',
         title:
             'Mączne',
+        filter: {...defaultFilter, include: ["Mąka"]}
     },
     {
-        url: '/public/img/baking.jpg',
+        path: '/public/img/baking.jpg',
         title:
             'Wypieki',
+        filter: {...defaultFilter, categories: ['Wypieki']}
     },
     {
-        url: '/public/img/cake.jpg',
+        path: '/public/img/cake.jpg',
         title:
             'Ciasta',
+        filter: {...defaultFilter, categories: ['Ciasta']}
     },
     {
-        url: '/public/img/dessert.jpg',
+        path: '/public/img/dessert.jpg',
         title:
             'Desery',
+        filter: {...defaultFilter, categories: ['Desery']}
     },
     {
-        url: '/public/img/breakfast.jpg',
+        path: '/public/img/breakfast.jpg',
         title:
             'Śniadania',
+        filter: {...defaultFilter, categories: ['Śniadania']}
     },
     {
-        url: '/public/img/supper.jpg',
+        path: '/public/img/supper.jpg',
         title:
             'Kolacje',
+        filter: {...defaultFilter, categories: ['Kolacje']}
     },
     {
-        url: '/public/img/snack.jpg',
+        path: '/public/img/snack.jpg',
         title:
             'Przekąski',
+        filter: {...defaultFilter, categories: ['Przekąski']}
     },
     {
-        url: '/public/img/fish.jpg',
+        path: '/public/img/fish.jpg',
         title:
             'Ryby',
+        filter: {...defaultFilter, include: ["Ryba"]}
     },
     {
-        url: '/public/img/soup.jpg',
+        path: '/public/img/soup.jpg',
         title:
             'Zupy',
+        filter: {...defaultFilter, categories: ['Zupy']}
     },
     {
-        url: '/public/img/salad.jpg',
+        path: '/public/img/salad.jpg',
         title:
             'Sałatki',
+        filter: {...defaultFilter, categories: ['Sałatki']}
     },
     {
-        url: '/public/img/drink.jpg',
+        path: '/public/img/drink.jpg',
         title:
             'Napoje',
+        filter: {...defaultFilter, categories: ['Napoje']}
     },
     {
-        url: '/public/img/festal.jpg',
+        path: '/public/img/festal.jpg',
         title:
             'Świąteczne',
+        filter: {...defaultFilter, categories: ['Świąteczne']}
     },
     {
-        url: '/public/img/thermomix.jpg',
+        path: '/public/img/thermomix.jpg',
         title:
             'Thermomix',
+        filter: {...defaultFilter, categories: ['Thermomix']}
     },
 ];

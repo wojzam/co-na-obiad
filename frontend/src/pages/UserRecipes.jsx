@@ -48,7 +48,7 @@ const UserRecipes = () => {
     return (
         <>
             <Typography component="h1" variant="h3" fontWeight="medium" gutterBottom>Moje przepisy</Typography>
-            <RecipesFetcher {...{setRecipes, isPending, setIsPending}} onlyUser={true}/>
+            <RecipesFetcher {...{setRecipes, isPending, setIsPending}} onlyUser={true} id={"/user-recipes"}/>
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>

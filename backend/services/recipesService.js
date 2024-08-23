@@ -15,8 +15,8 @@ const ACCESS_DENIED = {status: 403, body: {message: 'Access denied'}};
 const NOT_FOUND = {status: 404, body: {message: 'Recipe not found'}};
 
 const list = async (name, include, exclude, categories, creatorId, sort, page = 1, pageSize = 10) => {
-    const includeIds = include ? include.map(i => i.split(",")) : [];
-    const excludeIds = exclude ? exclude.map(i => i.split(",")) : [];
+    const includeIds = include ? await getAllChildrenIds(include) : [];
+    const excludeIds = exclude ? await getAllChildrenIds(exclude) : [];
     const categoriesNames = categories ? categories : [];
 
     let query = name ? [{name: {$regex: name, $options: 'i'}}] : [];
@@ -164,6 +164,31 @@ const validateIngredients = async (ingredients) => {
         return acc;
     }, []);
 };
+
+const getAllChildrenIds = async (ingredientNames) => {
+    const ingredients = await Ingredient.find(
+        {name: {$in: [...new Set(ingredientNames)]}}
+    ).lean();
+
+    const traverseAndCollectIds = async (ingredient, collectedIds) => {
+        if (!ingredient || collectedIds.has(ingredient._id)) return;
+        collectedIds.add(ingredient._id);
+
+        if (ingredient.children.length > 0) {
+            const children = await Ingredient.find({_id: {$in: ingredient.children}}).lean();
+            for (const child of children) {
+                await traverseAndCollectIds(child, collectedIds);
+            }
+        }
+    };
+
+    return Promise.all(ingredients.map(async (ing) => {
+        const collectedIds = new Set();
+        await traverseAndCollectIds(ing, collectedIds);
+        return Array.from(collectedIds);
+    }));
+};
+
 
 module.exports = {
     list,

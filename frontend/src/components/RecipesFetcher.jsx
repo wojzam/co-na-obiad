@@ -7,42 +7,27 @@ import useAuthData from "../hooks/useAuthData";
 import SortInput from "./SortInput";
 import debounce from "../utils/debounce";
 import {useCategories} from "../hooks/useCachedData.jsx";
+import useSearchState from "../hooks/useSearchState.jsx";
 
 const pageSize = 30;
 const MAX_CATEGORIES = 10;
 
-export default function RecipesFetcher({setRecipes, isPending, setIsPending, onlyUser = false}) {
+export default function RecipesFetcher({setRecipes, isPending, setIsPending, onlyUser = false, id = "/recipes"}) {
     const {userId} = useAuthData();
-    const [filter, setFilter] = useState({name: "", include: [], exclude: [], categories: []});
-    const [sort, setSort] = useState("name");
+    const {
+        filter,
+        handleFilterChange,
+        sort,
+        handleSortChange,
+        pages,
+        setPages,
+        isLastPage,
+        setIsLastPage,
+        resetRecipes,
+        isReadingState
+    } = useSearchState({id, setRecipes});
     const categories = useCategories();
-    const [selectedCategories, setSelectedCategories] = useState([]);
-    const [pages, setPages] = useState(1);
-    const [isLastPage, setIsLastPage] = useState(false);
-
-    const resetRecipes = () => {
-        setRecipes([]);
-        setPages(1);
-        setIsLastPage(false);
-    }
-
-    const handleFilterChange = (newFilter) => {
-        resetRecipes();
-        setFilter((prevFilter) => ({
-            ...prevFilter,
-            ...newFilter
-        }));
-    };
-
-    const handleSortChange = (event) => {
-        resetRecipes();
-        setSort(event.target.value);
-    }
-
-    const handleCategoriesChange = (newCategories) => {
-        setSelectedCategories(newCategories);
-        handleFilterChange({categories: newCategories});
-    };
+    const [canFetch, setCanFetch] = useState(false);
 
     const generateEndpoint = () => {
         let endpoint = `/api/recipes?name=${filter.name}` +
@@ -75,8 +60,14 @@ export default function RecipesFetcher({setRecipes, isPending, setIsPending, onl
     };
 
     useEffect(() => {
+        if (isReadingState) return;
+        setCanFetch(true);
+    }, [isReadingState]);
+
+    useEffect(() => {
+        if (isReadingState || !canFetch) return;
         fetchRecipes();
-    }, [filter, sort, pages]);
+    }, [canFetch, filter, sort, pages]);
 
     const reachedBottom = (threshold = 100) => {
         return document.body.scrollHeight <= window.scrollY + window.innerHeight + threshold;
@@ -120,9 +111,11 @@ export default function RecipesFetcher({setRecipes, isPending, setIsPending, onl
                 gap="1em"
                 width="100%"
             >
-                <SearchBar filter={filter} onFilterChange={handleFilterChange}/>
-                <IngredientFilterInput onFilterChange={handleFilterChange} text={"Zawiera"}/>
-                <IngredientFilterInput onFilterChange={handleFilterChange} text={"Nie zawiera"}/>
+                <SearchBar initialQuery={filter.name} onFilterChange={handleFilterChange}/>
+                <IngredientFilterInput initialIngredients={filter.include} onFilterChange={handleFilterChange}
+                                       text={"Zawiera"}/>
+                <IngredientFilterInput initialIngredients={filter.exclude} onFilterChange={handleFilterChange}
+                                       text={"Nie zawiera"}/>
                 <Autocomplete
                     sx={{
                         p: "2px 4px",
@@ -134,15 +127,16 @@ export default function RecipesFetcher({setRecipes, isPending, setIsPending, onl
                     }}
                     multiple
                     disablePortal
-                    value={selectedCategories}
+                    value={filter.categories}
                     options={categories.map(categories => categories.name)}
-                    getOptionDisabled={() => (selectedCategories.length >= MAX_CATEGORIES)}
+                    getOptionDisabled={() => (filter.categories.length >= MAX_CATEGORIES)}
                     filterSelectedOptions
-                    onChange={(e, v) => handleCategoriesChange(v)}
+                    onChange={(e, v) => handleFilterChange({categories: v})}
                     renderInput={(params) => <TextField {...params} label="Kategorie"/>}
                 />
             </Box>
-            <SortInput  {...{sort, handleSortChange}}/>
+            <SortInput {...{sort, handleSortChange}} />
         </Box>
     );
 }
+

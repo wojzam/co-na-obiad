@@ -1,9 +1,13 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {IconButton, InputBase, Paper} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
-export default function SearchBar({onFilterChange}) {
-    const [searchQuery, setSearchQuery] = useState("");
+export default function SearchBar({initialQuery, onFilterChange}) {
+    const [searchQuery, setSearchQuery] = useState(initialQuery);
+
+    useEffect(() => {
+        setSearchQuery(initialQuery);
+    }, [initialQuery]);
 
     const handleInputChange = (event) => {
         setSearchQuery(event.target.value);
@@ -12,7 +16,7 @@ export default function SearchBar({onFilterChange}) {
 
     const handleSearch = (event) => {
         event.preventDefault();
-        onFilterChange({name: searchQuery});
+        onFilterChange({name: searchQuery}); //TODO  Warning: Cannot update a component (`App`) while rendering a different component (`RecipesFetcher`).
     };
 
     return (

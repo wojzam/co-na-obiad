@@ -3,7 +3,7 @@ import {useCookies} from 'react-cookie';
 import {useParams} from 'react-router-dom';
 
 const useIngredientCheckbox = () => {
-    const {id: recipeId} = useParams(); // Assuming you're getting recipeId from the URL.
+    const {id: recipeId} = useParams();
     const [cookies, setCookie, removeCookie] = useCookies([`checkedIngredients`]);
     const [checked, setChecked] = useState([]);
 
