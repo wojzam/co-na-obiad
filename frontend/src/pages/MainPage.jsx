@@ -1,12 +1,8 @@
 import ImageButtonGrid from "../components/ImageButtonGrid";
 import {Divider, Paper, Typography} from "@mui/material";
 import Box from "@mui/material/Box";
-import useSearchState from "../hooks/useSearchState.jsx";
+import {defaultFilter, defaultSort, useSearchState} from "../hooks/useSearchState";
 import {useNavigate} from "react-router-dom";
-
-const defaultFilter = {name: "", include: [], exclude: [], categories: []};
-
-const defaultSort = "name";
 
 const MainPage = () => {
     const {save} = useSearchState({id: "/recipes"});

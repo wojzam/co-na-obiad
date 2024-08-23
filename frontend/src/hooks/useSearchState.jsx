@@ -2,19 +2,19 @@ import {useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
 
 const COOKIE_NAME = 'searchState';
+export const defaultFilter = {name: "", include: [], exclude: [], categories: []};
+export const defaultSort = "name";
 
-const useSearchState = ({id, setRecipes}) => {
-    const initialFilter = {name: "", include: [], exclude: [], categories: []};
-    const initialSort = "name";
+export const useSearchState = ({id, setRecipes}) => {
     const [cookies, setCookie] = useCookies([COOKIE_NAME]);
-    const [filter, setFilter] = useState(initialFilter);
-    const [sort, setSort] = useState(initialSort);
+    const [filter, setFilter] = useState(defaultFilter);
+    const [sort, setSort] = useState(defaultSort);
     const [pages, setPages] = useState(1);
     const [isLastPage, setIsLastPage] = useState(false);
     const [isReadingState, setIsReadingState] = useState(true);
 
     function resetCookie() {
-        save({filter: initialFilter, sort: initialSort});
+        save({filter: defaultFilter, sort: defaultSort});
     }
 
     useEffect(() => {
@@ -88,9 +88,7 @@ const useSearchState = ({id, setRecipes}) => {
         isLastPage,
         setIsLastPage,
         resetRecipes,
-        isReadingState: isReadingState,
+        isReadingState,
         save
     };
 };
-
-export default useSearchState;

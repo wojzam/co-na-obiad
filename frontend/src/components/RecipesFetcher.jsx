@@ -6,8 +6,8 @@ import axios from "axios";
 import useAuthData from "../hooks/useAuthData";
 import SortInput from "./SortInput";
 import debounce from "../utils/debounce";
-import {useCategories} from "../hooks/useCachedData.jsx";
-import useSearchState from "../hooks/useSearchState.jsx";
+import {useCategories} from "../hooks/useCachedData";
+import {useSearchState} from "../hooks/useSearchState";
 
 const pageSize = 30;
 const MAX_CATEGORIES = 10;
