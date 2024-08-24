@@ -3,12 +3,19 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import {RecipeForm} from "../components/forms/RecipeForm";
 import MessageBox from "../components/MessageBox";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import useAuthAxios from "../hooks/useAuthAxios";
 
 export default function CreateRecipe() {
     const axiosInstance = useAuthAxios();
     const [errorMessage, setErrorMessage] = useState("");
+
+    useEffect(() => {
+        axiosInstance.get("/api/healthcheck",)
+            .catch(() => {
+                setErrorMessage("Brak połaczenia z serwerem");
+            });
+    }, []);
 
     const onSubmit = (data) => {
         setErrorMessage("");

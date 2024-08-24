@@ -8,6 +8,7 @@ import SortInput from "./SortInput";
 import debounce from "../utils/debounce";
 import {useCategories} from "../hooks/useCachedData";
 import {useSearchState} from "../hooks/useSearchState";
+import MessageBox from "./MessageBox.jsx";
 
 const pageSize = 30;
 const MAX_CATEGORIES = 10;
@@ -28,6 +29,7 @@ export default function RecipesFetcher({setRecipes, isPending, setIsPending, onl
     } = useSearchState({id, setRecipes});
     const categories = useCategories();
     const [canFetch, setCanFetch] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const generateEndpoint = () => {
         let endpoint = `/api/recipes?name=${filter.name}` +
@@ -43,6 +45,7 @@ export default function RecipesFetcher({setRecipes, isPending, setIsPending, onl
 
     const fetchRecipes = () => {
         setIsPending(true);
+        setErrorMessage("");
 
         axios.get(generateEndpoint())
             .then((response) => {
@@ -53,6 +56,7 @@ export default function RecipesFetcher({setRecipes, isPending, setIsPending, onl
                 else setRecipes((prevRecipes) => [...prevRecipes, ...response.data]);
 
             }).catch(() => {
+            setErrorMessage("Brak połączenia z serwerem");
             resetRecipes();
         }).finally(() => {
             setIsPending(false);
@@ -96,52 +100,55 @@ export default function RecipesFetcher({setRecipes, isPending, setIsPending, onl
     }, [isPending, isLastPage]);
 
     return (
-        <Box
-            display="flex"
-            flexDirection={{xs: "column", sm: "column", md: "row"}}
-            justifyContent="space-between"
-            alignItems="flex-start"
-            width="100%"
-            mb="2em"
-            gap="1em"
-        >
+        <>
             <Box
                 display="flex"
                 flexDirection={{xs: "column", sm: "column", md: "row"}}
-                gap="1em"
+                justifyContent="space-between"
+                alignItems="flex-start"
                 width="100%"
+                mb="2em"
+                gap="1em"
             >
-                <SearchBar initialQuery={filter.name} onFilterChange={handleFilterChange}/>
-                <IngredientFilterInput initialIngredients={filter.include} onFilterChange={handleFilterChange}
-                                       text={"Zawiera"}/>
-                <IngredientFilterInput initialIngredients={filter.exclude} onFilterChange={handleFilterChange}
-                                       text={"Nie zawiera"}/>
-                <Autocomplete
-                    sx={{
-                        p: "2px 4px",
-                        display: "flex",
-                        alignItems: "center",
-                        height: 50,
-                        width: "auto",
-                        minWidth: 200
-                    }}
-                    multiple
-                    disablePortal
-                    value={filter.categories}
-                    options={categories.map(categories => categories.name)}
-                    getOptionDisabled={() => (filter.categories.length >= MAX_CATEGORIES)}
-                    limitTags={3}
-                    filterSelectedOptions
-                    onChange={(e, v) => handleFilterChange({categories: v})}
-                    renderInput={(params) => <TextField
-                        {...params}
-                        label="Kategorie"
-                        placeholder={filter.categories.length > 0 ? "" : "Zacznij pisać..."}
-                    />}
-                />
+                <Box
+                    display="flex"
+                    flexDirection={{xs: "column", sm: "column", md: "row"}}
+                    gap="1em"
+                    width="100%"
+                >
+                    <SearchBar initialQuery={filter.name} onFilterChange={handleFilterChange}/>
+                    <IngredientFilterInput initialIngredients={filter.include} onFilterChange={handleFilterChange}
+                                           text={"Zawiera"}/>
+                    <IngredientFilterInput initialIngredients={filter.exclude} onFilterChange={handleFilterChange}
+                                           text={"Nie zawiera"}/>
+                    <Autocomplete
+                        sx={{
+                            p: "2px 4px",
+                            display: "flex",
+                            alignItems: "center",
+                            height: 50,
+                            width: "auto",
+                            minWidth: 200
+                        }}
+                        multiple
+                        disablePortal
+                        value={filter.categories}
+                        options={categories.map(categories => categories.name)}
+                        getOptionDisabled={() => (filter.categories.length >= MAX_CATEGORIES)}
+                        limitTags={3}
+                        filterSelectedOptions
+                        onChange={(e, v) => handleFilterChange({categories: v})}
+                        renderInput={(params) => <TextField
+                            {...params}
+                            label="Kategorie"
+                            placeholder={filter.categories.length > 0 ? "" : "Zacznij pisać..."}
+                        />}
+                    />
+                </Box>
+                <SortInput {...{sort, handleSortChange}} />
             </Box>
-            <SortInput {...{sort, handleSortChange}} />
-        </Box>
+            <MessageBox message={errorMessage} isError={true}/>
+        </>
     );
 }
 

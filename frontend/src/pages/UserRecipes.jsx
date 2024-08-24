@@ -15,9 +15,11 @@ import {
     useTheme
 } from "@mui/material";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import AddIcon from '@mui/icons-material/Add';
 import {useNavigate} from "react-router-dom";
 import RecipesFetcher from "../components/RecipesFetcher";
 import truncateText from "../utils/truncateText";
+import Link from "@mui/material/Link";
 
 const maxNameLength = 80;
 const maxIngredientsLength = 100;
@@ -105,7 +107,25 @@ const UserRecipes = () => {
                     <CircularProgress size={100}/>
                 </Box> : recipes && recipes.length === 0 &&
                 <Grow in timeout={500}>
-                    <Typography mt={2} variant="h5" component="p">Brak wyników</Typography>
+                    <Box width="100%">
+                        <Typography mt={2} variant="h5" component="p">Brak przepisów</Typography>
+                        <Link href="/create-recipe" color="inherit" underline="none">
+                            <Box width="100%" p={2} my={5}
+                                 display="flex" justifyContent="center" alignItems="center" gap={2}
+                                 sx={{
+                                     borderColor: 'primary.main', borderStyle: "dashed", borderRadius: "20px",
+                                     "&:hover": {
+                                         borderStyle: "solid",
+                                         boxShadow: "0px 6px 9px rgba(0, 0, 0, 0.30)",
+                                     },
+                                 }}>
+                                <Typography variant="h6">
+                                    DODAJ PRZEPIS
+                                </Typography>
+                                <AddIcon/>
+                            </Box>
+                        </Link>
+                    </Box>
                 </Grow>}
         </>
     );

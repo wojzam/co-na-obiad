@@ -25,7 +25,7 @@ const RecipesBrowser = () => {
                     <CircularProgress size={100}/>
                 </Box> : recipes && recipes.length === 0 &&
                 <Grow in timeout={500}>
-                    <Typography mt={2} variant="h5" component="p">Brak wyników</Typography>
+                    <Typography mt={2} variant="h5" component="p">Brak przepisów spełniających kryteria</Typography>
                 </Grow>}
         </>
     );
