@@ -130,9 +130,14 @@ export default function RecipesFetcher({setRecipes, isPending, setIsPending, onl
                     value={filter.categories}
                     options={categories.map(categories => categories.name)}
                     getOptionDisabled={() => (filter.categories.length >= MAX_CATEGORIES)}
+                    limitTags={3}
                     filterSelectedOptions
                     onChange={(e, v) => handleFilterChange({categories: v})}
-                    renderInput={(params) => <TextField {...params} label="Kategorie"/>}
+                    renderInput={(params) => <TextField
+                        {...params}
+                        label="Kategorie"
+                        placeholder={filter.categories.length > 0 ? "" : "Zacznij pisać..."}
+                    />}
                 />
             </Box>
             <SortInput {...{sort, handleSortChange}} />

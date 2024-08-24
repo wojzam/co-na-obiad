@@ -4,16 +4,10 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import React from "react";
 import IngredientValueInput from "./IngredientValueInput";
+import {filterNamesWithPolishLetters} from "../../utils/filerNamesWithPolishLetters";
 
 const IngredientValueUnit = ({ingredients, units, name, watchedIngredients, handleAddRow}) => {
     const {control} = useFormContext();
-
-    const filterOptionsWithPolishLetters = (options, {inputValue}) => {
-        return options.filter((option) =>
-            option.toLowerCase().includes(inputValue.toLowerCase()) ||
-            option.toLowerCase().localeCompare(inputValue.toLowerCase(), 'pl', {sensitivity: 'base'}) === 0
-        );
-    };
 
     const handleIngredientNameChange = (field, value) => {
         field.onChange(value);
@@ -40,14 +34,17 @@ const IngredientValueUnit = ({ingredients, units, name, watchedIngredients, hand
                             disablePortal
                             options={ingredients.map((i) => i.name)}
                             filterSelectedOptions
-                            filterOptions={filterOptionsWithPolishLetters}
+                            filterOptions={filterNamesWithPolishLetters}
                             value={field.value || null}
                             sx={{
                                 '& .MuiInputBase-root': {padding: 0.5},
                                 width: {xs: '100%', sm: 220},
                             }}
                             onChange={(e, v) => handleIngredientNameChange(field, v)}
-                            renderInput={(params) => <TextField {...params} />}
+                            renderInput={(params) => <TextField
+                                {...params}
+                                placeholder={field.value > 0 ? "" : "Zacznij pisać..."}
+                            />}
                         />
                     )}
                 />

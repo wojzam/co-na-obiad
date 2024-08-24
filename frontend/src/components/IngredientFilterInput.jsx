@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {Autocomplete, TextField} from "@mui/material";
 import {useIngredients} from "../hooks/useCachedData";
+import {filterNamesWithPolishLetters} from "../utils/filerNamesWithPolishLetters";
 
 const MAX_INGREDIENTS = 20;
 
@@ -17,13 +18,6 @@ export default function IngredientFilterInput({initialIngredients, onFilterChang
         onFilterChange(text === "Zawiera" ? {include: value} : {exclude: value});
     };
 
-    const filterNamesWithPolishLetters = (options, {inputValue}) => {
-        return options.filter((option) =>
-            option.toLowerCase().includes(inputValue.toLowerCase()) ||
-            option.toLowerCase().localeCompare(inputValue.toLowerCase(), 'pl', {sensitivity: 'base'}) === 0
-        );
-    };
-
     return (
         <Autocomplete
             sx={{
@@ -38,6 +32,7 @@ export default function IngredientFilterInput({initialIngredients, onFilterChang
             value={selectedIngredients}
             options={ingredients.map(i => i.name)}
             getOptionDisabled={() => (selectedIngredients.length >= MAX_INGREDIENTS)}
+            limitTags={3}
             filterSelectedOptions
             filterOptions={filterNamesWithPolishLetters}
             onChange={handleInputChange}
@@ -45,6 +40,7 @@ export default function IngredientFilterInput({initialIngredients, onFilterChang
                 <TextField
                     {...params}
                     label={text}
+                    placeholder={selectedIngredients.length > 0 ? "" : "Zacznij pisać..."}
                 />
             )}
         />

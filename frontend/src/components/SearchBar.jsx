@@ -33,7 +33,7 @@ export default function SearchBar({initialQuery, onFilterChange}) {
         >
             <InputBase
                 sx={{ml: 1, flex: 1}}
-                placeholder="Szukaj.."
+                placeholder="Szukaj po nazwie.."
                 label="Szukaj"
                 value={searchQuery}
                 onChange={handleInputChange}
