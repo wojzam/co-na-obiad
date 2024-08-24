@@ -45,6 +45,8 @@ export default function Login() {
                     setError("root", {message: "Niepoprawna nazwa użytkownika lub hasło"})
                 } else if (error.response.status === 403) {
                     setMessage("Konto istnieje, ale oczekuje na aktywację przez administratora");
+                }  else if (error.response.status === 429) {
+                    setError("root", {message: "Za dużo prób spróbuj ponownie później"});
                 } else {
                     setError("root", {message: "Wystąpił nieoczekiwany błąd"})
                 }

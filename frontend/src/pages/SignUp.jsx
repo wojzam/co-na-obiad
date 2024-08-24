@@ -45,6 +45,8 @@ export default function SignUp() {
             .catch((error) => {
                 if (error.response.status === 409) {
                     setError("username", {message: "Nazwa użytkownika jest już zajęta"});
+                } else if (error.response.status === 429) {
+                    setError("root", {message: "Za dużo prób spróbuj ponownie później"});
                 } else {
                     setError("root", {message: "Wystąpił nieoczekiwany błąd"});
                 }

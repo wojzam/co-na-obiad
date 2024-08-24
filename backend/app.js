@@ -18,7 +18,7 @@ const ingredientsRouter = require('./routes/ingredients');
 const app = express();
 
 const globalRateLimiter = rateLimit({limit: 100});
-const authRateLimiter = rateLimit({max: 10});
+const authRateLimiter = rateLimit({max: 5});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
