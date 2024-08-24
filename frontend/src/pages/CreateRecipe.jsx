@@ -6,14 +6,17 @@ import MessageBox from "../components/MessageBox";
 import {useEffect, useState} from "react";
 import useAuthAxios from "../hooks/useAuthAxios";
 
+const exceedLimitMessage = "Przekroczono limit dodanych przepisów! (maks. 100 dziennie)";
+
 export default function CreateRecipe() {
     const axiosInstance = useAuthAxios();
     const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
-        axiosInstance.get("/api/healthcheck",)
-            .catch(() => {
-                setErrorMessage("Brak połaczenia z serwerem");
+        axiosInstance.get("/api/recipes/can-create",)
+            .catch((error) => {
+                if (error.response.status === 429) setErrorMessage(exceedLimitMessage);
+                else setErrorMessage("Brak połączenia z serwerem");
             });
     }, []);
 
@@ -29,8 +32,9 @@ export default function CreateRecipe() {
                 window.history.pushState({url: "/user-recipes"}, "", "/user-recipes");
                 window.location.href = `/recipes/${response.data._id}`;
             })
-            .catch(() => {
-                setErrorMessage("Wystąpił nieoczekiwany błąd");
+            .catch((error) => {
+                if (error.response.status === 429) setErrorMessage(exceedLimitMessage);
+                else setErrorMessage("Wystąpił nieoczekiwany błąd");
             });
     }
 

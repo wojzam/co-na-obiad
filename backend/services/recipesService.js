@@ -5,12 +5,14 @@ const Ingredient = require("../models/ingredient");
 const User = require("../models/user");
 const recipeDto = require("../dto/recipeDto");
 
+const MAX_DAILY_RECIPES = 100;
 const OK = (body = {message: "OK"}) => {
     return {status: 200, body: body}
 };
 const CREATED = (body) => {
     return {status: 201, body: body}
 };
+const EXCEED_LIMIT = {status: 429, body: {message: 'Exceed limit of created recipes'}};
 const ACCESS_DENIED = {status: 403, body: {message: 'Access denied'}};
 const NOT_FOUND = {status: 404, body: {message: 'Recipe not found'}};
 
@@ -90,6 +92,7 @@ async function appendCreatorUsername(recipe) {
 }
 
 const create = async (name, categories, preparation, ingredientSections, userId) => {
+    if (await exceedDailyRecipesLimit(userId)) return EXCEED_LIMIT;
     const newRecipe = new Recipe({
         name: name,
         preparation: preparation,
@@ -99,6 +102,26 @@ const create = async (name, categories, preparation, ingredientSections, userId)
     });
 
     return CREATED(await newRecipe.save());
+}
+
+const canCreate = async (userId) => {
+    if (await exceedDailyRecipesLimit(userId)) return EXCEED_LIMIT;
+    return OK;
+}
+
+const exceedDailyRecipesLimit = async (userId) => {
+    const today = new Date();
+    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+    const todayRecipes = await Recipe.find({
+        creatorId: userId,
+        createdAt: {
+            $gte: startOfDay,
+            $lt: endOfDay
+        }
+    }).lean();
+
+    return todayRecipes.length >= MAX_DAILY_RECIPES;
 }
 
 const update = async (id, name, categories, preparation, ingredientSections, userId) => {
@@ -194,6 +217,7 @@ module.exports = {
     list,
     find,
     create,
+    canCreate,
     update,
     softDelete,
     listCategories,

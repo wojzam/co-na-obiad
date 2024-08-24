@@ -26,6 +26,15 @@ router.post('/', requireToken, recipeSchema, async (req, res) => {
     }
 });
 
+router.get('/can-create', requireToken, async (req, res) => {
+    try {
+        const result = await recipesService.canCreate(req.userId);
+        res.status(result.status).json(result.body);
+    } catch (err) {
+        res.status(500);
+    }
+});
+
 router.get('/categories', async (req, res) => {
     try {
         const result = await recipesService.listCategories();
