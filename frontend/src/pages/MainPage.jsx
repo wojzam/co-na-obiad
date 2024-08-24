@@ -85,7 +85,11 @@ const images = [
         path: '/img/wege.jpg',
         title:
             'Wegetariańskie',
-        filter: {...defaultFilter, exclude: ["Mięso", "Owoce morza", "Ryba", "Bulion drobiowy", "Żelatyna"], categories: ['Dania główne']}
+        filter: {
+            ...defaultFilter,
+            exclude: ["Mięso", "Owoce morza", "Ryba", "Bulion drobiowy", "Żelatyna"],
+            categories: ['Dania główne']
+        }
     },
     {
         path: '/img/meat.jpg',
