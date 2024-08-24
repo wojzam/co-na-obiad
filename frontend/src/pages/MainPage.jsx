@@ -17,10 +17,10 @@ const MainPage = () => {
         <>
             <Typography variant="h3" component="h1" fontWeight="bold" color="primary" textAlign="center" width="100%"
                         mt={{xs: 3, sm: 3, md: 0}}>
-                Co na obiad
+                Co Na Obiad
             </Typography>
             <Typography variant="subtitle1" color="textSecondary" textAlign="center" width="100%">
-                Pyszne przepisy na każdy gust!
+                Pyszne przepisy dla każdego!
             </Typography>
             <Box display="flex" justifyContent="center" width="100%">
                 <Divider width="80%" sx={{my: 5, borderColor: 'primary.main'}}/>
@@ -70,109 +70,109 @@ export default MainPage;
 
 const images = [
     {
-        path: '/public/img/all_recipes.jpg',
+        path: '/img/all_recipes.jpg',
         title:
             'Wszystkie przepisy',
         filter: {...defaultFilter}
     },
     {
-        path: '/public/img/dinner.jpg',
+        path: '/img/dinner.jpg',
         title:
             'Dania główne',
         filter: {...defaultFilter, categories: ['Dania główne']}
     },
     {
-        path: '/public/img/wege.jpg',
+        path: '/img/wege.jpg',
         title:
             'Wegetariańskie',
-        filter: {...defaultFilter, exclude: ["Mięso"]}
+        filter: {...defaultFilter, exclude: ["Mięso", "Owoce morza", "Ryba", "Bulion drobiowy", "Żelatyna"], categories: ['Dania główne']}
     },
     {
-        path: '/public/img/meat.jpg',
+        path: '/img/meat.jpg',
         title:
             'Mięsne',
         filter: {...defaultFilter, include: ["Mięso"]}
     },
     {
-        path: '/public/img/pasta.jpg',
+        path: '/img/pasta.jpg',
         title:
             'Makarony',
         filter: {...defaultFilter, include: ["Makaron"]}
     },
     {
-        path: '/public/img/flour.jpg',
+        path: '/img/flour.jpg',
         title:
             'Mączne',
         filter: {...defaultFilter, include: ["Mąka"]}
     },
     {
-        path: '/public/img/baking.jpg',
+        path: '/img/baking.jpg',
         title:
             'Wypieki',
         filter: {...defaultFilter, categories: ['Wypieki']}
     },
     {
-        path: '/public/img/cake.jpg',
+        path: '/img/cake.jpg',
         title:
             'Ciasta',
         filter: {...defaultFilter, categories: ['Ciasta']}
     },
     {
-        path: '/public/img/dessert.jpg',
+        path: '/img/dessert.jpg',
         title:
             'Desery',
         filter: {...defaultFilter, categories: ['Desery']}
     },
     {
-        path: '/public/img/breakfast.jpg',
+        path: '/img/breakfast.jpg',
         title:
             'Śniadania',
         filter: {...defaultFilter, categories: ['Śniadania']}
     },
     {
-        path: '/public/img/supper.jpg',
+        path: '/img/supper.jpg',
         title:
             'Kolacje',
         filter: {...defaultFilter, categories: ['Kolacje']}
     },
     {
-        path: '/public/img/snack.jpg',
+        path: '/img/snack.jpg',
         title:
             'Przekąski',
         filter: {...defaultFilter, categories: ['Przekąski']}
     },
     {
-        path: '/public/img/fish.jpg',
+        path: '/img/fish.jpg',
         title:
             'Ryby',
         filter: {...defaultFilter, include: ["Ryba"]}
     },
     {
-        path: '/public/img/soup.jpg',
+        path: '/img/soup.jpg',
         title:
             'Zupy',
         filter: {...defaultFilter, categories: ['Zupy']}
     },
     {
-        path: '/public/img/salad.jpg',
+        path: '/img/salad.jpg',
         title:
             'Sałatki',
         filter: {...defaultFilter, categories: ['Sałatki']}
     },
     {
-        path: '/public/img/drink.jpg',
+        path: '/img/drink.jpg',
         title:
             'Napoje',
         filter: {...defaultFilter, categories: ['Napoje']}
     },
     {
-        path: '/public/img/festal.jpg',
+        path: '/img/festal.jpg',
         title:
             'Świąteczne',
         filter: {...defaultFilter, categories: ['Świąteczne']}
     },
     {
-        path: '/public/img/thermomix.jpg',
+        path: '/img/thermomix.jpg',
         title:
             'Thermomix',
         filter: {...defaultFilter, categories: ['Thermomix']}
