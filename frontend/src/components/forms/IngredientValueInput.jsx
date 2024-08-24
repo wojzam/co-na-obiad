@@ -1,11 +1,14 @@
 import {Controller, useFormContext} from "react-hook-form";
 import TextField from "@mui/material/TextField";
 import React from "react";
+import {useMediaQuery} from "@mui/material";
 
 const maxLength = 7;
 
 const IngredientValueInput = ({name}) => {
     const {control, setValue} = useFormContext();
+
+    const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
 
     const inputRegex = /^[0-9.,\- /]*$/;
     const submitRegex = /^(\d+([.,]\d+)?|\d+\/\d+|\d+\s\d+\/\d+|\d+([.,]\d+)?\s*-\s*\d+([.,]\d+)?)$/;
@@ -21,9 +24,10 @@ const IngredientValueInput = ({name}) => {
                 <>
                     <TextField
                         type="text"
+                        label={isSmallScreen ? "Wartość" : ""}
+                        InputLabelProps={{shrink: true,}}
                         inputProps={{style: {padding: 11.5}, maxLength: maxLength}}
                         value={field.value || ""}
-                        sx={{width: {xs: '100%', sm: 80}}}
                         onChange={(e) => {
                             const newValue = e.target.value;
                             if (inputRegex.test(newValue)) {

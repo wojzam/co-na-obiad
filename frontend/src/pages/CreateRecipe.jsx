@@ -39,7 +39,7 @@ export default function CreateRecipe() {
     }
 
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="xs" sx={{paddingLeft: 0, paddingRight: 0}}>
             <Box sx={{display: "flex", flexDirection: "column", alignItems: "center",}}>
                 <Typography component="h1" variant="h4" gutterBottom>Nowy przepis</Typography>
                 <MessageBox message={errorMessage} isError={true}/>

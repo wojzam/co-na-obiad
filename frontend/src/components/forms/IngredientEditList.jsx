@@ -10,11 +10,12 @@ import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import {Chip, Divider, Paper} from "@mui/material";
+import {Chip, Divider, Paper, useMediaQuery} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DragHandleIcon from '@mui/icons-material/DragHandle';
 import AddIcon from '@mui/icons-material/Add';
 import IngredientValueUnit from "./IngredientValueUnit";
 
@@ -57,6 +58,8 @@ export default function IngredientEditList({sectionIndex, handleRemove}) {
         move(result.source.index, result.destination.index);
     };
 
+    const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
+
     useEffect(() => {
         if (watchedIngredients.length === 0) {
             handleAddRow();
@@ -96,10 +99,18 @@ export default function IngredientEditList({sectionIndex, handleRemove}) {
                         <Table ref={provided.innerRef} {...provided.droppableProps} size={"small"}>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Nazwa</TableCell>
-                                    <TableCell align="right">Wartość</TableCell>
-                                    <TableCell align="right">Jednostka</TableCell>
-                                    <TableCell align="right"></TableCell>
+                                    {isSmallScreen ? (<>
+                                        <TableCell></TableCell>
+                                        <TableCell align="right"></TableCell>
+                                        <TableCell align="right"></TableCell>
+                                    </>) : (<>
+                                        <TableCell sx={{minWidth: {sm: 200, md: 220}}}> Nazwa < /TableCell>
+                                        <TableCell sx={{minWidth: {sm: 100, md: 115}}}>Wartość</TableCell>
+                                        <TableCell sx={{minWidth: {sm: 150, md: 170}}}>Jednostka</TableCell>
+                                        <TableCell align="right"></TableCell>
+                                        <TableCell align="right"></TableCell>
+                                    </>)}
+
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -109,7 +120,7 @@ export default function IngredientEditList({sectionIndex, handleRemove}) {
                                             {(provided) => (
                                                 <>
                                                     <TableRow>
-                                                        <TableCell colSpan={4}>
+                                                        <TableCell colSpan={5}>
                                                             {field.type === "alt" &&
                                                                 <Divider> <Chip label="LUB" size="small"/></Divider>}
                                                             {field.type === "opt" &&
@@ -129,8 +140,14 @@ export default function IngredientEditList({sectionIndex, handleRemove}) {
                                                             handleAddRow
                                                         }} name={`ingredientSections[${sectionIndex}].ingredients[${index}]`}
                                                         />
-                                                        <TableCell align="right">
-                                                            <IconButton onClick={() => handleRemoveRow(index)}>
+                                                        <TableCell align="right"
+                                                                   sx={{padding: isSmallScreen ? "8px 1px" : "6px 6px"}}>
+                                                            <DragHandleIcon/>
+                                                        </TableCell>
+                                                        <TableCell align="right"
+                                                                   sx={{padding: isSmallScreen ? "8px 0px" : "6px 6px"}}>
+                                                            <IconButton onClick={() => handleRemoveRow(index)}
+                                                                        sx={{display: watchedIngredients.length === 1 ? "none" : "block"}}>
                                                                 <ClearIcon/>
                                                             </IconButton>
                                                         </TableCell>
