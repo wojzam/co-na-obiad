@@ -39,6 +39,10 @@ export default function IngredientEditList({sectionIndex, handleRemove}) {
     };
 
     const handleAddRowWithType = (type = "") => {
+        if (type !== "") {
+            const lastIndex = watchedIngredients.length - 1;
+            if (!watchedIngredients[lastIndex].name && watchedIngredients[lastIndex].type === "") remove(lastIndex);
+        }
         if (watchedIngredients.length < MAX_LENGTH) {
             append({name: null, value: "", unit: null, type: type});
         }
