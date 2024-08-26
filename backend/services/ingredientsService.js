@@ -14,11 +14,11 @@ const INGREDIENT_CONFLICT = {status: 409, body: {message: 'Ingredient with provi
 
 
 const list = async () => {
-    return OK(await Ingredient.find().collation({locale: 'pl', strength: 1}).sort({name: 1}));
+    return OK(await Ingredient.find().collation({locale: 'pl', strength: 1}).sort({name: 1}).lean());
 }
 
 const listUnits = async () => {
-    return OK(await Unit.find());
+    return OK(await Unit.find().lean());
 }
 
 const create = async (name) => {

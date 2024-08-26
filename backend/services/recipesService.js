@@ -71,24 +71,28 @@ const list = async (name, include, exclude, categories, creatorId, sort, page = 
         .collation({locale: 'pl', strength: 1})
         .sort(sortQuery)
         .skip((page - 1) * pageSize)
-        .limit(pageSize);
+        .limit(pageSize)
+        .select(["name", "categories", "ingredientSections"])
+        .lean();
 
     return OK(recipes?.map(recipe => recipeDto(recipe)));
 }
 
 const find = async (id) => {
-    const recipe = await Recipe.findById(id);
+    const recipe = await Recipe
+        .findById(id)
+        .select(["name", "categories", "ingredientSections", "creatorId", "preparation"])
+        .lean();
     if (!recipe) return NOT_FOUND;
     return OK(await appendCreatorUsername(recipe));
 }
 
 async function appendCreatorUsername(recipe) {
     const creator = await User.findById(recipe.creatorId).select('username');
-    const recipeObj = recipe.toObject();
 
-    recipeObj.creator = creator.username;
-    recipeObj.creatorId = undefined;
-    return recipeObj;
+    recipe.creator = creator.username;
+    recipe.creatorId = undefined;
+    return recipe;
 }
 
 const create = async (name, categories, preparation, ingredientSections, userId) => {
