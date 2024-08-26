@@ -120,8 +120,15 @@ const exceedDailyRecipesLimit = async (userId) => {
             $lt: endOfDay
         }
     }).lean();
+    const todayDeletedRecipes = await DeletedRecipe.find({
+        'recipe.creatorId': userId, // Use dot notation to access fields within `recipe`
+        'recipe.createdAt': {
+            $gte: startOfDay,
+            $lt: endOfDay
+        }
+    }).lean();
 
-    return todayRecipes.length >= MAX_DAILY_RECIPES;
+    return todayRecipes.length + todayDeletedRecipes.length >= MAX_DAILY_RECIPES;
 }
 
 const update = async (id, name, categories, preparation, ingredientSections, userId) => {
