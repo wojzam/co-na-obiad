@@ -1,3 +1,4 @@
+import {useEffect, useState} from "react";
 import {Box, Button, Divider, Grid, Skeleton, Typography, useTheme} from "@mui/material";
 import BackButton from "../components/BackButton";
 import {useRecipe} from "../hooks/useRecipe";
@@ -5,7 +6,7 @@ import IngredientList from "../components/IngredientList";
 import CategoryLink from "../components/CategoryLink";
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 import useAuthAxios from "../hooks/useAuthAxios.jsx";
-import {useEffect, useState} from "react";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
 const RecipeDetails = () => {
     const recipe = useRecipe();
@@ -78,7 +79,7 @@ const RecipeDetails = () => {
                             {recipe ? recipe?.creator : <Skeleton width={100}/>}
                         </Typography>
                     </Box>
-                    <Box display="flex" justifyContent="end">
+                    <Box display="flex" justifyContent="end" gap={2}>
                         <Button sx={{
                             display: recipe && 'saved' in recipe ? "inherit" : "none",
                             height: "fit-content",
@@ -91,6 +92,20 @@ const RecipeDetails = () => {
                                 onClick={handleSave}>
                             {isSaved ? "Zapisano" : "Zapisz"}
                         </Button>
+
+                        <Button sx={{
+                            display: recipe && 'canEdit' in recipe ? "inherit" : "none",
+                            height: "fit-content",
+                            width: "fit-content",
+                            mb: {xs: 3, sm: 3, md: 0}
+                        }}
+                                startIcon={<EditOutlinedIcon/>}
+                                variant="outlined"
+                                href={`/edit-recipe/${recipe?._id}`}
+                                disabled={!recipe?.canEdit}>
+                            Edytuj
+                        </Button>
+
                     </Box>
                 </Box>
                 <Divider/>

@@ -91,12 +91,13 @@ const find = async (id, userId) => {
 
     const creator = await User.findById(recipe.creatorId).select('username');
     recipe.creator = creator.username;
-    recipe.creatorId = undefined;
 
     if (userId) {
         recipe.saved = !!(recipe.savedBy && recipe.savedBy.some((id) => id.equals(userId)));
+        recipe.canEdit = userId.equals(recipe.creatorId);
     }
     recipe.savedBy = undefined;
+    recipe.creatorId = undefined;
 
     return OK(recipe);
 }
