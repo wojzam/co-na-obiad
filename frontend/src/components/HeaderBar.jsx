@@ -1,9 +1,12 @@
-import {useState} from "react";
+import React, {useState} from "react";
 import {AppBar, Box, Button, Menu, MenuItem} from "@mui/material";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import useAuthData from "../hooks/useAuthData";
+import {defaultFilter, defaultSort, useSearchState} from "../hooks/useSearchState";
 import MobileMenu from './MobileMenu';
 import truncateText from "../utils/truncateText";
+import AddIcon from '@mui/icons-material/Add';
+import {useNavigate} from "react-router-dom";
 
 const homeButtonStyle = {
     textTransform: "none",
@@ -37,6 +40,21 @@ const maxUsernameLength = 27;
 export default function HeaderBar() {
     const {logout, username} = useAuthData();
     const [anchorEl, setAnchorEl] = useState(null);
+    const {save: saveRecipesSearch} = useSearchState({id: "/recipes"});
+    const {save: saveUserRecipesSearch} = useSearchState({id: "/user-recipes"});
+    const navigate = useNavigate();
+
+    const openRecipes = () => {
+        saveRecipesSearch({filter: defaultFilter, sort: defaultSort});
+        navigate("/recipes");
+        navigate(0);
+    }
+
+    const openUserRecipes = () => {
+        saveUserRecipesSearch({filter: defaultFilter, sort: defaultSort});
+        navigate("/user-recipes");
+        navigate(0);
+    }
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -64,15 +82,15 @@ export default function HeaderBar() {
                 </Button>
 
                 {/* Desktop view */}
-                <Box display={{xs: 'none', md: 'flex'}} sx={{gap: 2}}>
-                    <Button href="/recipes" sx={buttonStyle}>
+                <Box display={{xs: 'none', md: 'flex'}} sx={{gap: 4}}>
+                    <Button onClick={openRecipes} sx={buttonStyle}>
                         Przepisy
                     </Button>
-                    <Button href="/user-recipes" disabled={!username} sx={buttonStyle}>
+                    <Button onClick={openUserRecipes} disabled={!username} sx={buttonStyle}>
                         Moje przepisy
                     </Button>
-                    <Button href="/create-recipe" disabled={!username} sx={buttonStyle}>
-                        Dodaj przepis
+                    <Button href="/create-recipe" disabled={!username} sx={buttonStyle} startIcon={<AddIcon/>}>
+                        Dodaj
                     </Button>
                 </Box>
                 <Box display={{xs: 'none', md: 'flex'}}>
@@ -113,7 +131,7 @@ export default function HeaderBar() {
                 </Box>
 
                 {/* Mobile Menu */}
-                <MobileMenu/>
+                <MobileMenu openRecipes={openRecipes} openUserRecipes={openUserRecipes}/>
             </Box>
         </AppBar>
     );

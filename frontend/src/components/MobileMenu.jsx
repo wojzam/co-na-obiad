@@ -3,8 +3,9 @@ import {Box, Button, Drawer, IconButton, useTheme} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import useAuthData from '../hooks/useAuthData';
+import AddIcon from '@mui/icons-material/Add';
 
-export default function MobileMenu() {
+export default function MobileMenu({openRecipes, openUserRecipes}) {
     const {logout, username} = useAuthData();
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [menuHeight, setMenuHeight] = useState('100vh');
@@ -83,14 +84,14 @@ export default function MobileMenu() {
                     p={2}
                 >
                     <Box display="flex" flexDirection="column" gap={2} p={2}>
-                        <Button href="/recipes" sx={buttonStyle}>
+                        <Button onClick={openRecipes} sx={buttonStyle}>
                             Przepisy
                         </Button>
-                        <Button href="/user-recipes" disabled={!username} sx={buttonStyle}>
+                        <Button onClick={openUserRecipes} disabled={!username} sx={buttonStyle}>
                             Moje przepisy
                         </Button>
-                        <Button href="/create-recipe" disabled={!username} sx={buttonStyle}>
-                            Dodaj przepis
+                        <Button href="/create-recipe" disabled={!username} sx={buttonStyle} startIcon={<AddIcon/>}>
+                            Dodaj
                         </Button>
                     </Box>
                     <Box display="flex" flexDirection="column" gap={2} p={2}>
