@@ -68,7 +68,7 @@ export default function IngredientEditList({sectionIndex, handleRemove}) {
 
     return (
         <Paper sx={{mb: 4}}>
-            <Box display={sectionIndex > 0 ? 'flex' : 'none'} justifyContent="center" gap={10} pt={3} px={2} mt={5}
+            <Box display={sectionIndex > 0 ? 'flex' : 'none'} pt={3} px={2} mt={5}
                  mb={2}>
                 <TextField
                     {...register(`ingredientSections[${sectionIndex}].sectionName`, {
@@ -78,6 +78,7 @@ export default function IngredientEditList({sectionIndex, handleRemove}) {
                             message: "Nazwa sekcji nie może przekraczać 100 znaków"
                         }
                     })}
+                    sx={{mr: 2}}
                     label="Nazwa sekcji"
                     fullWidth
                     error={!!errors?.ingredientSections?.[sectionIndex]?.sectionName}
@@ -87,10 +88,10 @@ export default function IngredientEditList({sectionIndex, handleRemove}) {
                     variant="text"
                     startIcon={<DeleteOutlineIcon/>}
                     onClick={() => handleRemove(sectionIndex)}
-                    sx={{flexGrow: 1, minWidth: 150}}
+                    sx={{width: "fit-content", whiteSpace: "nowrap", px: 3}}
                     color="error"
                 >
-                    Usuń sekcję
+                    {isSmallScreen ? "Usuń" : "Usuń sekcję"}
                 </Button>
             </Box>
             <DragDropContext onDragEnd={handleDragEnd}>
@@ -110,7 +111,6 @@ export default function IngredientEditList({sectionIndex, handleRemove}) {
                                         <TableCell align="right"></TableCell>
                                         <TableCell align="right"></TableCell>
                                     </>)}
-
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -176,7 +176,8 @@ export default function IngredientEditList({sectionIndex, handleRemove}) {
                         Dodaj składnik
                     </Button>
                 </Box>
-                <Box display="flex" justifyContent="center" gap={2} pt={2}>
+                <Box display="flex" justifyContent="center" flexDirection={{xs: "column", sm: "row", md: "row"}}
+                     gap={2} pt={2}>
                     <Button
                         variant="outlined"
                         startIcon={<AddIcon/>}

@@ -44,7 +44,7 @@ const IngredientList = ({ingredientSections}) => {
 
     return (
         <>
-            <Typography marginTop={3} fontWeight="medium" gutterBottom
+            <Typography marginTop={3} fontWeight="medium"
                         textAlign={{xs: 'center', sm: 'center', md: 'start'}}
                         sx={{
                             fontSize: {
@@ -53,6 +53,11 @@ const IngredientList = ({ingredientSections}) => {
                             },
                         }}>
                 Składniki:
+            </Typography>
+            <Typography fontWeight="lighter" gutterBottom
+                        textAlign={{xs: 'center', sm: 'center', md: 'start'}}
+                        variant="subtitle2">
+                (zaznacz dodane)
             </Typography>
             {ingredientSections ? (
                 ingredientSections.map((section, sectionIndex) => (

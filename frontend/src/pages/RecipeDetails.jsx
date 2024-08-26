@@ -46,7 +46,7 @@ const RecipeDetails = () => {
                             lg: theme.typography.subtitle1.fontSize,
                         },
                     }}>
-                        {recipe ? "Autor: " + recipe?.creator : <Skeleton width={100}/>}
+                        {recipe ? recipe?.creator : <Skeleton width={100}/>}
                     </Typography>
                     <Divider/>
                 </Box>

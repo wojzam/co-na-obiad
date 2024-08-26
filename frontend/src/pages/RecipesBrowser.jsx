@@ -1,15 +1,23 @@
 import {useState} from "react";
-import {Box, CircularProgress, Grid, Grow, Typography} from "@mui/material";
+import {Box, CircularProgress, Grid, Grow, Typography, useTheme} from "@mui/material";
 import Recipe from "../components/Recipe";
 import RecipesFetcher from "../components/RecipesFetcher";
 
 const RecipesBrowser = () => {
+    const theme = useTheme();
     const [recipes, setRecipes] = useState([]);
     const [isPending, setIsPending] = useState(true);
 
     return (
         <>
-            <Typography component="h1" variant="h3" fontWeight="medium" gutterBottom> Przepisy </Typography>
+            <Typography component="h1" fontWeight="medium" gutterBottom sx={{
+                fontSize: {
+                    xs: theme.typography.h4.fontSize,
+                    sm: theme.typography.h3.fontSize,
+                }
+            }}>
+                Przepisy
+            </Typography>
             <RecipesFetcher {...{setRecipes, isPending, setIsPending}}/>
             {recipes && <Grid container spacing={3} columns={{sm: 2, md: 8, lg: 8, xl: 12}} alignItems="stretch">
                 {recipes.map(recipe => (

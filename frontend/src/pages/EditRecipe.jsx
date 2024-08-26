@@ -1,7 +1,7 @@
-import {Box, CircularProgress, Container, Typography} from "@mui/material";
-import {RecipeForm} from "../components/forms/RecipeForm";
 import {useParams} from "react-router-dom";
 import {useState} from "react";
+import {Box, CircularProgress, Container, Typography, useTheme} from "@mui/material";
+import {RecipeForm} from "../components/forms/RecipeForm";
 import BackButton from "../components/BackButton";
 import {useRecipe} from "../hooks/useRecipe";
 import MessageBox from "../components/MessageBox";
@@ -9,6 +9,7 @@ import useAuthAxios from "../hooks/useAuthAxios";
 
 export default function EditRecipe() {
     const {id} = useParams();
+    const theme = useTheme();
     const axiosInstance = useAuthAxios();
     const recipe = useRecipe();
     const [errorMessage, setErrorMessage] = useState("");
@@ -47,7 +48,14 @@ export default function EditRecipe() {
             <BackButton/>
             <Container component="main" maxWidth="xs">
                 <Box sx={{display: "flex", flexDirection: "column", alignItems: "center",}}>
-                    <Typography component="h1" variant="h4" gutterBottom>Edytuj przepis</Typography>
+                    <Typography component="h1" gutterBottom sx={{
+                        fontSize: {
+                            xs: theme.typography.h5.fontSize,
+                            sm: theme.typography.h4.fontSize,
+                        }
+                    }}>
+                        Edytuj przepis
+                    </Typography>
                     <MessageBox message={errorMessage} isError={true}/>
                     {recipe ?
                         <RecipeForm onSubmit={onSubmit} onDelete={onDelete} isEdit={true} initialData={{

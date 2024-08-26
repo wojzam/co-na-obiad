@@ -49,7 +49,14 @@ const UserRecipes = () => {
 
     return (
         <>
-            <Typography component="h1" variant="h3" fontWeight="medium" gutterBottom>Moje przepisy</Typography>
+            <Typography component="h1" fontWeight="medium" gutterBottom sx={{
+                fontSize: {
+                    xs: theme.typography.h4.fontSize,
+                    sm: theme.typography.h3.fontSize,
+                }
+            }}>
+                Moje przepisy
+            </Typography>
             <RecipesFetcher {...{setRecipes, isPending, setIsPending}} onlyUser={true} id={"/user-recipes"}/>
             <TableContainer component={Paper}>
                 <Table>
@@ -72,7 +79,7 @@ const UserRecipes = () => {
                                     cursor: 'pointer'
                                 }}
                             >
-                                <TableCell sx={{minWidth: 250}}>
+                                <TableCell sx={{minWidth: {xs: 100, sm: 150, md: 250}}}>
                                     <Typography component="h4" fontWeight="bold"
                                                 sx={{
                                                     wordBreak: 'break-word',

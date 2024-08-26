@@ -1,10 +1,10 @@
-import ImageButtonGrid from "../components/ImageButtonGrid";
-import {Divider, Paper, Typography} from "@mui/material";
-import Box from "@mui/material/Box";
-import {defaultFilter, defaultSort, useSearchState} from "../hooks/useSearchState";
 import {useNavigate} from "react-router-dom";
+import ImageButtonGrid from "../components/ImageButtonGrid";
+import {Box, Divider, Paper, Typography, useTheme} from "@mui/material";
+import {defaultFilter, defaultSort, useSearchState} from "../hooks/useSearchState";
 
 const MainPage = () => {
+    const theme = useTheme();
     const {save} = useSearchState({id: "/recipes"});
     const navigate = useNavigate();
 
@@ -13,10 +13,28 @@ const MainPage = () => {
         navigate("/recipes");
     }
 
+    const HeaderText = ({text, mt}) => {
+        return <Typography component="h1" fontWeight="medium" color="primary" width="100%" mt={mt}
+                           sx={{
+                               fontSize: {
+                                   xs: theme.typography.h6.fontSize,
+                                   sm: theme.typography.h5.fontSize,
+                               }
+                           }}>
+            {text}
+        </Typography>
+    }
+
     return (
         <>
-            <Typography variant="h3" component="h1" fontWeight="bold" color="primary" textAlign="center" width="100%"
-                        mt={{xs: 3, sm: 3, md: 0}}>
+            <Typography component="h1" fontWeight="bold" color="primary" textAlign="center" width="100%"
+                        mt={{xs: 3, sm: 3, md: 0}}
+                        sx={{
+                            fontSize: {
+                                xs: theme.typography.h4.fontSize,
+                                sm: theme.typography.h3.fontSize,
+                            }
+                        }}>
                 Co Na Obiad
             </Typography>
             <Typography variant="subtitle1" color="textSecondary" textAlign="center" width="100%">
@@ -27,35 +45,26 @@ const MainPage = () => {
             </Box>
             <ImageButtonGrid images={images} onClick={onClick}/>
             <Paper sx={{mt: 10, width: "100%", padding: 4}}>
-                <Typography variant="h5" component="h1" fontWeight="medium" color="primary" width="100%">
-                    Witaj w "Co na Obiad"!
-                </Typography>
+                <HeaderText text={'Witaj w "Co na Obiad"!'}/>
                 Jeśli kiedykolwiek zastanawiałeś się, co dziś ugotować, nasza aplikacja jest właśnie dla Ciebie! "Co na
                 Obiad" to Twoje nowe, niezawodne źródło inspiracji kulinarnych, które sprawi, że gotowanie stanie się
                 przyjemnością.
-                <Typography variant="h5" component="h1" fontWeight="medium" color="primary" width="100%" mt={4}>
-                    Odkryj Nowe Przepisy
-                </Typography>
+                <HeaderText text={'Odkryj Nowe Przepisy'} mt={4}/>
                 Nasza aplikacja to prawdziwa skarbnica przepisów na każdą okazję. Znajdziesz tu pomysły na szybkie
                 obiady, eleganckie kolacje, zdrowe przekąski oraz wyjątkowe desery. Niezależnie od tego, czy jesteś
                 wegetarianinem, fanem tradycyjnej kuchni, czy po prostu szukasz czegoś nowego – "Co na Obiad" pomoże Ci
                 znaleźć idealne danie na każdą chwilę.
-                <Typography variant="h5" component="h1" fontWeight="medium" color="primary" width="100%" mt={4}>
-                    Dodaj Własne Przepisy
-                </Typography>
+                <HeaderText text={'Dodaj Własne Przepisy'} mt={4}/>
                 Masz swój ulubiony przepis, którym chcesz się podzielić ze światem? Po zalogowaniu możesz łatwo dodać
                 własne przepisy do naszej bazy. Dołącz do naszej społeczności i zainspiruj innych swoimi kulinarnymi
                 pomysłami!
-                <Typography variant="h5" component="h1" fontWeight="medium" color="primary" width="100%" mt={4}>
-                    Filtruj Według Składników
-                </Typography>
-                Nie wiesz, co ugotować z tego, co masz w lodówce? Nasza unikalna funkcja filtrowania przepisów
-                według składników pozwoli Ci znaleźć dania, które możesz przygotować z dostępnych w domu produktów.
-                Co więcej, możesz także wykluczyć składniki, których nie lubisz lub na które jesteś uczulony, aby
-                znaleźć przepisy idealnie dopasowane do Twoich potrzeb.
-                <Typography variant="h5" component="h1" fontWeight="medium" color="primary" width="100%" mt={4}>
-                    Dołącz Do Nas!
-                </Typography>
+                <HeaderText text={'Filtruj Według Składników'} mt={4}/>
+                Dzięki unikalnej funkcji filtrowania przepisów według składników, możesz łatwo znaleźć dania zawierające
+                podane produkty, na które masz ochotę. Co więcej, masz również możliwość wykluczenia składników, których
+                nie lubisz lub na które jesteś uczulony, co pozwoli Ci znaleźć przepisy idealnie dopasowane do Twoich
+                potrzeb. Na przykład możesz wyszukać wszystkie dania z mięsem i warzywami lub wykluczyć przepisy
+                zawierające nabiał, aby cieszyć się posiłkami zgodnymi z Twoimi preferencjami.
+                <HeaderText text={'Dołącz Do Nas!'} mt={4}/>
                 Nie czekaj! Już dziś zarejestruj się i zacznij korzystać z pełni możliwości naszej aplikacji.
                 Niezależnie od tego, czy gotujesz dla siebie, rodziny, czy przyjaciół – z nami
                 każde danie będzie sukcesem!

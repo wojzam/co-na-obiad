@@ -1,14 +1,16 @@
+import {useEffect, useState} from "react";
+import {useTheme} from "@mui/material";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import {RecipeForm} from "../components/forms/RecipeForm";
 import MessageBox from "../components/MessageBox";
-import {useEffect, useState} from "react";
 import useAuthAxios from "../hooks/useAuthAxios";
 
 const exceedLimitMessage = "Przekroczono limit dodanych przepisów! (maks. 100 dziennie)";
 
 export default function CreateRecipe() {
+    const theme = useTheme();
     const axiosInstance = useAuthAxios();
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -39,9 +41,16 @@ export default function CreateRecipe() {
     }
 
     return (
-        <Container component="main" maxWidth="xs" sx={{paddingLeft: 0, paddingRight: 0}}>
+        <Container component="main" maxWidth="xs">
             <Box sx={{display: "flex", flexDirection: "column", alignItems: "center",}}>
-                <Typography component="h1" variant="h4" gutterBottom>Nowy przepis</Typography>
+                <Typography component="h1" gutterBottom sx={{
+                    fontSize: {
+                        xs: theme.typography.h5.fontSize,
+                        sm: theme.typography.h4.fontSize,
+                    }
+                }}>
+                    Nowy przepis
+                </Typography>
                 <MessageBox message={errorMessage} isError={true}/>
                 <RecipeForm onSubmit={onSubmit}/>
             </Box>
