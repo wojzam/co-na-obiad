@@ -9,9 +9,11 @@ export default function Recipe({id, name, categories, ingredients, additionalIng
         <Link href={`/recipes/${id}`} color="inherit" underline="none" width="100%">
             <Box
                 sx={{
-                    my: 2,
+                    mt: 2,
+                    mb: {xs: 0.5, sm: 1.5},
                     px: 5,
-                    py: 2,
+                    pt: {xs: 1.5, sm: 2},
+                    pb: {xs: 0, sm: 0.5},
                     height: "100%",
                     borderRadius: 8,
                     background: theme.palette.neutral.main,
