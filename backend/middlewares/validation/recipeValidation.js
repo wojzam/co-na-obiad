@@ -34,6 +34,10 @@ const filterSchema = [checkSchema({
         optional: true, in: ['query'], trim: true, escape: true, isLength: {
             options: {max: 24}, errorMessage: 'Creator ID cannot exceed 24 characters'
         },
+    }, savedBy: {
+        optional: true, in: ['query'], trim: true, escape: true, isLength: {
+            options: {max: 24}, errorMessage: 'SavedBy cannot exceed 24 characters'
+        },
     }, sort: {
         optional: true, in: ['query'], trim: true, escape: true, isLength: {
             options: {max: 20}, errorMessage: 'Sort cannot exceed 20 characters'

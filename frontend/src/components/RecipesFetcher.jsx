@@ -12,8 +12,11 @@ import MessageBox from "./MessageBox.jsx";
 
 const pageSize = 30;
 const MAX_CATEGORIES = 10;
+const TYPE_ALL = "all";
+export const TYPE_USER = "user";
+export const TYPE_SAVED = "savedBy";
 
-export default function RecipesFetcher({setRecipes, isPending, setIsPending, onlyUser = false, id = "/recipes"}) {
+export default function RecipesFetcher({setRecipes, isPending, setIsPending, type = TYPE_ALL, id = "/recipes"}) {
     const {userId} = useAuthData();
     const {
         filter,
@@ -39,7 +42,10 @@ export default function RecipesFetcher({setRecipes, isPending, setIsPending, onl
             `&sort=${sort}` +
             `&page=${pages}` +
             `&pageSize=${pageSize}`;
-        if (onlyUser && userId) endpoint = endpoint + `&creatorId=${userId}`;
+        if (userId) {
+            if (type === TYPE_USER) endpoint = endpoint + `&creatorId=${userId}`;
+            if (type === TYPE_SAVED) endpoint = endpoint + `&savedBy=${userId}`;
+        }
         return endpoint;
     }
 

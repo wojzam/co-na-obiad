@@ -3,13 +3,23 @@ const router = express.Router();
 const recipesService = require('../services/recipesService');
 const {matchedData, validationResult} = require('express-validator');
 const {filterSchema, recipeSchema} = require('../middlewares/validation/recipeValidation')
-const {requireToken} = require('../middlewares/authMiddleware');
+const {requireToken, optionalToken} = require('../middlewares/authMiddleware');
 const {validId} = require("../middlewares/validation/validId");
 
 router.get('/', filterSchema, async (req, res) => {
     try {
         const data = matchedData(req);
-        const result = await recipesService.list(data.name, data.include, data.exclude, data.categories, data.creatorId, data.sort, data.page, data.pageSize);
+        const result = await recipesService.list(
+            data.name,
+            data.include,
+            data.exclude,
+            data.categories,
+            data.creatorId,
+            data.savedBy,
+            data.sort,
+            data.page,
+            data.pageSize
+        );
         res.status(result.status).json(result.body);
     } catch (err) {
         res.status(500);
@@ -44,9 +54,9 @@ router.get('/categories', async (req, res) => {
     }
 });
 
-router.get('/:id', validId, async (req, res) => {
+router.get('/:id', validId, optionalToken, async (req, res) => {
     try {
-        const result = await recipesService.find(req.params.id);
+        const result = await recipesService.find(req.params.id, req.userId);
         res.status(result.status).json(result.body);
     } catch (err) {
         res.status(500);
@@ -66,6 +76,24 @@ router.put('/:id', requireToken, validId, recipeSchema, async (req, res) => {
 router.delete('/:id', requireToken, validId, async (req, res) => {
     try {
         const result = await recipesService.softDelete(req.params.id, req.userId);
+        res.status(result.status).json(result.body);
+    } catch (err) {
+        res.status(500);
+    }
+});
+
+router.post('/:id/save', requireToken, validId, async (req, res) => {
+    try {
+        const result = await recipesService.save(req.params.id, req.userId);
+        res.status(result.status).json(result.body);
+    } catch (err) {
+        res.status(500);
+    }
+});
+
+router.delete('/:id/save', requireToken, validId, async (req, res) => {
+    try {
+        const result = await recipesService.unSave(req.params.id, req.userId);
         res.status(result.status).json(result.body);
     } catch (err) {
         res.status(500);

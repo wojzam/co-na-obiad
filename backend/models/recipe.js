@@ -21,6 +21,7 @@ const recipeSchema = new mongoose.Schema({
     }],
     ingredientSections: [ingredientsSectionSchema],
     creatorId: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true},
+    savedBy: [{type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true}],
     createdAt: {type: Date, default: Date.now, index: true},
     updatedAt: {type: Date, default: Date.now},
 }, {

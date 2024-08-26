@@ -16,16 +16,12 @@ const EXCEED_LIMIT = {status: 429, body: {message: 'Exceed limit of created reci
 const ACCESS_DENIED = {status: 403, body: {message: 'Access denied'}};
 const NOT_FOUND = {status: 404, body: {message: 'Recipe not found'}};
 
-const list = async (name, include, exclude, categories, creatorId, sort, page = 1, pageSize = 10) => {
+const list = async (name, include, exclude, categories, creatorId, savedBy, sort, page = 1, pageSize = 10) => {
     const includeIds = include ? await getAllChildrenIds(include) : [];
     const excludeIds = exclude ? await getAllChildrenIds(exclude) : [];
     const categoriesNames = categories ? categories : [];
 
     let query = name ? [{name: {$regex: name, $options: 'i'}}] : [];
-
-    if (creatorId) {
-        query.push({creatorId: creatorId});
-    }
 
     if (includeIds.length > 0) {
         query.push({
@@ -49,6 +45,14 @@ const list = async (name, include, exclude, categories, creatorId, sort, page = 
                 'categories.name': {$in: children}
             }))
         });
+    }
+
+    if (creatorId) {
+        query.push({creatorId: creatorId});
+    }
+
+    if (savedBy) {
+        query.push({savedBy: savedBy});
     }
 
     const findQuery = query.length > 0 ? {$and: query} : {};
@@ -78,21 +82,23 @@ const list = async (name, include, exclude, categories, creatorId, sort, page = 
     return OK(recipes?.map(recipe => recipeDto(recipe)));
 }
 
-const find = async (id) => {
+const find = async (id, userId) => {
     const recipe = await Recipe
         .findById(id)
-        .select(["name", "categories", "ingredientSections", "creatorId", "preparation"])
+        .select(["name", "categories", "ingredientSections", "creatorId", "preparation", "savedBy"])
         .lean();
     if (!recipe) return NOT_FOUND;
-    return OK(await appendCreatorUsername(recipe));
-}
 
-async function appendCreatorUsername(recipe) {
     const creator = await User.findById(recipe.creatorId).select('username');
-
     recipe.creator = creator.username;
     recipe.creatorId = undefined;
-    return recipe;
+
+    if (userId) {
+        recipe.saved = !!(recipe.savedBy && recipe.savedBy.some((id) => id.equals(userId)));
+    }
+    recipe.savedBy = undefined;
+
+    return OK(recipe);
 }
 
 const create = async (name, categories, preparation, ingredientSections, userId) => {
@@ -158,6 +164,29 @@ const softDelete = async (recipeId, userId) => {
     await deletedRecipe.save();
 
     await Recipe.findByIdAndDelete(recipe._id);
+    return OK();
+}
+
+const save = async (recipeId, userId) => {
+    const recipe = await Recipe.findById(recipeId).select(["savedBy"]).lean();
+    if (!recipe) return NOT_FOUND;
+
+    if (!recipe.savedBy) {
+        recipe.savedBy = [userId];
+    } else if (!recipe.savedBy.includes(userId)) {
+        recipe.savedBy.push(userId);
+    }
+
+    await Recipe.findByIdAndUpdate(recipeId, {savedBy: recipe.savedBy});
+    return OK();
+}
+
+const unSave = async (recipeId, userId) => {
+    const recipe = await Recipe.findById(recipeId).select(["savedBy"]).lean();
+    if (!recipe) return NOT_FOUND;
+    if (!recipe.savedBy) return OK();
+
+    await Recipe.findByIdAndUpdate(recipeId, {savedBy: recipe.savedBy.filter((id) => !id.equals(userId))});
     return OK();
 }
 
@@ -231,5 +260,7 @@ module.exports = {
     canCreate,
     update,
     softDelete,
+    save,
+    unSave,
     listCategories,
 }
