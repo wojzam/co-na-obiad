@@ -101,21 +101,18 @@ const find = async (id, userId) => {
 
 const create = async (name, categories, preparation, ingredientSections, userId) => {
     if (await exceedDailyRecipesLimit(userId)) return EXCEED_LIMIT;
+const create = async (name, categories, preparation, ingredientSections, user) => {
+    if (await exceedDailyRecipesLimit(user._id)) return EXCEED_LIMIT;
 
     const newRecipe = new Recipe({
         name: name,
         preparation: preparation,
         categories: await validateCategories(categories),
         ingredientSections: await validateSections(ingredientSections),
-        creator: await getUser(userId)
+        creator: {_id: user._id, name: user.username}
     });
 
     return CREATED(await newRecipe.save());
-}
-
-async function getUser(userId) {
-    const user = await User.findById(userId).select('username').lean();
-    return {_id: userId, name: user.username};
 }
 
 const canCreate = async (userId) => {

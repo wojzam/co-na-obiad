@@ -29,7 +29,7 @@ router.get('/', filterSchema, async (req, res) => {
 router.post('/', requireToken, recipeSchema, async (req, res) => {
     try {
         const data = matchedData(req);
-        const result = await recipesService.create(data.name, data.categories, data.preparation, data.ingredientSections, req.userId);
+        const result = await recipesService.create(data.name, data.categories, data.preparation, data.ingredientSections, req.user);
         res.status(result.status).json(result.body);
     } catch (err) {
         res.status(500);
