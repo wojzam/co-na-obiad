@@ -113,7 +113,8 @@ export const RecipeForm = ({onSubmit, onDelete, initialData, isEdit = false}) =>
                             label="Przygotowanie"
                             fullWidth
                             multiline
-                            rows={12}
+                            minRows={6}
+                            maxRows={20}
                             error={!!errors.preparation}
                             helperText={errors.preparation ? errors.preparation.message : ""}
                         />
