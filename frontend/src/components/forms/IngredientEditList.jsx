@@ -74,9 +74,13 @@ export default function IngredientEditList({sectionIndex, handleRemove}) {
                     {...register(`ingredientSections[${sectionIndex}].sectionName`, {
                         required: sectionIndex > 0 && "Nazwa sekcji jest wymagana",
                         maxLength: {
-                            value: 100,
-                            message: "Nazwa sekcji nie może przekraczać 100 znaków"
-                        }
+                            value: 64,
+                            message: "Nazwa sekcji nie może przekraczać 64 znaków"
+                        },
+                        pattern: {
+                            value: /^[a-zA-Z0-9 @\-!._:*#%?]+$/,
+                            message: 'Nazwa sekcji może zawierać tylko litery, cyfry i znaki @-!._:*#%?'
+                        },
                     })}
                     sx={{mr: 2}}
                     label="Nazwa sekcji"

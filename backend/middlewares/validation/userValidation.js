@@ -1,7 +1,7 @@
 const {checkSchema} = require("express-validator");
 const {validRequest} = require("./validRequest");
 
-const authSchema = [checkSchema({
+const usernameSchema = [checkSchema({
     username: {
         notEmpty: {
             errorMessage: 'Username is required',
@@ -17,9 +17,12 @@ const authSchema = [checkSchema({
             errorMessage: 'Username can contain only letter, numbers or @-!._:*#%?'
         }
     },
-    password: {
+}), validRequest];
+
+const newPasswordSchema = [checkSchema({
+    currentPassword: {
         notEmpty: {
-            errorMessage: 'Password is required',
+            errorMessage: 'Current password is required',
         },
         in: ['body'],
         trim: true,
@@ -29,18 +32,18 @@ const authSchema = [checkSchema({
             errorMessage: 'Password must be between 8-64 characters',
         },
     },
-    token: {
+    newPassword: {
         notEmpty: {
-            errorMessage: 'Token is required',
+            errorMessage: 'New password is required',
         },
         in: ['body'],
         trim: true,
         escape: true,
         isLength: {
-            options: {max: 5000},
-            errorMessage: 'Token cannot exceed 5000 characters',
+            options: {min: 8, max: 64},
+            errorMessage: 'Password must be between 8-64 characters',
         },
     },
 }), validRequest];
 
-module.exports = {authSchema};
+module.exports = {usernameSchema, newPasswordSchema};

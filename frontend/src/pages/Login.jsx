@@ -41,7 +41,7 @@ export default function Login() {
                 login(response.data);
             })
             .catch((error) => {
-                if (error.response.status === 401) {
+                if (error.response.status === 401 || error.response.status === 400) {
                     setError("root", {message: "Niepoprawna nazwa użytkownika lub hasło"})
                 } else if (error.response.status === 403) {
                     setMessage("Konto istnieje, ale oczekuje na aktywację przez administratora");
@@ -75,8 +75,8 @@ export default function Login() {
                                 {...register("username", {
                                     required: "Nazwa użytkownika jest wymagana",
                                     maxLength: {
-                                        value: 64,
-                                        message: "Nazwa użytkownika nie może przekraczać 64 znaków"
+                                        value: 20,
+                                        message: "Nazwa użytkownika nie może przekraczać 20 znaków"
                                     }
                                 })}
                                 label="Nazwa użytkownika"

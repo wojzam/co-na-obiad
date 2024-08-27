@@ -4,7 +4,6 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import useAuthData from "../hooks/useAuthData";
 import {defaultFilter, defaultSort, useSearchState} from "../hooks/useSearchState";
 import MobileMenu from './MobileMenu';
-import truncateText from "../utils/truncateText";
 import AddIcon from '@mui/icons-material/Add';
 import {useNavigate} from "react-router-dom";
 
@@ -34,8 +33,6 @@ const signupButtonStyle = {
     fontSize: 16,
     color: "black",
 };
-
-const maxUsernameLength = 27;
 
 export default function HeaderBar() {
     const {logout, username} = useAuthData();
@@ -84,7 +81,7 @@ export default function HeaderBar() {
                 {/* Desktop view */}
                 <Box display={{xs: 'none', md: 'flex'}} sx={{gap: 4}}>
                     <Button onClick={openRecipes} sx={buttonStyle}>
-                        Przepisy
+                        Wszystkie przepisy
                     </Button>
                     <Button onClick={openUserRecipes} disabled={!username} sx={buttonStyle}>
                         Moje przepisy
@@ -97,7 +94,7 @@ export default function HeaderBar() {
                     {username ? (
                         <Box mr={2}>
                             <Button startIcon={<AccountCircleOutlinedIcon/>} onClick={handleClick} sx={buttonStyle}>
-                                {truncateText(username, maxUsernameLength)}
+                                {username}
                             </Button>
                             <Menu
                                 anchorEl={anchorEl}

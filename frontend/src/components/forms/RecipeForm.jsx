@@ -66,10 +66,18 @@ export const RecipeForm = ({onSubmit, onDelete, initialData, isEdit = false}) =>
                         <TextField
                             {...register("name", {
                                 required: "Nazwa jest wymagana",
+                                validate: {
+                                    minLengthAfterTrim: value =>
+                                        value.trim().length >= 3 || "Nazwa musi mieć co najnmiej 3 znaki"
+                                },
                                 maxLength: {
                                     value: 100,
                                     message: "Nazwa nie może przekraczać 100 znaków"
-                                }
+                                },
+                                pattern: {
+                                    value: /^[a-zA-Z0-9 @\-!._:*#%?]+$/,
+                                    message: 'Nazwa może zawierać tylko litery, cyfry i znaki @-!._:*#%?'
+                                },
                             })}
                             label="Nazwa"
                             fullWidth

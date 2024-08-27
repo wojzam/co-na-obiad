@@ -58,8 +58,11 @@ const recipeSchema = [checkSchema({
         notEmpty: {
             errorMessage: 'Name is required',
         }, in: ['body'], trim: true, escape: true, isLength: {
-            options: {max: 100}, errorMessage: 'Name cannot exceed 100 characters',
-        },
+            options: {min: 3, max: 100}, errorMessage: 'Name must be between 3-100 characters',
+        }, matches: {
+            options: /^[a-zA-Z0-9 @\-!._:*#%?]+$/,
+            errorMessage: 'Name can contain only letter, numbers or @-!._:*#%?'
+        }
     }, categories: {
         optional: true, in: ['body'], isArray: {
             options: {max: 10}, errorMessage: 'Categories must be an array with maximum of 10 items',
@@ -81,9 +84,12 @@ const recipeSchema = [checkSchema({
             options: {max: 5}, errorMessage: 'Ingredient section must be an array with maximum of 5 items',
         }
     }, 'ingredientSections.*.sectionName': {
-        optional: true, trim: true, escape: true, isLength: {
-            options: {max: 100}, errorMessage: 'Section name cannot exceed 100 characters',
-        },
+        optional: {options: {nullable: true, checkFalsy: true}}, trim: true, escape: true, isLength: {
+            options: {max: 64}, errorMessage: 'Section name cannot exceed 64 characters',
+        }, matches: {
+            options: /^[a-zA-Z0-9 @\-!._:*#%?]+$/,
+            errorMessage: 'Section name can contain only letter, numbers or @-!._:*#%?'
+        }
     }, 'ingredientSections.*.ingredients': {
         isArray: {
             options: {max: 30}, errorMessage: 'Ingredients must be an array with a maximum of 30 items',

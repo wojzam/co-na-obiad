@@ -53,11 +53,19 @@ const UpdateUsername = () => {
                 name="username"
                 control={control}
                 rules={{
-                    required: 'Nazwa użytkownika jest wymagana',
+                    required: "Nazwa użytkownika jest wymagana",
+                    validate: {
+                        minLengthAfterTrim: value =>
+                            value.trim().length >= 3 || "Nazwa użytkownika musi mieć co najmniej 3 znaki"
+                    },
                     maxLength: {
-                        value: 64,
-                        message: "Nazwa użytkownika nie może przekraczać 64 znaków"
-                    }
+                        value: 20,
+                        message: "Nazwa użytkownika nie może przekraczać 20 znaków"
+                    },
+                    pattern: {
+                        value: /^[a-zA-Z0-9 @\-!._:*#%?]+$/,
+                        message: 'Nazwa użytkownika może zawierać tylko litery, cyfry i znaki @-!._:*#%?'
+                    },
                 }}
                 render={({field}) => (
                     <TextField

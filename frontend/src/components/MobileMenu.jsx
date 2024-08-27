@@ -85,7 +85,7 @@ export default function MobileMenu({openRecipes, openUserRecipes}) {
                 >
                     <Box display="flex" flexDirection="column" gap={2} p={2}>
                         <Button onClick={openRecipes} sx={buttonStyle}>
-                            Przepisy
+                            Wszystkie Przepisy
                         </Button>
                         <Button onClick={openUserRecipes} disabled={!username} sx={buttonStyle}>
                             Moje przepisy
