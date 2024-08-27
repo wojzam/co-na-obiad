@@ -60,8 +60,8 @@ const recipeSchema = [checkSchema({
         }, in: ['body'], trim: true, escape: true, isLength: {
             options: {min: 3, max: 100}, errorMessage: 'Name must be between 3-100 characters',
         }, matches: {
-            options: /^[a-zA-Z0-9 @\-!._:*#%?ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$/,
-            errorMessage: 'Name can contain only letter, numbers or @-!._:*#%?'
+            options: /^[a-zA-Z0-9 @\-!._:(){}*#%?ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$/,
+            errorMessage: 'Name can contain only letter, numbers or @-!._:(){}*#%?'
         }
     }, categories: {
         optional: true, in: ['body'], isArray: {
@@ -87,8 +87,8 @@ const recipeSchema = [checkSchema({
         optional: {options: {nullable: true, checkFalsy: true}}, trim: true, escape: true, isLength: {
             options: {max: 64}, errorMessage: 'Section name cannot exceed 64 characters',
         }, matches: {
-            options: /^[a-zA-Z0-9 @\-!._:*#%?ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$/,
-            errorMessage: 'Section name can contain only letter, numbers or @-!._:*#%?'
+            options: /^[a-zA-Z0-9 @\-!._:(){}*#%?ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$/,
+            errorMessage: 'Section name can contain only letter, numbers or @-!._:(){}*#%?'
         }
     }, 'ingredientSections.*.ingredients': {
         isArray: {
