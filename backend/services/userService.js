@@ -7,6 +7,7 @@ const OK = (body = {message: "OK"}) => {
 };
 const USER_CONFLICT = {status: 409, body: {message: 'User with provided username already exists'}};
 const INCORRECT_PASSWORD = {status: 400, body: {message: 'Incorrect password'}};
+const EXCEED_LIMIT = {status: 429, body: {message: 'Exceed limit of updating username'}};
 
 
 const list = async () => {
@@ -15,10 +16,12 @@ const list = async () => {
 
 const updateUsername = async (user, username) => {
     try {
-        const conflictUsername = await User.findOne({username: username});
+        if (!await canUpdateUsername(user)) return EXCEED_LIMIT;
+        const conflictUsername = await User.findOne({username: username}).lean();
         if (conflictUsername && !conflictUsername._id.equals(user._id)) return USER_CONFLICT;
 
         user.username = username;
+        user.updatedUsernameAt = Date.now();
         const updatedUser = await user.save();
         await updateUsernameInRecipes(user._id, username);
 
@@ -47,6 +50,14 @@ const updateUsernameInRecipes = async (id, newUsername) => {
         {$set: {'creator.name': newUsername}},
     );
 };
+
+const canUpdateUsername = async (user) => {
+    return isAtLeastOneDayAfter(user.updatedUsernameAt);
+}
+
+const isAtLeastOneDayAfter = (date) => {
+    return (Date.now() - date) / (1000 * 60 * 60 * 24) >= 1;
+}
 
 module.exports = {
     list,

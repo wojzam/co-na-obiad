@@ -32,7 +32,9 @@ const UpdateUsername = () => {
                 setMessage("Zmieniono nazwę użytkownika")
             })
             .catch((error) => {
-                if (error.response.status === 409) {
+                if (error.response.status === 429) {
+                    setError("root", {message: "Przekroczono dzienny limit aktualizacji nazwy użytkownika"});
+                } else if (error.response.status === 409) {
                     setError("username", {message: "Nazwa użytkownika jest już zajęta"});
                 } else {
                     setError("root", {message: "Wystąpił nieoczekiwany błąd"});
@@ -46,7 +48,9 @@ const UpdateUsername = () => {
             onSubmit={handleSubmit(onSubmit)}
             sx={{mt: 5, width: '100%'}}
         >
-            <Typography component="h2" variant="h6" gutterBottom> Zmień nazwę użytkownika </Typography>
+            <Typography component="h2" variant="h6"> Zmień nazwę użytkownika </Typography>
+            <Typography component="h3" variant="subtitle2" fontWeight="lighter" mb={2}>
+                (maks. raz dziennie) </Typography>
             <MessageBox message={message}/>
             <MessageBox message={errors.root} isError={true}/>
             <Controller
