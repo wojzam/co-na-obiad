@@ -13,7 +13,7 @@ const usernameSchema = [checkSchema({
             options: {min: 3, max: 20},
             errorMessage: 'Username must be between 3-20 characters',
         }, matches: {
-            options: /^[a-zA-Z0-9 @\-!._:*#%?]+$/,
+            options: /^[a-zA-Z0-9 @\-!._:*#%?ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$/,
             errorMessage: 'Username can contain only letter, numbers or @-!._:*#%?'
         }
     },

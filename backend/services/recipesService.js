@@ -99,8 +99,6 @@ const find = async (id, userId) => {
     return OK(recipe);
 }
 
-const create = async (name, categories, preparation, ingredientSections, userId) => {
-    if (await exceedDailyRecipesLimit(userId)) return EXCEED_LIMIT;
 const create = async (name, categories, preparation, ingredientSections, user) => {
     if (await exceedDailyRecipesLimit(user._id)) return EXCEED_LIMIT;
 
@@ -183,6 +181,15 @@ const save = async (recipeId, userId) => {
 }
 
 const unSave = async (recipeId, userId) => {
+    const recipe = await Recipe.findById(recipeId).select(["savedBy"]).lean();
+    if (!recipe) return NOT_FOUND;
+    if (!recipe.savedBy) return OK();
+
+    await Recipe.findByIdAndUpdate(recipeId, {savedBy: recipe.savedBy.filter((id) => !id.equals(userId))});
+    return OK();
+}
+
+const comment = async (recipeId, user) => {
     const recipe = await Recipe.findById(recipeId).select(["savedBy"]).lean();
     if (!recipe) return NOT_FOUND;
     if (!recipe.savedBy) return OK();

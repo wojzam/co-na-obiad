@@ -78,7 +78,7 @@ export default function IngredientEditList({sectionIndex, handleRemove}) {
                             message: "Nazwa sekcji nie może przekraczać 64 znaków"
                         },
                         pattern: {
-                            value: /^[a-zA-Z0-9 @\-!._:*#%?]+$/,
+                            value: /^[a-zA-Z0-9 @\-!._:*#%?ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$/,
                             message: 'Nazwa sekcji może zawierać tylko litery, cyfry i znaki @-!._:*#%?'
                         },
                     })}

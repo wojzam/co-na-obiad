@@ -75,7 +75,7 @@ export const RecipeForm = ({onSubmit, onDelete, initialData, isEdit = false}) =>
                                     message: "Nazwa nie może przekraczać 100 znaków"
                                 },
                                 pattern: {
-                                    value: /^[a-zA-Z0-9 @\-!._:*#%?]+$/,
+                                    value: /^[a-zA-Z0-9 @\-!._:*#%?ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$/,
                                     message: 'Nazwa może zawierać tylko litery, cyfry i znaki @-!._:*#%?'
                                 },
                             })}
