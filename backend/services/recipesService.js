@@ -48,7 +48,7 @@ const list = async (name, include, exclude, categories, creatorId, savedBy, sort
     }
 
     if (creatorId) {
-        query.push({creatorId: creatorId});
+        query.push({'creator._id': creatorId});
     }
 
     if (savedBy) {
@@ -76,7 +76,7 @@ const list = async (name, include, exclude, categories, creatorId, savedBy, sort
         .sort(sortQuery)
         .skip((page - 1) * pageSize)
         .limit(pageSize)
-        .select(["name", "categories", "ingredientSections"])
+        .select(["name", "categories", "ingredientSections", "creator"])
         .lean();
 
     return OK(recipes?.map(recipe => recipeDto(recipe)));
@@ -85,34 +85,37 @@ const list = async (name, include, exclude, categories, creatorId, savedBy, sort
 const find = async (id, userId) => {
     const recipe = await Recipe
         .findById(id)
-        .select(["name", "categories", "ingredientSections", "creatorId", "preparation", "savedBy"])
+        .select(["name", "categories", "ingredientSections", "creator", "preparation", "savedBy"])
         .lean();
     if (!recipe) return NOT_FOUND;
 
-    const creator = await User.findById(recipe.creatorId).select('username');
-    recipe.creator = creator.username;
-
     if (userId) {
         recipe.saved = !!(recipe.savedBy && recipe.savedBy.some((id) => id.equals(userId)));
-        recipe.canEdit = userId.equals(recipe.creatorId);
+        recipe.canEdit = userId.equals(recipe.creator._id);
     }
     recipe.savedBy = undefined;
-    recipe.creatorId = undefined;
+    recipe.creator = recipe.creator.name;
 
     return OK(recipe);
 }
 
 const create = async (name, categories, preparation, ingredientSections, userId) => {
     if (await exceedDailyRecipesLimit(userId)) return EXCEED_LIMIT;
+
     const newRecipe = new Recipe({
         name: name,
         preparation: preparation,
         categories: await validateCategories(categories),
         ingredientSections: await validateSections(ingredientSections),
-        creatorId: userId
+        creator: await getUser(userId)
     });
 
     return CREATED(await newRecipe.save());
+}
+
+async function getUser(userId) {
+    const user = await User.findById(userId).select('username').lean();
+    return {_id: userId, name: user.username};
 }
 
 const canCreate = async (userId) => {
@@ -125,14 +128,14 @@ const exceedDailyRecipesLimit = async (userId) => {
     const startOfDay = new Date(today.setHours(0, 0, 0, 0));
     const endOfDay = new Date(today.setHours(23, 59, 59, 999));
     const todayRecipes = await Recipe.find({
-        creatorId: userId,
+        'creator._id': userId,
         createdAt: {
             $gte: startOfDay,
             $lt: endOfDay
         }
     }).lean();
     const todayDeletedRecipes = await DeletedRecipe.find({
-        'recipe.creatorId': userId, // Use dot notation to access fields within `recipe`
+        'recipe.creator._id': userId,
         'recipe.createdAt': {
             $gte: startOfDay,
             $lt: endOfDay
@@ -145,7 +148,7 @@ const exceedDailyRecipesLimit = async (userId) => {
 const update = async (id, name, categories, preparation, ingredientSections, userId) => {
     const recipe = await Recipe.findById(id);
     if (!recipe) return NOT_FOUND;
-    if (!recipe.creatorId.equals(userId)) ACCESS_DENIED;
+    if (!recipe.creator._id.equals(userId)) ACCESS_DENIED;
 
     recipe.name = name;
     recipe.preparation = preparation;
@@ -159,7 +162,7 @@ const update = async (id, name, categories, preparation, ingredientSections, use
 const softDelete = async (recipeId, userId) => {
     const recipe = await Recipe.findById(recipeId);
     if (!recipe) return NOT_FOUND
-    if (!recipe.creatorId.equals(userId)) return ACCESS_DENIED;
+    if (!recipe.creator._id.equals(userId)) return ACCESS_DENIED;
 
     const deletedRecipe = new DeletedRecipe({recipe: recipe});
     await deletedRecipe.save();

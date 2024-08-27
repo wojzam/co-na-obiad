@@ -18,6 +18,7 @@ const recipeDto = (recipe) => {
         categories: recipe.categories.map(c => c.name).join(", "),
         ingredients: formatIngredients(ingredients),
         additionalIngredients: formatIngredients(additionalIngredients),
+        creator: recipe.creator.name,
     };
 };
 

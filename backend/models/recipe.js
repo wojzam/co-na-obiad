@@ -20,7 +20,10 @@ const recipeSchema = new mongoose.Schema({
         name: {type: String, required: true, index: true},
     }],
     ingredientSections: [ingredientsSectionSchema],
-    creatorId: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true},
+    creator: {
+        _id: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true},
+        name: {type: String, required: true},
+    },
     savedBy: [{type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true}],
     createdAt: {type: Date, default: Date.now, index: true},
     updatedAt: {type: Date, default: Date.now},
