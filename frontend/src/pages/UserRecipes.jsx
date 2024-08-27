@@ -41,6 +41,7 @@ const UserRecipes = () => {
     }, [selectedView]);
 
     const handleAlignmentChange = (event, newAlignment) => {
+        if (newAlignment === null) return;
         setSelectedView(newAlignment);
     };
 
