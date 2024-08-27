@@ -1,9 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta content="0; url=https://co-na-obiad.onrender.com" http-equiv="refresh">
-    <title>Redirecting...</title>
+    <meta content="60; url=https://co-na-obiad.onrender.com" http-equiv="refresh">
+    <title>Przekierowanie...</title>
+    <style>
+        body {
+            background-color: #473931;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        #countdown {
+            font-size: 36px;
+            color: #ffba73;
+            font-weight: bold;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid #ffba73;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        p {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+    </style>
     <script>
         const frontendUrl = "https://co-na-obiad.onrender.com/healthcheck";
         const backendUrl = "https://co-na-obiad-backend.onrender.com/healthcheck";
@@ -35,6 +84,8 @@
     </script>
 </head>
 <body>
-<p style="font-size:30px">Redirecting in <span id="countdown">60</span> seconds...</p>
+<div class="spinner"></div>
+<h1>Ładowanie "Co Na Obiad"...</h1>
+<p>Za około <span id="countdown">60</span> sekund nastąpi przekierowanie.</p>
 </body>
 </html>
