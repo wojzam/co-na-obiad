@@ -12,7 +12,7 @@ export default function Recipe({id, name, categories, ingredients, additionalIng
                  sx={{
                      mt: 2,
                      mb: {xs: 0, sm: 0.5},
-                     px: 5,
+                     px: 3,
                      pt: {xs: 1.5, sm: 2},
                      pb: {xs: 1, sm: 1.5},
                      height: "100%",
@@ -25,7 +25,7 @@ export default function Recipe({id, name, categories, ingredients, additionalIng
                      },
                  }}>
                 <Box>
-                    <Box display="flex" flexDirection="column" justifyContent="center">
+                    <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
                         <Typography
                             component="h2"
                             sx={{
@@ -68,7 +68,7 @@ export default function Recipe({id, name, categories, ingredients, additionalIng
                     </Typography>
                 </Box>
                 <Box display="flex" alignItems="center" flexDirection="column">
-                    <Divider sx={{width: "90%"}}>
+                    <Divider sx={{width: "60%"}}>
                         <Typography variant="subtitle2" fontWeight="lighter" align="center"
                                     sx={{
                                         wordBreak: 'break-word',
