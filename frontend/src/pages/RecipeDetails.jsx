@@ -147,7 +147,7 @@ const RecipeDetails = () => {
                         )}
                     </Grid>
                 </Grid>
-                <CommentsSection recipeId={recipe?._id} canComment={recipe?.canComment}
+                <CommentsSection recipeId={recipe?._id} initialCanComment={recipe?.canComment}
                                  initialComments={recipe?.comments}/>
             </Box>
         </>

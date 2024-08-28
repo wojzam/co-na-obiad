@@ -1,3 +1,5 @@
+const {MAX_COMMENTS} = require('../constants/limits');
+
 const recipeDtoSmall = (recipe) => {
     const formatIngredients = (ingredients) => ingredients.map(ingredient => ingredient.name.toLowerCase()).join(', ');
 
@@ -22,7 +24,7 @@ const recipeDtoSmall = (recipe) => {
     };
 };
 
-const recipeDto = (recipe, userId, maxComments = 100) => {
+const recipeDto = (recipe, userId) => {
     const recipeObj = recipe.toObject();
 
     if (userId) {
@@ -40,7 +42,7 @@ const recipeDto = (recipe, userId, maxComments = 100) => {
     })
 
     if (recipeObj.creator) recipeObj.creator = recipeObj.creator.name;
-    recipeObj.canComment = userId !== undefined && (!('comments' in recipeObj) || recipeObj.comments?.length < maxComments);
+    recipeObj.canComment = userId !== undefined && (!recipeObj.comments || recipeObj.comments.length < MAX_COMMENTS);
     recipeObj.savedBy = undefined;
 
     return recipeObj;

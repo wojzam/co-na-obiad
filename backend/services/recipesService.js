@@ -4,8 +4,8 @@ const DishCategory = require("../models/dishCategory");
 const Ingredient = require("../models/ingredient");
 const {recipeDtoSmall, recipeDto} = require("../dto/recipeDto");
 
-const MAX_DAILY_RECIPES = 100;
-const MAX_COMMENTS = 100;
+const {MAX_DAILY_RECIPES} = require('../constants/limits');
+
 const OK = (body = {message: "OK"}) => {
     return {status: 200, body: body};
 };
@@ -181,39 +181,6 @@ const unSave = async (recipeId, userId) => {
     return OK();
 }
 
-const comment = async (recipeId, user, text) => {
-    const EXCEEDED_COMMENTS_LIMIT = {status: 429, body: {message: 'Exceeded limit of added comments'}};
-    const recipe = await Recipe.findById(recipeId).select('comments');
-    if (!recipe) return NOT_FOUND;
-    if (!Array.isArray(recipe.comments)) recipe.comments = [];
-    if (recipe.comments.length >= MAX_COMMENTS) return EXCEEDED_COMMENTS_LIMIT;
-
-    recipe.comments.push({
-        user: {_id: user._id, name: user.username},
-        text: text
-    });
-
-    return OK(recipeDto(await recipe.save(), user._id).comments);
-};
-
-const deleteComment = async (recipeId, commentId, userId) => {
-    const COMMENT_NOT_FOUND = {status: 404, body: "Comment not found"}
-    const FORBIDDEN = {status: 403, body: "You are not authorized to delete this comment"}
-    const recipe = await Recipe.findById(recipeId).select(["comments", "creator"]);
-    if (!recipe) return NOT_FOUND;
-
-    if (!Array.isArray(recipe.comments) || recipe.comments.length === 0) return COMMENT_NOT_FOUND;
-
-    const comment = recipe.comments.id(commentId);
-
-    if (!comment) return COMMENT_NOT_FOUND;
-    if (!recipe.creator._id.equals(userId) && !comment.user._id.equals(userId)) return FORBIDDEN;
-
-    recipe.comments = recipe.comments.filter((c) => !c._id.equals(comment._id));
-
-    return OK(recipeDto(await recipe.save(), userId).comments);
-}
-
 const listCategories = async () => {
     return OK(await DishCategory.find().collation({locale: 'pl', strength: 1}).sort({name: 1}));
 }
@@ -276,7 +243,6 @@ const getAllChildrenIds = async (ingredientNames) => {
     }));
 };
 
-
 module.exports = {
     list,
     find,
@@ -286,7 +252,5 @@ module.exports = {
     softDelete,
     save,
     unSave,
-    comment,
-    deleteComment,
     listCategories
 }

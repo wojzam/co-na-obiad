@@ -7,7 +7,7 @@ import ReplyIcon from '@mui/icons-material/Reply';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import AddCommentIcon from '@mui/icons-material/AddComment';
 
-const CommentsSection = ({recipeId, canComment, initialComments = []}) => {
+const CommentsSection = ({recipeId, initialCanComment, initialComments = []}) => {
     const theme = useTheme();
     const axiosInstance = useAuthAxios();
     const {handleSubmit, control, formState: {errors}, reset} = useForm({
@@ -17,15 +17,17 @@ const CommentsSection = ({recipeId, canComment, initialComments = []}) => {
         }
     });
     const [comments, setComments] = useState([]);
+    const [canComment, setCanComment] = useState(false);
     const [showAllComments, setShowAllComments] = useState(false);
     const commentFieldRef = useRef(null);
 
     const displayedComments = showAllComments ? comments : comments.slice(0, 3);
 
     useEffect(() => {
+        setCanComment(initialCanComment);
         setComments(Array.isArray(initialComments) ? initialComments : []);
         setShowAllComments(initialComments !== undefined && initialComments.length <= 3);
-    }, [initialComments]);
+    }, [initialCanComment, initialComments]);
 
     const openTextField = () => {
         setShowAllComments(true);
@@ -46,8 +48,10 @@ const CommentsSection = ({recipeId, canComment, initialComments = []}) => {
             },
         })
             .then((response) => {
-                setComments(response.data);
+                setComments(response.data.comments);
+                setCanComment(response.data.canComment);
                 reset();
+                commentFieldRef.current.focus(false);
             })
             .catch(() => {
             });
@@ -56,7 +60,8 @@ const CommentsSection = ({recipeId, canComment, initialComments = []}) => {
     const handleDelete = (commentId) => {
         axiosInstance.delete(`/api/recipes/${recipeId}/comments/${commentId}`)
             .then((response) => {
-                setComments(response.data);
+                setComments(response.data.comments);
+                setCanComment(response.data.canComment);
             })
             .catch(() => {
             });
@@ -72,8 +77,9 @@ const CommentsSection = ({recipeId, canComment, initialComments = []}) => {
             }}>
                 Komentarze:
             </Typography>
-            <Button onClick={openTextField} startIcon={<AddCommentIcon/>} disabled={!canComment}> Dodaj
-                komentarz</Button>
+            <Button onClick={openTextField} startIcon={<AddCommentIcon/>} disabled={!canComment}>
+                Dodaj komentarz
+            </Button>
             <Divider/>
             <Box mt={2}>
                 {comments && comments.length > 0 ? (
@@ -100,7 +106,7 @@ const CommentsSection = ({recipeId, canComment, initialComments = []}) => {
                                     {comment.text}
                                 </Typography>
                                 <Box width="100%" display="flex" justifyContent="end">
-                                    <Button disabled={!canComment} startIcon={<ReplyIcon/>}>Odpowiedz</Button>
+                                    <Button disabled startIcon={<ReplyIcon/>}>Odpowiedz</Button>
                                 </Box>
                             </Paper>
                         ))}

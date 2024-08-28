@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const recipesService = require('../services/recipesService');
+const commentsService = require('../services/commentsService');
 const {matchedData, validationResult} = require('express-validator');
 const {filterSchema, recipeSchema, commentSchema} = require('../middlewares/validation/recipeValidation')
 const {requireToken, optionalToken} = require('../middlewares/authMiddleware');
@@ -103,7 +104,7 @@ router.delete('/:id/save', requireToken, validId(), async (req, res) => {
 router.post('/:id/comments', requireToken, validId(), commentSchema, async (req, res) => {
     try {
         const data = matchedData(req);
-        const result = await recipesService.comment(req.params.id, req.user, data.text);
+        const result = await commentsService.comment(req.params.id, req.user, data.text);
         res.status(result.status).json(result.body);
     } catch (err) {
         res.status(500);
@@ -112,7 +113,7 @@ router.post('/:id/comments', requireToken, validId(), commentSchema, async (req,
 
 router.delete('/:id/comments/:commentId', requireToken, validId(), validId('commentId'), async (req, res) => {
     try {
-        const result = await recipesService.deleteComment(req.params.id, req.params.commentId, req.userId);
+        const result = await commentsService.deleteComment(req.params.id, req.params.commentId, req.userId);
         res.status(result.status).json(result.body);
     } catch (err) {
         res.status(500);
