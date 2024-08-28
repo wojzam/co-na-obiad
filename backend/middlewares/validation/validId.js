@@ -1,14 +1,15 @@
-const {check, validationResult} = require('express-validator');
+const {check} = require('express-validator');
 const mongoose = require('mongoose');
-const {validRequest} = require("./validRequest");
+const {validRequest} = require('./validRequest');
 
-const validId = [
-    check('id').custom((value) => {
+const validId = (paramName = 'id') => [
+    check(paramName).custom((value) => {
         if (!mongoose.Types.ObjectId.isValid(value)) {
-            throw new Error('Invalid ID format');
+            throw new Error(`Invalid ${paramName} format`);
         }
         return true;
-    }), validRequest
+    }),
+    validRequest
 ];
 
 module.exports = {validId};

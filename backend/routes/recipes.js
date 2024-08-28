@@ -54,7 +54,7 @@ router.get('/categories', async (req, res) => {
     }
 });
 
-router.get('/:id', validId, optionalToken, async (req, res) => {
+router.get('/:id', validId(), optionalToken, async (req, res) => {
     try {
         const result = await recipesService.find(req.params.id, req.userId);
         res.status(result.status).json(result.body);
@@ -63,7 +63,7 @@ router.get('/:id', validId, optionalToken, async (req, res) => {
     }
 });
 
-router.put('/:id', requireToken, validId, recipeSchema, async (req, res) => {
+router.put('/:id', requireToken, validId(), recipeSchema, async (req, res) => {
     try {
         const data = matchedData(req);
         const result = await recipesService.update(req.params.id, data.name, data.categories, data.preparation, data.ingredientSections, req.userId);
@@ -73,7 +73,7 @@ router.put('/:id', requireToken, validId, recipeSchema, async (req, res) => {
     }
 });
 
-router.delete('/:id', requireToken, validId, async (req, res) => {
+router.delete('/:id', requireToken, validId(), async (req, res) => {
     try {
         const result = await recipesService.softDelete(req.params.id, req.userId);
         res.status(result.status).json(result.body);
@@ -82,7 +82,7 @@ router.delete('/:id', requireToken, validId, async (req, res) => {
     }
 });
 
-router.post('/:id/save', requireToken, validId, async (req, res) => {
+router.post('/:id/save', requireToken, validId(), async (req, res) => {
     try {
         const result = await recipesService.save(req.params.id, req.userId);
         res.status(result.status).json(result.body);
@@ -91,7 +91,7 @@ router.post('/:id/save', requireToken, validId, async (req, res) => {
     }
 });
 
-router.delete('/:id/save', requireToken, validId, async (req, res) => {
+router.delete('/:id/save', requireToken, validId(), async (req, res) => {
     try {
         const result = await recipesService.unSave(req.params.id, req.userId);
         res.status(result.status).json(result.body);
@@ -100,22 +100,20 @@ router.delete('/:id/save', requireToken, validId, async (req, res) => {
     }
 });
 
-router.post('/:id/comments', requireToken, validId, commentSchema, async (req, res) => {
+router.post('/:id/comments', requireToken, validId(), commentSchema, async (req, res) => {
     try {
         const data = matchedData(req);
         const result = await recipesService.comment(req.params.id, req.user, data.text);
         res.status(result.status).json(result.body);
     } catch (err) {
-        console.log(err)
         res.status(500);
     }
 });
 
-router.delete('/:id/comments', requireToken, validId, async (req, res) => {
+router.delete('/:id/comments/:commentId', requireToken, validId(), validId('commentId'), async (req, res) => {
     try {
-        // const result = await recipesService.deleteComment(req.params.id, req.userId);
-        // res.status(result.status).json(result.body);
-        res.status(500);
+        const result = await recipesService.deleteComment(req.params.id, req.params.commentId, req.userId);
+        res.status(result.status).json(result.body);
     } catch (err) {
         res.status(500);
     }

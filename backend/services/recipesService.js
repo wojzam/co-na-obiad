@@ -12,9 +12,7 @@ const OK = (body = {message: "OK"}) => {
 const CREATED = (body) => {
     return {status: 201, body: body};
 };
-const EXCEEDED_LIMIT = (body = {message: 'Exceeded limit of created recipes'}) => {
-    return {status: 429, body: body};
-};
+const EXCEEDED_LIMIT = {status: 429, body: {message: 'Exceeded limit of created recipes'}};
 const ACCESS_DENIED = {status: 403, body: {message: 'Access denied'}};
 const NOT_FOUND = {status: 404, body: {message: 'Recipe not found'}};
 
@@ -94,7 +92,7 @@ const find = async (id, userId) => {
 }
 
 const create = async (name, categories, preparation, ingredientSections, user) => {
-    if (await exceedDailyRecipesLimit(user._id)) return EXCEEDED_LIMIT();
+    if (await exceedDailyRecipesLimit(user._id)) return EXCEEDED_LIMIT;
 
     const newRecipe = new Recipe({
         name: name,
@@ -108,7 +106,7 @@ const create = async (name, categories, preparation, ingredientSections, user) =
 }
 
 const canCreate = async (userId) => {
-    if (await exceedDailyRecipesLimit(userId)) return EXCEEDED_LIMIT();
+    if (await exceedDailyRecipesLimit(userId)) return EXCEEDED_LIMIT;
     return OK;
 }
 
@@ -184,10 +182,11 @@ const unSave = async (recipeId, userId) => {
 }
 
 const comment = async (recipeId, user, text) => {
+    const EXCEEDED_COMMENTS_LIMIT = {status: 429, body: {message: 'Exceeded limit of added comments'}};
     const recipe = await Recipe.findById(recipeId).select('comments');
     if (!recipe) return NOT_FOUND;
     if (!Array.isArray(recipe.comments)) recipe.comments = [];
-    if (recipe.comments.length >= MAX_COMMENTS) return EXCEEDED_LIMIT('Exceeded limit of added comments');
+    if (recipe.comments.length >= MAX_COMMENTS) return EXCEEDED_COMMENTS_LIMIT;
 
     recipe.comments.push({
         user: {_id: user._id, name: user.username},
@@ -198,28 +197,21 @@ const comment = async (recipeId, user, text) => {
 };
 
 const deleteComment = async (recipeId, commentId, userId) => {
-    // TODO
-    // const recipe = await Recipe.findById(recipeId).select(["comments", "creator"]);
-    // if (!recipe) return {status: 404, message: "Recipe not found"};
-    //
-    // if (!Array.isArray(recipe.comments) || recipe.comments.length === 0) {
-    //     return {status: 404, message: "Comment not found"};
-    // }
-    //
-    // const comment = recipe.comments.id(commentId);
-    // if (!comment) return {status: 404, message: "Comment not found"};
-    //
-    // const isCreatorOfRecipe = recipe.creator.toString() === userId;
-    // const isCreatorOfComment = comment.user._id.toString() === userId;
-    //
-    // if (!isCreatorOfRecipe && !isCreatorOfComment) {
-    //     return {status: 403, message: "You are not authorized to delete this comment"};
-    // }
-    //
-    // comment.remove();
-    //
-    // await recipe.save();
-    return OK();
+    const COMMENT_NOT_FOUND = {status: 404, body: "Comment not found"}
+    const FORBIDDEN = {status: 403, body: "You are not authorized to delete this comment"}
+    const recipe = await Recipe.findById(recipeId).select(["comments", "creator"]);
+    if (!recipe) return NOT_FOUND;
+
+    if (!Array.isArray(recipe.comments) || recipe.comments.length === 0) return COMMENT_NOT_FOUND;
+
+    const comment = recipe.comments.id(commentId);
+
+    if (!comment) return COMMENT_NOT_FOUND;
+    if (!recipe.creator._id.equals(userId) && !comment.user._id.equals(userId)) return FORBIDDEN;
+
+    recipe.comments = recipe.comments.filter((c) => !c._id.equals(comment._id));
+
+    return OK(recipeDto(await recipe.save(), userId).comments);
 }
 
 const listCategories = async () => {

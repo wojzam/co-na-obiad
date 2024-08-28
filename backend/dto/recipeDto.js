@@ -32,6 +32,7 @@ const recipeDto = (recipe, userId, maxComments = 100) => {
 
     recipeObj.comments?.map((comment) => {
         comment.creator = comment.user.name;
+        comment.canDelete = userId && ((recipeObj.creator && userId.equals(recipeObj.creator._id)) || comment.user._id.equals(userId));
         comment.user = undefined;
         comment.createdAt = comment.createdAt.toLocaleString(undefined, {
             year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',

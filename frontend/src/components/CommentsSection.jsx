@@ -4,7 +4,7 @@ import useAuthAxios from "../hooks/useAuthAxios.jsx";
 import {Box, Button, Divider, IconButton, Paper, TextField, Typography, useTheme} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import ReplyIcon from '@mui/icons-material/Reply';
-import ClearIcon from "@mui/icons-material/Clear";
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import AddCommentIcon from '@mui/icons-material/AddComment';
 
 const CommentsSection = ({recipeId, canComment, initialComments = []}) => {
@@ -53,6 +53,15 @@ const CommentsSection = ({recipeId, canComment, initialComments = []}) => {
             });
     };
 
+    const handleDelete = (commentId) => {
+        axiosInstance.delete(`/api/recipes/${recipeId}/comments/${commentId}`)
+            .then((response) => {
+                setComments(response.data);
+            })
+            .catch(() => {
+            });
+    };
+
     return (
         <Box mt={15}>
             <Typography fontWeight="bold" gutterBottom sx={{
@@ -75,7 +84,10 @@ const CommentsSection = ({recipeId, canComment, initialComments = []}) => {
                                     <Typography variant="h6" fontWeight="medium">
                                         {comment.creator}
                                     </Typography>
-                                    <IconButton sx={{display: "none"}}><ClearIcon fontSize="small"/></IconButton>
+                                    <IconButton sx={{display: comment.canDelete ? "block" : "none"}}
+                                                onClick={() => handleDelete(comment._id)}>
+                                        <DeleteOutlinedIcon fontSize="small"/>
+                                    </IconButton>
                                 </Box>
                                 <Typography variant="caption" color="textSecondary">
                                     {comment.createdAt}
