@@ -69,7 +69,7 @@ export default function Recipe({id, name, categories, ingredients, additionalIng
                     </Typography>
                 </Box>
                 <Box display="flex" alignItems="center" flexDirection="column" mt={0.5}>
-                    <Divider sx={{width: "60%"}}>
+                    <Divider sx={{width: creator.length > 15 ? "100%" : (creator.length > 10 ? "80%" : "70%")}}>
                         <Box display="flex" flexDirection="row" gap={0.5}>
                             <PersonOutlinedIcon fontSize="small" color="disabled"/>
                             <Typography variant="subtitle2" fontWeight="lighter"

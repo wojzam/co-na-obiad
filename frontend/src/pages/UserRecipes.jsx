@@ -69,11 +69,15 @@ const UserRecipes = () => {
                 value={selectedView}
                 exclusive
                 size="large"
+                fullWidth
                 onChange={handleAlignmentChange}
-                sx={{mb: 4}}
-            >
-                <ToggleButton value={TYPE_USER}>Moje przepisy</ToggleButton>
-                <ToggleButton value={TYPE_SAVED}>Zapisane przepisy</ToggleButton>
+                sx={{mb: 4, mt: {xs: 3, sm: 2, md: 0}}}>
+                <ToggleButton sx={{fontWeight: selectedView === TYPE_USER ? "bold" : "regular"}} value={TYPE_USER}>
+                    Moje przepisy
+                </ToggleButton>
+                <ToggleButton sx={{fontWeight: selectedView === TYPE_SAVED ? "bold" : "regular"}} value={TYPE_SAVED}>
+                    Zapisane
+                </ToggleButton>
             </ToggleButtonGroup>
             <RecipesFetcher key={fetcherKey} {...{setRecipes, isPending, setIsPending}} type={selectedView}
                             id={"/user-recipes"}/>
