@@ -12,6 +12,16 @@ const ingredientsSectionSchema = new mongoose.Schema({
     }]
 });
 
+const commentSchema = new mongoose.Schema({
+    user: {
+        _id: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
+        name: {type: String, required: true},
+    },
+    text: {type: String, required: true},
+    createdAt: {type: Date, default: Date.now},
+    parentComment: {type: mongoose.Schema.Types.ObjectId, ref: 'Comment', optional: true},
+});
+
 const recipeSchema = new mongoose.Schema({
     name: {type: String, required: true, index: {collation: {locale: 'pl', strength: 1}}},
     preparation: {type: String, default: ""},
@@ -25,6 +35,7 @@ const recipeSchema = new mongoose.Schema({
         name: {type: String, required: true},
     },
     savedBy: [{type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true}],
+    comments: [commentSchema],
     createdAt: {type: Date, default: Date.now, index: true},
     updatedAt: {type: Date, default: Date.now},
 }, {

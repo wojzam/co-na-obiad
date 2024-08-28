@@ -49,6 +49,11 @@ const updateUsernameInRecipes = async (id, newUsername) => {
         {'creator._id': id},
         {$set: {'creator.name': newUsername}},
     );
+    await Recipe.updateMany(
+        {'comments.user._id': id},
+        {$set: {'comments.$[comment].user.name': newUsername}},
+        {arrayFilters: [{'comment.user._id': id}]}
+    );
 };
 
 const canUpdateUsername = async (user) => {

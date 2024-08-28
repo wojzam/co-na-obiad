@@ -122,6 +122,19 @@ const recipeSchema = [checkSchema({
     },
 }), validRequest];
 
+const commentSchema = [checkSchema({
+    text: {
+        notEmpty: {
+            errorMessage: 'Comment is required',
+        }, in: ['body'], trim: true, escape: true, isLength: {
+            options: {min: 1, max: 1000}, errorMessage: 'Comment cannot exceed 1000 characters',
+        }, matches: {
+            options: /^[a-zA-Z0-9 @\-!._:(){}*#%?ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$/,
+            errorMessage: 'Comment can contain only letter, numbers or @-!._:(){}*#%?'
+        }
+    }
+}), validRequest];
+
 const customEscape = (value) => {
     if (typeof value !== 'string') return value;
     return value
@@ -131,5 +144,5 @@ const customEscape = (value) => {
 };
 
 module.exports = {
-    filterSchema, recipeSchema
+    filterSchema, recipeSchema, commentSchema
 };

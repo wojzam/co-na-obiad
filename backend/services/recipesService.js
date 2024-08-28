@@ -2,17 +2,19 @@ const Recipe = require("../models/recipe");
 const DeletedRecipe = require("../models/deletedRecipe");
 const DishCategory = require("../models/dishCategory");
 const Ingredient = require("../models/ingredient");
-const User = require("../models/user");
-const recipeDto = require("../dto/recipeDto");
+const {recipeDtoSmall, recipeDto} = require("../dto/recipeDto");
 
 const MAX_DAILY_RECIPES = 100;
+const MAX_COMMENTS = 100;
 const OK = (body = {message: "OK"}) => {
-    return {status: 200, body: body}
+    return {status: 200, body: body};
 };
 const CREATED = (body) => {
-    return {status: 201, body: body}
+    return {status: 201, body: body};
 };
-const EXCEED_LIMIT = {status: 429, body: {message: 'Exceed limit of created recipes'}};
+const EXCEEDED_LIMIT = (body = {message: 'Exceeded limit of created recipes'}) => {
+    return {status: 429, body: body};
+};
 const ACCESS_DENIED = {status: 403, body: {message: 'Access denied'}};
 const NOT_FOUND = {status: 404, body: {message: 'Recipe not found'}};
 
@@ -76,31 +78,23 @@ const list = async (name, include, exclude, categories, creatorId, savedBy, sort
         .sort(sortQuery)
         .skip((page - 1) * pageSize)
         .limit(pageSize)
-        .select(["name", "categories", "ingredientSections", "creator"])
+        .select(["name", "categories", "ingredientSections", "creator", "comments"])
         .lean();
 
-    return OK(recipes?.map(recipe => recipeDto(recipe)));
+    return OK(recipes?.map(recipe => recipeDtoSmall(recipe)));
 }
 
 const find = async (id, userId) => {
     const recipe = await Recipe
         .findById(id)
-        .select(["name", "categories", "ingredientSections", "creator", "preparation", "savedBy"])
-        .lean();
+        .select(["name", "categories", "ingredientSections", "creator", "preparation", "savedBy", "comments"]);
     if (!recipe) return NOT_FOUND;
 
-    if (userId) {
-        recipe.saved = !!(recipe.savedBy && recipe.savedBy.some((id) => id.equals(userId)));
-        recipe.canEdit = userId.equals(recipe.creator._id);
-    }
-    recipe.savedBy = undefined;
-    recipe.creator = recipe.creator.name;
-
-    return OK(recipe);
+    return OK(recipeDto(recipe, userId));
 }
 
 const create = async (name, categories, preparation, ingredientSections, user) => {
-    if (await exceedDailyRecipesLimit(user._id)) return EXCEED_LIMIT;
+    if (await exceedDailyRecipesLimit(user._id)) return EXCEEDED_LIMIT();
 
     const newRecipe = new Recipe({
         name: name,
@@ -110,11 +104,11 @@ const create = async (name, categories, preparation, ingredientSections, user) =
         creator: {_id: user._id, name: user.username}
     });
 
-    return CREATED(await newRecipe.save());
+    return CREATED(recipeDto(await newRecipe.save(), user._id));
 }
 
 const canCreate = async (userId) => {
-    if (await exceedDailyRecipesLimit(userId)) return EXCEED_LIMIT;
+    if (await exceedDailyRecipesLimit(userId)) return EXCEEDED_LIMIT();
     return OK;
 }
 
@@ -151,7 +145,7 @@ const update = async (id, name, categories, preparation, ingredientSections, use
     recipe.ingredientSections = await validateSections(ingredientSections);
     recipe.updatedAt = Date.now();
 
-    return OK(await recipe.save());
+    return OK(recipeDto(await recipe.save(), userId));
 }
 
 const softDelete = async (recipeId, userId) => {
@@ -189,12 +183,42 @@ const unSave = async (recipeId, userId) => {
     return OK();
 }
 
-const comment = async (recipeId, user) => {
-    const recipe = await Recipe.findById(recipeId).select(["savedBy"]).lean();
+const comment = async (recipeId, user, text) => {
+    const recipe = await Recipe.findById(recipeId).select('comments');
     if (!recipe) return NOT_FOUND;
-    if (!recipe.savedBy) return OK();
+    if (!Array.isArray(recipe.comments)) recipe.comments = [];
+    if (recipe.comments.length >= MAX_COMMENTS) return EXCEEDED_LIMIT('Exceeded limit of added comments');
 
-    await Recipe.findByIdAndUpdate(recipeId, {savedBy: recipe.savedBy.filter((id) => !id.equals(userId))});
+    recipe.comments.push({
+        user: {_id: user._id, name: user.username},
+        text: text
+    });
+
+    return OK(recipeDto(await recipe.save(), user._id).comments);
+};
+
+const deleteComment = async (recipeId, commentId, userId) => {
+    // TODO
+    // const recipe = await Recipe.findById(recipeId).select(["comments", "creator"]);
+    // if (!recipe) return {status: 404, message: "Recipe not found"};
+    //
+    // if (!Array.isArray(recipe.comments) || recipe.comments.length === 0) {
+    //     return {status: 404, message: "Comment not found"};
+    // }
+    //
+    // const comment = recipe.comments.id(commentId);
+    // if (!comment) return {status: 404, message: "Comment not found"};
+    //
+    // const isCreatorOfRecipe = recipe.creator.toString() === userId;
+    // const isCreatorOfComment = comment.user._id.toString() === userId;
+    //
+    // if (!isCreatorOfRecipe && !isCreatorOfComment) {
+    //     return {status: 403, message: "You are not authorized to delete this comment"};
+    // }
+    //
+    // comment.remove();
+    //
+    // await recipe.save();
     return OK();
 }
 
@@ -270,5 +294,7 @@ module.exports = {
     softDelete,
     save,
     unSave,
-    listCategories,
+    comment,
+    deleteComment,
+    listCategories
 }

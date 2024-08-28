@@ -7,6 +7,7 @@ import CategoryLink from "../components/CategoryLink";
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 import useAuthAxios from "../hooks/useAuthAxios.jsx";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import CommentsSection from "../components/CommentsSection.jsx";
 
 const RecipeDetails = () => {
     const recipe = useRecipe();
@@ -139,6 +140,8 @@ const RecipeDetails = () => {
                         )}
                     </Grid>
                 </Grid>
+                <CommentsSection recipeId={recipe?._id} canComment={recipe?.canComment}
+                                 initialComments={recipe?.comments}/>
             </Box>
         </>
     );
