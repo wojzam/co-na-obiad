@@ -5,6 +5,13 @@
     <meta content="0; url=https://co-na-obiad.onrender.com" http-equiv="refresh">
     <title>Przekierowanie...</title>
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
         body {
             background-color: #473931;
             color: #ffffff;
@@ -13,30 +20,28 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
             text-align: center;
         }
 
         h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
         }
 
         #countdown {
-            font-size: 36px;
+            font-size: 2.5rem;
             color: #ffba73;
             font-weight: bold;
         }
 
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(255, 255, 255, 0.3);
-            border-top: 5px solid #ffba73;
+            width: 4rem;
+            height: 4rem;
+            border: 0.5rem solid rgba(255, 255, 255, 0.3);
+            border-top: 0.5rem solid #ffba73;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-bottom: 20px;
+            margin-bottom: 1rem;
         }
 
         @keyframes spin {
@@ -49,8 +54,27 @@
         }
 
         p {
-            font-size: 18px;
-            margin-top: 10px;
+            font-size: 1.125rem;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            #countdown {
+                font-size: 2rem;
+            }
+
+            .spinner {
+                width: 3rem;
+                height: 3rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
         }
     </style>
     <script>
