@@ -125,13 +125,17 @@ const recipeSchema = [checkSchema({
 const commentSchema = [checkSchema({
     text: {
         notEmpty: {
-            errorMessage: 'Comment is required',
+            errorMessage: 'Comment text is required',
         }, in: ['body'], trim: true, escape: true, isLength: {
-            options: {min: 1, max: 1000}, errorMessage: 'Comment cannot exceed 1000 characters',
+            options: {min: 1, max: 1000}, errorMessage: 'Comment text cannot exceed 1000 characters',
         }, matches: {
             options: /^[a-zA-Z0-9 @\-!._:(){}*#%?ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$/,
-            errorMessage: 'Comment can contain only letter, numbers or @-!._:(){}*#%?'
+            errorMessage: 'Comment text can contain only letter, numbers or @-!._:(){}*#%?'
         }
+    }, parentId: {
+        optional: true, in: ['body'], trim: true, escape: true, isLength: {
+            options: {max: 24}, errorMessage: 'Parent ID cannot exceed 24 characters'
+        },
     }
 }), validRequest];
 

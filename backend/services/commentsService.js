@@ -11,16 +11,19 @@ const OK = (body = {message: "OK"}) => {
     return {status: 200, body: body};
 };
 
-const comment = async (recipeId, user, text) => {
+const comment = async (recipeId, user, text, parentId) => {
     const recipe = await Recipe.findById(recipeId).select('comments');
     if (!recipe) return RECIPE_NOT_FOUND;
     if (!Array.isArray(recipe.comments)) recipe.comments = [];
     if (recipe.comments.length >= MAX_COMMENTS) return EXCEEDED_COMMENTS_LIMIT;
 
-    recipe.comments.push({
+    const newComment = {
         user: {_id: user._id, name: user.username},
-        text: text
-    });
+        text: text,
+    };
+    if (parentId) newComment.parentId = parentId;
+
+    recipe.comments.push(newComment);
 
     const dto = recipeDto(await recipe.save(), user._id);
     return OK({comments: dto.comments, canComment: dto.canComment});

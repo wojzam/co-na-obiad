@@ -19,7 +19,7 @@ const commentSchema = new mongoose.Schema({
     },
     text: {type: String, required: true},
     createdAt: {type: Date, default: Date.now},
-    parentComment: {type: mongoose.Schema.Types.ObjectId, ref: 'Comment', optional: true},
+    parentId: {type: mongoose.Schema.Types.ObjectId, ref: 'Comment', default: null},
 });
 
 const recipeSchema = new mongoose.Schema({

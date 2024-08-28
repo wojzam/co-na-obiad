@@ -13,12 +13,13 @@ const CommentsSection = ({recipeId, initialCanComment, initialComments = []}) =>
     const {handleSubmit, control, formState: {errors}, reset} = useForm({
         mode: "all",
         defaultValues: {
-            comment: "",
+            text: ""
         }
     });
     const [comments, setComments] = useState([]);
     const [canComment, setCanComment] = useState(false);
     const [showAllComments, setShowAllComments] = useState(false);
+    const [activeReplayInput, setActiveReplayInput] = useState(null);
     const commentFieldRef = useRef(null);
 
     const displayedComments = showAllComments ? comments : comments.slice(0, 3);
@@ -29,8 +30,13 @@ const CommentsSection = ({recipeId, initialCanComment, initialComments = []}) =>
         setShowAllComments(initialComments !== undefined && initialComments.length <= 3);
     }, [initialCanComment, initialComments]);
 
+    useEffect(() => {
+        reset();
+    }, [activeReplayInput]);
+
     const openTextField = () => {
         setShowAllComments(true);
+        setActiveReplayInput(null)
         if (commentFieldRef.current) {
             focusOnTextField();
         }
@@ -42,7 +48,10 @@ const CommentsSection = ({recipeId, initialCanComment, initialComments = []}) =>
     }
 
     const onSubmit = (data) => {
-        axiosInstance.post(`/api/recipes/${recipeId}/comments`, {text: data.comment}, {
+        axiosInstance.post(`/api/recipes/${recipeId}/comments`, {
+            text: data.text,
+            parentId: activeReplayInput
+        }, {
             headers: {
                 "Content-Type": "application/json"
             },
@@ -51,6 +60,7 @@ const CommentsSection = ({recipeId, initialCanComment, initialComments = []}) =>
                 setComments(response.data.comments);
                 setCanComment(response.data.canComment);
                 reset();
+                setActiveReplayInput(null);
                 commentFieldRef.current.focus(false);
             })
             .catch(() => {
@@ -67,68 +77,50 @@ const CommentsSection = ({recipeId, initialCanComment, initialComments = []}) =>
             });
     };
 
-    return (
-        <Box mt={15}>
-            <Typography fontWeight="bold" gutterBottom sx={{
-                fontSize: {
-                    xs: theme.typography.h6.fontSize,
-                    lg: theme.typography.h5.fontSize,
-                }
-            }}>
-                Komentarze:
-            </Typography>
-            <Button onClick={openTextField} startIcon={<AddCommentIcon/>} disabled={!canComment}>
-                Dodaj komentarz
-            </Button>
-            <Divider/>
-            <Box mt={2}>
-                {comments && comments.length > 0 ? (
-                    <>
-                        {displayedComments.map((comment) => (
-                            <Paper key={comment._id} elevation={3} sx={{py: 1.5, px: 2, mb: 2, borderRadius: 4}}>
-                                <Box display="flex" flexDirection="row" justifyContent="space-between">
-                                    <Typography variant="h6" fontWeight="medium">
-                                        {comment.creator}
-                                    </Typography>
-                                    <IconButton sx={{display: comment.canDelete ? "block" : "none"}}
-                                                onClick={() => handleDelete(comment._id)}>
-                                        <DeleteOutlinedIcon fontSize="small"/>
-                                    </IconButton>
-                                </Box>
-                                <Typography variant="caption" color="textSecondary">
-                                    {comment.createdAt}
-                                </Typography>
-                                <Typography variant="body1" fontWeight="medium" sx={{
-                                    mt: 2,
-                                    wordBreak: 'break-word',
-                                    overflowWrap: 'break-word',
-                                }}>
-                                    {comment.text}
-                                </Typography>
-                                <Box width="100%" display="flex" justifyContent="end">
-                                    <Button disabled startIcon={<ReplyIcon/>}>Odpowiedz</Button>
-                                </Box>
-                            </Paper>
-                        ))}
-                        {comments.length > 3 && (
-                            <Box display="flex" justifyContent="center">
-                                <Button onClick={() => setShowAllComments(true)}
-                                        sx={{mt: 2, fontSize: "large", display: showAllComments ? "none" : "block"}}>
-                                    {!showAllComments && `Załaduj więcej (${comments.length - 3})...`}
-                                </Button>
-                            </Box>
-                        )}
-                    </>
-                ) : (
-                    <Typography variant="body1" color="textSecondary">
-                        Brak komentarzy. Bądź pierwsza/ym, który skomentuje!
+    const CommentView = ({comment, depth = 0, sx = {}}) => {
+        return (
+            <Box sx={sx}>
+                <Paper elevation={3} sx={{py: 1.5, px: 2, mb: 2, borderRadius: 4}}>
+                    <Box display="flex" flexDirection="row" justifyContent="space-between">
+                        <Typography variant="h6" fontWeight="medium">
+                            {comment?.creator}
+                        </Typography>
+                        <IconButton sx={{display: comment.canDelete ? "block" : "none"}}
+                                    onClick={() => handleDelete(comment._id)}>
+                            <DeleteOutlinedIcon fontSize="small"/>
+                        </IconButton>
+                    </Box>
+                    <Typography variant="caption" color="textSecondary">
+                        {comment?.createdAt}
                     </Typography>
-                )}
+                    <Typography variant="body1" fontWeight="medium" sx={{
+                        mt: 2,
+                        mb: depth >= 2 ? 1 : 0,
+                        wordBreak: 'break-word',
+                        overflowWrap: 'break-word',
+                    }}>
+                        {comment?.text}
+                    </Typography>
+                    <Box width="100%" display="flex" justifyContent="end">
+                        <Button disabled={!canComment} sx={{display: depth >= 2 ? "none" : "flex"}}
+                                onClick={() => setActiveReplayInput(comment._id)}
+                                startIcon={<ReplyIcon/>}>
+                            Odpowiedz
+                        </Button>
+                    </Box>
+                </Paper>
+                <CommentInput display={activeReplayInput === comment._id ? "flex" : "none"}
+                              sx={{ml: 4, mt: 0, mb: 4}}/>
             </Box>
-            <Box mt={3} display={showAllComments ? "flex" : "none"} alignItems="flex-end" component="form"
+        )
+    };
+
+    const CommentInput = ({display = "flex", sx = {}}) => {
+        return (
+            <Box display={display} alignItems="flex-end" component="form" sx={sx}
                  onSubmit={handleSubmit(onSubmit)}>
                 <Controller
-                    name="comment"
+                    name="text"
                     control={control}
                     rules={{
                         required: "Komentarz nie może być pusty",
@@ -153,10 +145,9 @@ const CommentsSection = ({recipeId, initialCanComment, initialComments = []}) =>
                             multiline
                             minRows={2}
                             maxRows={8}
-                            margin="normal"
                             fullWidth
-                            error={!!errors.comment}
-                            helperText={errors.comment ? errors.comment.message : ''}
+                            error={!!errors.text}
+                            helperText={errors.text ? errors.text.message : ''}
                             inputRef={commentFieldRef}
                             disabled={!canComment}
                             onKeyDown={(e) => {
@@ -172,6 +163,62 @@ const CommentsSection = ({recipeId, initialCanComment, initialComments = []}) =>
                     <SendIcon/>
                 </IconButton>
             </Box>
+        )
+    };
+
+    return (
+        <Box mt={15}>
+            <Typography fontWeight="bold" gutterBottom sx={{
+                fontSize: {
+                    xs: theme.typography.h6.fontSize,
+                    lg: theme.typography.h5.fontSize,
+                }
+            }}>
+                Komentarze:
+            </Typography>
+            <Button onClick={openTextField} startIcon={<AddCommentIcon/>} disabled={!canComment}>
+                Dodaj komentarz
+            </Button>
+            <Divider/>
+            <Box mt={2}>
+                {comments && comments.length > 0 ? (
+                    <>
+                        {displayedComments.map((comment) => (
+                            <Box key={comment._id}>
+                                <CommentView comment={comment}/>
+                                {comment.children.map((child1) => (
+                                    <Box key={child1._id}>
+                                        <CommentView comment={child1} depth={1} sx={{ml: 4}}/>
+                                        {child1.children.map((child2) => (
+                                            <Box key={child2._id}>
+                                                <CommentView comment={child2} depth={2} sx={{ml: 8}}/>
+                                            </Box>
+                                        ))}
+                                    </Box>
+                                ))}
+                            </Box>
+                        ))}
+                        {comments.length > 3 && (
+                            <Box display="flex" justifyContent="center">
+                                <Button onClick={() => setShowAllComments(true)}
+                                        sx={{
+                                            mt: 2,
+                                            fontSize: "large",
+                                            display: showAllComments ? "none" : "block"
+                                        }}>
+                                    {!showAllComments && `Załaduj więcej (${comments.length - 3})...`}
+                                </Button>
+                            </Box>
+                        )}
+                    </>
+                ) : (
+                    <Typography variant="body1" color="textSecondary">
+                        Brak komentarzy. Bądź pierwszą/ym, który skomentuje!
+                    </Typography>
+                )}
+            </Box>
+            <CommentInput display={showAllComments && activeReplayInput === null ? "flex" : "none"}
+                          sx={{mt: 3, mb: 4}}/>
         </Box>
     );
 }

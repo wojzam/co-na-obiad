@@ -3,15 +3,14 @@ const {MAX_COMMENTS} = require('../constants/limits');
 const recipeDtoSmall = (recipe) => {
     const formatIngredients = (ingredients) => ingredients.map(ingredient => ingredient.name.toLowerCase()).join(', ');
 
-    const [ingredients, additionalIngredients] = recipe.ingredientSections.reduce(
-        ([main, additional], section, index) => {
-            if (index === 0) {
-                main.push(...section.ingredients);
-            } else {
-                additional.push(...section.ingredients);
-            }
-            return [main, additional];
-        }, [[], []]);
+    const [ingredients, additionalIngredients] = recipe.ingredientSections.reduce(([main, additional], section, index) => {
+        if (index === 0) {
+            main.push(...section.ingredients);
+        } else {
+            additional.push(...section.ingredients);
+        }
+        return [main, additional];
+    }, [[], []]);
 
     return {
         id: recipe._id,
@@ -45,7 +44,59 @@ const recipeDto = (recipe, userId) => {
     recipeObj.canComment = userId !== undefined && (!recipeObj.comments || recipeObj.comments.length < MAX_COMMENTS);
     recipeObj.savedBy = undefined;
 
+    recipeObj.comments = createCommentsHierarchy(recipeObj.comments);
+
     return recipeObj;
+}
+
+const createCommentsHierarchy = (comments) => {
+    const commentMap = new Map();
+    const result = [];
+
+    const getFromMap = (_id) => {
+        const comment = commentMap.get(_id.toString())
+        if (comment) return comment;
+        const deletedComment = {_id: _id, text: "Usunięto", parentId: null, children: []};
+        commentMap.set(_id.toString(), deletedComment);
+        result.push(deletedComment);
+        return deletedComment;
+    }
+
+    comments.forEach(comment => {
+        comment.children = [];
+        commentMap.set(comment._id.toString(), comment);
+
+    });
+
+    comments.forEach(comment => {
+        if (comment.parentId === null) {
+            result.push(comment);
+
+        } else {
+            let depth = 1;
+            let parentComment = getFromMap(comment.parentId);
+
+            while (parentComment && parentComment.parentId !== null) {
+                depth++;
+                parentComment = getFromMap(parentComment.parentId);
+            }
+
+            if (depth >= 2) {
+                let ancestor = getFromMap(comment.parentId);
+                while (ancestor && depth >= 3) {
+                    ancestor = getFromMap(ancestor.parentId);
+                    depth--;
+                }
+                if (ancestor) {
+                    ancestor.children.push(comment);
+                }
+            } else {
+                parentComment.children.push(comment);
+            }
+        }
+    });
+
+    return result;
 }
 
 module.exports = {recipeDtoSmall, recipeDto};

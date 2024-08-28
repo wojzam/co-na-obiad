@@ -104,7 +104,7 @@ router.delete('/:id/save', requireToken, validId(), async (req, res) => {
 router.post('/:id/comments', requireToken, validId(), commentSchema, async (req, res) => {
     try {
         const data = matchedData(req);
-        const result = await commentsService.comment(req.params.id, req.user, data.text);
+        const result = await commentsService.comment(req.params.id, req.user, data.text, data.parentId);
         res.status(result.status).json(result.body);
     } catch (err) {
         res.status(500);
