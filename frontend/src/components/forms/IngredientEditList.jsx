@@ -109,9 +109,9 @@ export default function IngredientEditList({sectionIndex, handleRemove}) {
                                         <TableCell align="right"></TableCell>
                                         <TableCell align="right"></TableCell>
                                     </>) : (<>
-                                        <TableCell sx={{minWidth: {sm: 200, md: 240, lg: 300}}}> Nazwa < /TableCell>
+                                        <TableCell sx={{minWidth: {sm: 200, md: 240, lg: 250}}}> Nazwa < /TableCell>
                                         <TableCell sx={{minWidth: {sm: 100, md: 115}}}>Wartość</TableCell>
-                                        <TableCell sx={{minWidth: {sm: 150, md: 200, lg: 210}}}>Jednostka</TableCell>
+                                        <TableCell sx={{minWidth: {sm: 150, md: 205}}}>Jednostka</TableCell>
                                         <TableCell align="right"></TableCell>
                                         <TableCell align="right"></TableCell>
                                     </>)}

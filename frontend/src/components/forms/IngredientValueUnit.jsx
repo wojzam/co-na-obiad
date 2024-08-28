@@ -78,7 +78,7 @@ const IngredientValueUnit = ({ingredients, units, name, watchedIngredients, hand
     return (
         <>
             {isSmallScreen ? (
-                <Box my={1} mx={1} component="th">
+                <Box py={1} px={1} component="th">
                     <Box sx={{mb: 2}}>
                         <NameInput/>
                     </Box>

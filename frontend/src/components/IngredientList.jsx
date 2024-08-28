@@ -44,7 +44,7 @@ const IngredientList = ({ingredientSections}) => {
 
     return (
         <>
-            <Typography marginTop={3} fontWeight="medium"
+            <Typography marginTop={3} fontWeight="bold"
                         textAlign={{xs: 'center', sm: 'center', md: 'start'}}
                         sx={{
                             fontSize: {

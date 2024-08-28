@@ -63,10 +63,10 @@ const RecipeDetails = () => {
                             },
                             wordBreak: 'break-word',
                             overflowWrap: 'break-word',
-                        }} fontWeight="medium">
+                        }} fontWeight="bolder">
                             {recipe ? recipe?.name : <Skeleton width={300}/>}
                         </Typography>
-                        <Typography fontWeight="light" gutterBottom sx={{
+                        <Typography fontWeight="lighter" sx={{
                             textAlign: {
                                 xs: 'center',
                                 sm: 'center',
@@ -77,7 +77,16 @@ const RecipeDetails = () => {
                                 lg: theme.typography.subtitle1.fontSize,
                             },
                         }}>
-                            {recipe ? recipe?.creator : <Skeleton width={100}/>}
+                            {recipe ? (
+                                <>
+                                    Dodane przez:&nbsp;
+                                    <Typography component="span" fontWeight="regular">
+                                        {recipe.creator}
+                                    </Typography>
+                                </>
+                            ) : (
+                                <Skeleton width={100}/>
+                            )}
                         </Typography>
                     </Box>
                     <Box display="flex" justifyContent="end" gap={2}>
@@ -93,7 +102,6 @@ const RecipeDetails = () => {
                                 onClick={handleSave}>
                             {isSaved ? "Zapisano" : "Zapisz"}
                         </Button>
-
                         <Button sx={{
                             display: recipe && 'canEdit' in recipe ? "inherit" : "none",
                             height: "fit-content",
@@ -106,7 +114,6 @@ const RecipeDetails = () => {
                                 disabled={!recipe?.canEdit}>
                             Edytuj
                         </Button>
-
                     </Box>
                 </Box>
                 <Divider/>
@@ -117,7 +124,7 @@ const RecipeDetails = () => {
                     <Grid item xs={8} sm={8} md={8} lg={9} xl={11}>
                         {recipe?.preparation && (
                             <>
-                                <Typography marginTop={3} fontWeight="medium" gutterBottom
+                                <Typography marginTop={3} fontWeight="bold" gutterBottom
                                             sx={{
                                                 fontSize: {
                                                     xs: theme.typography.h6.fontSize,
