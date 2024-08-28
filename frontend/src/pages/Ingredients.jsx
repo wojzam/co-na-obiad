@@ -153,10 +153,10 @@ const Ingredients = () => {
                                 <TableCell>
                                     <Autocomplete
                                         sx={{width: 300}}
-                                        defaultValue={ingredients.find(ing => ing._id === ingredient?.parent)?.name || null}
+                                        value={ingredients.find(ing => ing._id === ingredient.parent)?.name || null}
                                         options={ingredients.map((ing) => ing.name)}
                                         filterSelectedOptions
-                                        onChange={(e, v) => handleParentChange(ingredient._id, v)}
+                                        onChange={(e, newValue) => handleParentChange(ingredient._id, newValue)}
                                         renderInput={(params) => (
                                             <TextField
                                                 {...params}

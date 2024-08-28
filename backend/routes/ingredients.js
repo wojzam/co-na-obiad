@@ -35,7 +35,7 @@ router.get('/units', async (req, res) => {
     }
 });
 
-router.put('/:id', requireToken, requireAdmin, validId, ingredientSchema, async (req, res) => {
+router.put('/:id', requireToken, requireAdmin, validId(), ingredientSchema, async (req, res) => {
     try {
         const data = matchedData(req);
         const result = await ingredientsService.update(req.params.id, data.name, data.children);
