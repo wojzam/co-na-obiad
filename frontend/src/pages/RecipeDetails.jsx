@@ -133,11 +133,7 @@ const RecipeDetails = () => {
                                             }}>
                                     Przygotowanie:
                                 </Typography>
-                                <Typography sx={{
-                                    fontSize: {
-                                        xs: theme.typography.body2.fontSize,
-                                        sm: theme.typography.body1.fontSize,
-                                    },
+                                <Typography variant="body1" sx={{
                                     wordBreak: 'break-word',
                                     overflowWrap: 'break-word',
                                 }} fontWeight="regular" style={{whiteSpace: 'pre-line'}}>
