@@ -1,24 +1,29 @@
+import React, {useEffect, useState} from "react";
 import {Autocomplete, Box, Button, CircularProgress, Grid, TextField, Typography} from "@mui/material";
 import IngredientEditList from "./IngredientEditList";
 import {useCategories} from "../../hooks/useCachedData";
 import {Controller, FormProvider, useFieldArray, useForm, useWatch} from "react-hook-form";
 import DeleteButton from "../DeleteButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import React from "react";
 
 const MAX_CATEGORIES = 10;
+const STORAGE_KEY = "recipeFormData";
+
+const defaultValues = (initialValues = null) => ({
+    name: initialValues?.name || "",
+    categories: initialValues?.categories || [],
+    preparation: initialValues?.preparation || "",
+    ingredientSections: initialValues?.ingredientSections || [{
+        sectionName: "", ingredients: []
+    }]
+});
 
 export const RecipeForm = ({onSubmit, onDelete, initialData, isEdit = false}) => {
     const methods = useForm({
         mode: "all",
-        defaultValues: {
-            name: initialData?.name || "",
-            categories: initialData?.categories || [],
-            preparation: initialData?.preparation || "",
-            ingredientSections: initialData?.ingredientSections || [{sectionName: "", ingredients: []}]
-        }
+        defaultValues: defaultValues(initialData)
     });
-    const {control, register, handleSubmit, formState: {errors, isSubmitting}} = methods;
+    const {control, register, handleSubmit, formState: {errors, isSubmitting}, watch, setValue} = methods;
 
     const {fields: sectionFields, append: appendSection, remove: removeSection} = useFieldArray({
         control,
@@ -30,6 +35,7 @@ export const RecipeForm = ({onSubmit, onDelete, initialData, isEdit = false}) =>
         name: `ingredientSections`,
     });
 
+    const [isInitialLoad, setIsInitialLoad] = useState(false);
     const categories = useCategories();
 
     const handleAddSection = () => {
@@ -56,6 +62,43 @@ export const RecipeForm = ({onSubmit, onDelete, initialData, isEdit = false}) =>
                 return filteredIngredient;
             }).filter((ingredient) => ingredient.name),
         }));
+    }
+
+    useEffect(() => {
+        const navigationEntries = performance.getEntriesByType("navigation");
+        if (navigationEntries.length > 0 && navigationEntries[0].type !== "reload") {
+            if (initialData) sessionStorage.setItem(STORAGE_KEY, JSON.stringify(initialData));
+            else sessionStorage.removeItem(STORAGE_KEY)
+        }
+        setIsInitialLoad(true);
+    }, []);
+
+    useEffect(() => {
+        if (isInitialLoad) loadFormValues();
+    }, [setValue, isInitialLoad]);
+
+    useEffect(() => {
+        if (isInitialLoad) saveForm();
+    }, [watch, isInitialLoad]);
+
+    function loadFormValues() {
+        const navigationEntries = performance.getEntriesByType("navigation");
+        if (navigationEntries.length > 0 && navigationEntries[0].type === "reload") {
+            const savedData = sessionStorage.getItem(STORAGE_KEY);
+            if (savedData) {
+                const parsedData = JSON.parse(savedData);
+                Object.keys(parsedData).forEach((key) => {
+                    setValue(key, parsedData[key]);
+                });
+            }
+        }
+    }
+
+    function saveForm() {
+        const subscription = watch((value) => {
+            sessionStorage.setItem(STORAGE_KEY, JSON.stringify(value));
+        });
+        return () => subscription.unsubscribe();
     }
 
     return (

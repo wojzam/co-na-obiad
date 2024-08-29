@@ -49,11 +49,6 @@ const UserRecipes = () => {
         navigate(`/recipes/${id}`);
     };
 
-    const handleEditClick = (e, id) => {
-        e.stopPropagation();
-        navigate(`/edit-recipe/${id}`);
-    };
-
     const hideOnSmallerScreen = {
         display: {
             xs: 'none',
@@ -126,7 +121,8 @@ const UserRecipes = () => {
                                     <TableCell align="right">
                                         <Button
                                             variant="outlined"
-                                            onClick={(e) => handleEditClick(e, recipe.id)}
+                                            href={`/edit-recipe/${recipe.id}`}
+                                            onClick={(e) => e.stopPropagation()}
                                             startIcon={<EditOutlinedIcon/>}
                                         >
                                             Edytuj
