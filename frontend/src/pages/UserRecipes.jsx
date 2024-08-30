@@ -1,9 +1,11 @@
 import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 import {
     Box,
     Button,
     CircularProgress,
     Grow,
+    Link,
     Paper,
     Table,
     TableBody,
@@ -18,13 +20,13 @@ import {
 } from "@mui/material";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import AddIcon from '@mui/icons-material/Add';
-import {useNavigate} from "react-router-dom";
+import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import RecipesFetcher, {TYPE_SAVED, TYPE_USER} from "../components/RecipesFetcher";
 import truncateText from "../utils/truncateText";
-import Link from "@mui/material/Link";
 
 const maxNameLength = 80;
-const maxIngredientsLength = 100;
+const maxCategoriesLength = 37;
+const maxIngredientsLength = 90;
 
 const UserRecipes = () => {
     const [selectedView, setSelectedView] = useState(TYPE_USER);
@@ -84,9 +86,12 @@ const UserRecipes = () => {
                                 <TableCell>Nazwa</TableCell>
                                 <TableCell align="right" sx={hideOnSmallerScreen}>Kategorie</TableCell>
                                 <TableCell align="right" sx={hideOnSmallerScreen}>Składniki</TableCell>
-                                {selectedView === TYPE_USER && (
+                                {selectedView === TYPE_USER && (<>
+                                    <TableCell align="right" sx={hideOnSmallerScreen}>
+                                        <CommentOutlinedIcon fontSize="large" sx={{pt: 1.2, pl: 2}}/>
+                                    </TableCell>
                                     <TableCell align="right"></TableCell>
-                                )}
+                                </>)}
                             </TableRow>
                         </TableHead>
                     )}
@@ -110,24 +115,30 @@ const UserRecipes = () => {
                                         {truncateText(recipe.name, maxNameLength)}
                                     </Typography>
                                 </TableCell>
-                                <TableCell align="right" sx={hideOnSmallerScreen}>{recipe.categories}</TableCell>
+                                <TableCell align="right" sx={hideOnSmallerScreen}>
+                                    {truncateText(recipe.categories, maxCategoriesLength)}
+                                </TableCell>
                                 <TableCell align="right" sx={hideOnSmallerScreen}>
                                     {truncateText(
                                         recipe.ingredients +
                                         (recipe.additionalIngredients && `, ${recipe.additionalIngredients}`),
                                         maxIngredientsLength)}
                                 </TableCell>
-                                {selectedView === TYPE_USER && (
-                                    <TableCell align="right">
-                                        <Button
-                                            variant="outlined"
-                                            href={`/edit-recipe/${recipe.id}`}
-                                            onClick={(e) => e.stopPropagation()}
-                                            startIcon={<EditOutlinedIcon/>}
-                                        >
-                                            Edytuj
-                                        </Button>
-                                    </TableCell>
+                                {selectedView === TYPE_USER && (<>
+                                        <TableCell align="right" sx={hideOnSmallerScreen}>
+                                            {recipe.comments}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            <Button
+                                                variant="outlined"
+                                                href={`/edit-recipe/${recipe.id}`}
+                                                onClick={(e) => e.stopPropagation()}
+                                                startIcon={<EditOutlinedIcon/>}
+                                            >
+                                                Edytuj
+                                            </Button>
+                                        </TableCell>
+                                    </>
                                 )}
                             < /TableRow>
                         ))}
