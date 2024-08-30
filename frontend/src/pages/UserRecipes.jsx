@@ -1,5 +1,4 @@
 import {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
 import {
     Box,
     Button,
@@ -33,7 +32,6 @@ const UserRecipes = () => {
     const [recipes, setRecipes] = useState([]);
     const [isPending, setIsPending] = useState(true);
     const [fetcherKey, setFetcherKey] = useState(0);
-    const navigate = useNavigate();
     const theme = useTheme();
 
     useEffect(() => {
@@ -48,7 +46,7 @@ const UserRecipes = () => {
     };
 
     const handleRowClick = (id) => {
-        navigate(`/recipes/${id}`);
+        window.location.href = `/recipes/${id}`;
     };
 
     const hideOnSmallerScreen = {
