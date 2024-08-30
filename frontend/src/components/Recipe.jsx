@@ -2,6 +2,7 @@ import {Box, Divider, Link, Typography, useTheme} from "@mui/material";
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import truncateText from "../utils/truncateText";
+import CategoryLink from "./CategoryLink";
 
 const maxTextLength = 200;
 
@@ -45,23 +46,11 @@ export default function Recipe({id, name, categories, ingredients, additionalIng
                         </Typography>
                         <Box display="flex" gap={1} flexWrap="wrap" justifyContent="center">
                             {categories.split(',').map((category, index) => (
-                                <Typography
-                                    key={index}
-                                    variant="subtitle2"
-                                    sx={{
-                                        display: 'inline-block',
-                                        backgroundColor: theme.palette.lightGrey.main,
-                                        borderRadius: "5px",
-                                        px: 1.5,
-                                        whiteSpace: "nowrap",
-                                    }}
-                                >
-                                    {category}
-                                </Typography>
+                                <CategoryLink key={index} category={{name: category}}/>
                             ))}
                         </Box>
                     </Box>
-                    <Typography mt={2} variant="subtitle2" align="center">
+                    <Typography mt={1.4} variant="subtitle2" align="center">
                         {truncateText(ingredients, maxTextLength)}
                     </Typography>
                     <Typography mt={0.5} variant="subtitle2" fontWeight="light" align="center">

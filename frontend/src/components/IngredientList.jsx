@@ -76,18 +76,25 @@ const IngredientList = ({ingredientSections}) => {
                                 }
 
                                 const key = getItemIndex(sectionIndex, index);
+                                const visibleIndex = section.ingredients.slice(0, index + 1)
+                                    .filter(ing => ing?.type !== "alt").length - 1;
 
                                 return (
-                                    <ListItem key={key} disableGutters style={{marginLeft: 0, padding: 1}}>
+                                    <ListItem key={key} disableGutters style={{
+                                        marginLeft: 0,
+                                        padding: 1,
+                                        backgroundColor: visibleIndex % 2 === 0 ? "inherit" : theme.palette.action.hover,
+                                    }}>
                                         <ListItemButton role={undefined}
                                                         onClick={handleToggle(key)}
                                                         dense
                                                         disableGutters>
-                                            <ListItemIcon>
+                                            <ListItemIcon sx={{minWidth: 50, pl: 1, py: 0.3}}>
                                                 <Checkbox
                                                     edge="start"
                                                     checked={checked.indexOf(key) !== -1}
                                                     tabIndex={-1}
+                                                    size={"small"}
                                                     disableRipple
                                                 />
                                             </ListItemIcon>
@@ -97,7 +104,8 @@ const IngredientList = ({ingredientSections}) => {
                                                     <Typography variant="body1" fontWeight="medium"
                                                                 textAlign={{xs: 'center', sm: 'center', md: 'start'}}
                                                                 paddingRight={{xs: 7, sm: 7, md: 0}}
-                                                                color={theme.palette.primary.main}>
+                                                                color={checked.indexOf(key) !== -1 ? 'grey' : 'primary'}
+                                                                sx={{textDecorationLine: checked.indexOf(key) !== -1 ? 'line-through' : 'none'}}>
                                                         {getIngredientDesc(ingredient)}
                                                         {collectAltIngredients(index, section).map((alt, altIndex) => (
                                                             <span key={`${key}-${altIndex}`}>
