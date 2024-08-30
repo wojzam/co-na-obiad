@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from "react";
 import {Autocomplete, Box, TextField} from "@mui/material";
-import SearchBar from "./SearchBar";
-import IngredientFilterInput from "./IngredientFilterInput";
 import axios from "axios";
-import useAuthData from "../hooks/useAuthData";
+import SearchBar from "./SearchBar";
 import SortInput from "./SortInput";
+import IngredientFilterInput from "./IngredientFilterInput";
+import MessageBox from "./MessageBox";
+import useAuthData from "../hooks/useAuthData";
 import debounce from "../utils/debounce";
 import {useCategories} from "../hooks/useCachedData";
 import {useSearchState} from "../hooks/useSearchState";
-import MessageBox from "./MessageBox.jsx";
+import {usePagingState} from "../hooks/usePagingState";
 
 const pageSize = 30;
 const MAX_CATEGORIES = 10;
@@ -18,21 +19,21 @@ export const TYPE_SAVED = "savedBy";
 
 export default function RecipesFetcher({setRecipes, isPending, setIsPending, type = TYPE_ALL, id = "/recipes"}) {
     const {userId} = useAuthData();
-    const {
-        filter,
-        handleFilterChange,
-        sort,
-        handleSortChange,
-        pages,
-        setPages,
-        isLastPage,
-        setIsLastPage,
-        resetRecipes,
-        isReadingState
-    } = useSearchState({id, setRecipes});
     const categories = useCategories();
+
+    const resetRecipes = () => {
+        setRecipes([]);
+        setPagesToLoad(1);
+        currentPage = 1;
+        setIsLastPage(false);
+    };
+
+    const {filter, handleFilterChange, sort, handleSortChange, isReadingState} = useSearchState({id, resetRecipes});
+    const [scroll, setScroll] = useState(0);
+    const {pagesToLoad, setPagesToLoad, isLastPage, setIsLastPage,} = usePagingState({id, scroll});
     const [canFetch, setCanFetch] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    let currentPage = 1;
 
     const generateEndpoint = () => {
         let endpoint = `/api/recipes?name=${filter.name}` +
@@ -40,7 +41,7 @@ export default function RecipesFetcher({setRecipes, isPending, setIsPending, typ
             filter.exclude.map(i => `&exclude[]=${i}`).join("") +
             filter.categories.map(i => `&categories[]=${i}`).join("") +
             `&sort=${sort}` +
-            `&page=${pages}` +
+            `&page=${currentPage}` +
             `&pageSize=${pageSize}`;
         if (userId) {
             if (type === TYPE_USER) endpoint = endpoint + `&creatorId=${userId}`;
@@ -50,17 +51,22 @@ export default function RecipesFetcher({setRecipes, isPending, setIsPending, typ
     }
 
     const fetchRecipes = () => {
-        setIsPending(true);
         setErrorMessage("");
+        if (isLastPage) return;
+
+        setIsPending(true);
 
         axios.get(generateEndpoint())
             .then((response) => {
-                if (response.data.length === 0 || response.data.length !== pageSize) {
-                    setIsLastPage(true);
-                }
-                if (pages === 1) setRecipes(response.data);
+                if (currentPage === 1) setRecipes(response.data);
                 else setRecipes((prevRecipes) => [...prevRecipes, ...response.data]);
-
+                if (response.data.length === 0 || response.data.length !== pageSize) {
+                    if (response.data.length === 0) setPagesToLoad(prev => prev - 1);
+                    setIsLastPage(true);
+                } else if (currentPage < pagesToLoad) {
+                    currentPage++;
+                    fetchRecipes();
+                }
             }).catch(() => {
             setErrorMessage("Brak połączenia z serwerem");
             resetRecipes();
@@ -76,8 +82,8 @@ export default function RecipesFetcher({setRecipes, isPending, setIsPending, typ
 
     useEffect(() => {
         if (isReadingState || !canFetch) return;
-        fetchRecipes();
-    }, [canFetch, filter, sort, pages]);
+        debounce(fetchRecipes, 50)();
+    }, [canFetch, filter, sort, pagesToLoad]);
 
     const reachedBottom = (threshold = 100) => {
         return document.body.scrollHeight <= window.scrollY + window.innerHeight + threshold;
@@ -88,15 +94,16 @@ export default function RecipesFetcher({setRecipes, isPending, setIsPending, typ
     }
 
     const addNextPage = () => {
-        setPages((prevPages) => prevPages + 1);
+        setPagesToLoad((prevPages) => prevPages + 1);
     }
 
     useEffect(() => {
         if (shouldLoadNextPage()) addNextPage();
         else {
             const debouncedOnScroll = debounce(() => {
+                setScroll(window.scrollY);
                 if (shouldLoadNextPage()) addNextPage();
-            }, 100);
+            }, 50);
             window.addEventListener("scroll", debouncedOnScroll);
 
             return () => {

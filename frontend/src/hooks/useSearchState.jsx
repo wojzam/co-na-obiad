@@ -1,14 +1,12 @@
 import {useEffect, useState} from 'react';
 
-const SESSION_STORAGE_KEY = 'searchState';
+const SEARCH_KEY = 'searchState';
 export const defaultFilter = {name: "", include: [], exclude: [], categories: []};
 export const defaultSort = "name";
 
-export const useSearchState = ({id, setRecipes}) => {
+export const useSearchState = ({id, resetRecipes}) => {
     const [filter, setFilter] = useState(defaultFilter);
     const [sort, setSort] = useState(defaultSort);
-    const [pages, setPages] = useState(1);
-    const [isLastPage, setIsLastPage] = useState(false);
     const [isReadingState, setIsReadingState] = useState(true);
 
     function resetSessionStorage() {
@@ -21,7 +19,7 @@ export const useSearchState = ({id, setRecipes}) => {
     }, [id]);
 
     const read = () => {
-        const sessionState = sessionStorage.getItem(SESSION_STORAGE_KEY);
+        const sessionState = sessionStorage.getItem(SEARCH_KEY);
         if (sessionState) {
             const parsedState = JSON.parse(sessionState);
             const searchState = parsedState[id];
@@ -37,16 +35,10 @@ export const useSearchState = ({id, setRecipes}) => {
     };
 
     const save = (newState) => {
-        const sessionState = sessionStorage.getItem(SESSION_STORAGE_KEY);
+        const sessionState = sessionStorage.getItem(SEARCH_KEY);
         const updatedSearchState = sessionState ? JSON.parse(sessionState) : {};
         updatedSearchState[id] = newState;
-        sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(updatedSearchState));
-    };
-
-    const resetRecipes = () => {
-        setRecipes([]);
-        setPages(1);
-        setIsLastPage(false);
+        sessionStorage.setItem(SEARCH_KEY, JSON.stringify(updatedSearchState));
     };
 
     const handleFilterChange = (updatedFields) => {
@@ -70,10 +62,6 @@ export const useSearchState = ({id, setRecipes}) => {
         handleFilterChange,
         sort,
         handleSortChange,
-        pages,
-        setPages,
-        isLastPage,
-        setIsLastPage,
         resetRecipes,
         isReadingState,
         save
