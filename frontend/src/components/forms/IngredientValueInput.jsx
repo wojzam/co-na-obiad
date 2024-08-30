@@ -15,7 +15,7 @@ const IngredientValueInput = ({name}) => {
 
     return (
         <Controller
-            name={name} // Adjust according to your structure
+            name={name}
             control={control}
             rules={{
                 validate: (value) => !value || !value.trim() || submitRegex.test(value.trim())

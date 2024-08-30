@@ -1,30 +1,38 @@
 import {useEffect, useState} from 'react';
-import {useCookies} from 'react-cookie';
 import {useParams} from 'react-router-dom';
+
+const STORAGE_KEY = 'checkedIngredients';
 
 const useIngredientCheckbox = () => {
     const {id: recipeId} = useParams();
-    const [cookies, setCookie, removeCookie] = useCookies([`checkedIngredients`]);
     const [checked, setChecked] = useState([]);
 
     useEffect(() => {
-        setChecked(getChecked());
-    }, []);
+        const navigationEntries = performance.getEntriesByType("navigation");
+        if (navigationEntries.length > 0 && navigationEntries[0].type !== "reload") {
+            sessionStorage.removeItem(STORAGE_KEY);
+        } else {
+            setChecked(getChecked());
+        }
+    }, [recipeId]);
 
     const getChecked = () => {
-        if (cookies[`checkedIngredients`]) {
-            if (recipeId === cookies[`checkedIngredients`].id) {
-                const ch = cookies[`checkedIngredients`].checked;
-                return ch ? ch : [];
+        const savedData = sessionStorage.getItem(STORAGE_KEY);
+        if (savedData) {
+            const parsedData = JSON.parse(savedData);
+            if (recipeId === parsedData.id) {
+                return parsedData.checked || [];
+            } else {
+                sessionStorage.removeItem(STORAGE_KEY);
             }
-            removeCookie(`checkedIngredients`, {path: '/'});
         }
         return [];
-    }
+    };
 
     const saveChecked = (newChecked) => {
-        setCookie(`checkedIngredients`, {id: recipeId, checked: newChecked}, {path: '/'});
-    }
+        const dataToSave = JSON.stringify({id: recipeId, checked: newChecked});
+        sessionStorage.setItem(STORAGE_KEY, dataToSave);
+    };
 
     const handleToggle = (index) => () => {
         const currentIndex = checked.indexOf(index);
