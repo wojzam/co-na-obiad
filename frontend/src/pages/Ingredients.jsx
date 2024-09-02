@@ -42,7 +42,12 @@ const Ingredients = () => {
         data.forEach(ing => {
             if (ing.children) {
                 ing.children.forEach(child => {
-                    data.find(i => i._id === child._id).parent = ing._id;
+                    const childIngredient = data.find(i => i._id === child._id);
+                    if (childIngredient.parents) {
+                        childIngredient.parents.push(ing._id);
+                    } else {
+                        childIngredient.parents = [ing._id];
+                    }
                 });
                 delete ing.children;
             }
@@ -74,7 +79,7 @@ const Ingredients = () => {
         setErrorMessage("");
 
         const ingredient = ingredients.find(ingredient => ingredient._id === id);
-        const children = ingredients.filter(ingredient => ingredient.parent === id).map((ing) => ing._id);
+        const children = ingredients.filter(ingredient => ingredient.parents?.includes(id)).map((ing) => ing._id);
 
         axiosInstance.put(`/api/ingredients/${id}`, {
             name: ingredient.name.trim(),
@@ -100,17 +105,12 @@ const Ingredients = () => {
         ));
     };
 
-    const handleParentChange = (id, value) => {
-        if (value) {
-            const parentId = ingredients.find(ingredient => ingredient.name === value)._id;
-            setIngredients(ingredients.map(ingredient =>
-                ingredient._id === id ? {...ingredient, parent: parentId} : ingredient
-            ));
-        } else {
-            setIngredients(ingredients.map(ingredient =>
-                ingredient._id === id ? {...ingredient, parent: null} : ingredient
-            ));
-        }
+    const handleParentChange = (id, values) => {
+        const parentIds = values.map(value => ingredients.find(ingredient => ingredient.name === value)?._id);
+
+        setIngredients(ingredients.map(ingredient =>
+            ingredient._id === id ? {...ingredient, parents: parentIds} : ingredient
+        ));
     };
 
     return (
@@ -152,11 +152,12 @@ const Ingredients = () => {
                                 </TableCell>
                                 <TableCell>
                                     <Autocomplete
+                                        multiple
                                         sx={{width: 300}}
-                                        value={ingredients.find(ing => ing._id === ingredient.parent)?.name || null}
+                                        value={ingredient.parents ? ingredient.parents.map(parentId => ingredients.find(ing => ing._id === parentId)?.name).filter(Boolean) : []}
                                         options={ingredients.map((ing) => ing.name)}
                                         filterSelectedOptions
-                                        onChange={(e, newValue) => handleParentChange(ingredient._id, newValue)}
+                                        onChange={(e, newValues) => handleParentChange(ingredient._id, newValues)}
                                         renderInput={(params) => (
                                             <TextField
                                                 {...params}
