@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {
     Autocomplete,
     CircularProgress,
@@ -8,6 +8,7 @@ import {
     TableCell,
     TableContainer,
     TableHead,
+    TablePagination,
     TableRow,
     TextField,
     Typography,
@@ -25,6 +26,9 @@ const Ingredients = () => {
     const [newIngredient, setNewIngredient] = useState("");
     const [isPending, setIsPending] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(50);
+    const [searchTerm, setSearchTerm] = useState("");
     const theme = useTheme();
 
     useEffect(() => {
@@ -113,6 +117,34 @@ const Ingredients = () => {
         ));
     };
 
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value.toLowerCase());
+        setPage(0);
+    };
+
+    const filteredIngredients = useMemo(() => {
+        return ingredients.filter(ingredient =>
+            ingredient.name.toLowerCase().includes(searchTerm) ||
+            (ingredient.parents && ingredient.parents.some(parentId => {
+                const parent = ingredients.find(ing => ing._id === parentId);
+                return parent?.name.toLowerCase().includes(searchTerm);
+            }))
+        );
+    }, [ingredients, searchTerm]);
+
+    const paginatedIngredients = useMemo(() => {
+        return filteredIngredients.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+    }, [filteredIngredients, page, rowsPerPage]);
+
     return (
         <>
             <Typography component="h1" variant="h2" fontWeight="medium" gutterBottom>Składniki</Typography>
@@ -128,6 +160,13 @@ const Ingredients = () => {
                 />
                 <Button variant="contained" onClick={handleAdd}>Dodaj składnik</Button>
             </Box>
+            <TextField
+                label="Szukaj"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                onChange={handleSearchChange}
+            />
             <TableContainer component={Paper}>
                 <Table size={"small"}>
                     <TableHead>
@@ -138,7 +177,7 @@ const Ingredients = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {ingredients && ingredients.map((ingredient, index) => (
+                        {paginatedIngredients && paginatedIngredients.map((ingredient, index) => (
                             <TableRow
                                 key={ingredient._id}
                                 sx={{
@@ -173,6 +212,14 @@ const Ingredients = () => {
                         ))}
                     </TableBody>
                 </Table>
+                <TablePagination
+                    component="div"
+                    count={filteredIngredients.length}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    rowsPerPage={rowsPerPage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
             </TableContainer>
             {isPending ? <CircularProgress/> :
                 ingredients.length === 0 && <Typography variant="h6" component="p">Brak wyników</Typography>}
