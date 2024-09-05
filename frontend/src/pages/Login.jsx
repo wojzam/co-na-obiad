@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import useAuthData from "../hooks/useAuthData";
 import {useForm} from "react-hook-form";
-import {CircularProgress, TextField} from "@mui/material";
+import {Checkbox, CircularProgress, FormControlLabel, TextField} from "@mui/material";
 import {ReCaptchaV3} from "../components/ReCaptchaV3";
 import MessageBox from "../components/MessageBox";
 import axios from "axios";
@@ -20,6 +20,7 @@ export default function Login() {
     });
     const [captchaToken, setCaptchaToken] = useState("");
     const [message, setMessage] = useState("");
+    const [rememberMe, setRememberMe] = useState(false);
 
     const onSubmit = (data) => {
         setMessage("");
@@ -38,7 +39,7 @@ export default function Login() {
             }
         })
             .then((response) => {
-                login(response.data);
+                login(response.data, rememberMe);
             })
             .catch((error) => {
                 if (error.response.status === 401 || error.response.status === 400) {
@@ -107,6 +108,17 @@ export default function Login() {
                             />
                         </Grid>
                     </Grid>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={rememberMe}
+                                onChange={(e) => setRememberMe(e.target.checked)}
+                                color="primary"
+                            />
+                        }
+                        label="Zapamiętaj mnie"
+                        sx={{mt: 1}}
+                    />
                     <ReCaptchaV3 setToken={setCaptchaToken}/>
                     {isSubmitting &&
                         <Box sx={{display: 'flex', justifyContent: 'center', mt: 2}}> <CircularProgress/> </Box>}
