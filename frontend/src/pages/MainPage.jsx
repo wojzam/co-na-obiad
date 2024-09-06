@@ -1,4 +1,3 @@
-import {useNavigate} from "react-router-dom";
 import ImageButtonGrid from "../components/ImageButtonGrid";
 import {Box, Divider, Paper, Typography, useTheme} from "@mui/material";
 import {defaultFilter, defaultSort, useSearchState} from "../hooks/useSearchState";
@@ -6,11 +5,10 @@ import {defaultFilter, defaultSort, useSearchState} from "../hooks/useSearchStat
 const MainPage = () => {
     const theme = useTheme();
     const {save} = useSearchState({id: "/recipes"});
-    const navigate = useNavigate();
 
     const onClick = (image) => {
         save({filter: image.filter, sort: defaultSort});
-        navigate("/recipes");
+        window.location.href = "/recipes";
     }
 
     const HeaderText = ({text, mt}) => {
