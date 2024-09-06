@@ -64,7 +64,7 @@ const IngredientList = ({ingredientSections}) => {
                     <Box key={sectionIndex} mt={sectionIndex > 0 ? 5 : 0}>
                         <Typography variant="h6" fontWeight="medium"
                                     textAlign={{xs: 'center', sm: 'center', md: 'start'}}>
-                            {section.sectionName}{section.sectionName && ":"}
+                            {section?.sectionName}{section?.sectionName && ":"}
                         </Typography>
                         <List sx={{width: "100%"}}>
                             {section.ingredients.map((ingredient, index) => {

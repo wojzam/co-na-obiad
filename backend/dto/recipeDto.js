@@ -23,8 +23,8 @@ const recipeDtoSmall = (recipe) => {
     };
 };
 
-const recipeDto = (recipe, userId) => {
-    const recipeObj = recipe.toObject();
+const recipeDto = (recipe, userId, isObject = false) => {
+    const recipeObj = isObject ? recipe : recipe.toObject();
 
     if (userId) {
         recipeObj.saved = !!(recipeObj.savedBy && recipeObj.savedBy.some((id) => id.equals(userId)));

@@ -5,6 +5,7 @@ import HeaderBar from "./components/HeaderBar";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import MainPage from "./pages/MainPage";
+import Menu from "./pages/Menu";
 import RecipesBrowser from "./pages/RecipesBrowser";
 import UserRecipes from "./pages/UserRecipes";
 import RecipeDetails from "./pages/RecipeDetails";
@@ -35,6 +36,7 @@ export default function App() {
                                element={isAuthenticated ? <Navigate to="/user-recipes" replace/> : <Login/>}/>
                         <Route path="/signup"
                                element={isAuthenticated ? <Navigate to="/user-recipes" replace/> : <SignUp/>}/>
+                        <Route path="/menu" element={<Menu/>}/>
                         <Route path="/recipes" element={<RecipesBrowser/>}/>
                         <Route path="/user-recipes" element={<UserRecipes/>}/>
                         <Route path="/recipes/:id" element={<RecipeDetails/>}/>

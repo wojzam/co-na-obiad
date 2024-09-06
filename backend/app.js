@@ -14,6 +14,7 @@ const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
 const recipesRouter = require('./routes/recipes');
 const ingredientsRouter = require('./routes/ingredients');
+const menuRouter = require('./routes/menu');
 
 const app = express();
 
@@ -41,6 +42,7 @@ app.use('/auth', authRateLimiter, authRouter);
 app.use('/users', usersRouter);
 app.use('/recipes', recipesRouter);
 app.use('/ingredients', ingredientsRouter);
+app.use('/menu', menuRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
