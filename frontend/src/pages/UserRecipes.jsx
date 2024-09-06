@@ -114,7 +114,7 @@ const UserRecipes = () => {
                                     </Typography>
                                 </TableCell>
                                 <TableCell align="right" sx={hideOnSmallerScreen}>
-                                    {truncateText(recipe.categories, maxCategoriesLength)}
+                                    {truncateText(recipe.categories.map(c => c.name).join(", "), maxCategoriesLength)}
                                 </TableCell>
                                 <TableCell align="right" sx={hideOnSmallerScreen}>
                                     {truncateText(

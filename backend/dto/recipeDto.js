@@ -15,7 +15,7 @@ const recipeDtoSmall = (recipe) => {
     return {
         id: recipe._id,
         name: recipe.name,
-        categories: recipe.categories.map(c => c.name).join(", "),
+        categories: recipe.categories,
         ingredients: formatIngredients(ingredients),
         additionalIngredients: formatIngredients(additionalIngredients),
         creator: recipe.creator.name,

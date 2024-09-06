@@ -45,8 +45,8 @@ export default function Recipe({id, name, categories, ingredients, additionalIng
                             {name}
                         </Typography>
                         <Box display="flex" gap={1} flexWrap="wrap" justifyContent="center">
-                            {categories.split(',').map((category, index) => (
-                                <CategoryLink key={index} category={{name: category}}/>
+                            {categories.map((category, index) => (
+                                <CategoryLink key={index} category={category}/>
                             ))}
                         </Box>
                     </Box>
