@@ -47,9 +47,15 @@ export const usePagingState = ({id, scroll}) => {
     };
 
     const updateScroll = (newScroll) => {
-        setTimeout(() => {
-            window.scrollTo({top: newScroll, behavior: "instant"});
-        }, 400);
+        const onLoad = () => {
+            setTimeout(() => {
+                window.scrollTo({top: newScroll, behavior: "instant"});
+            }, 500);
+            window.removeEventListener("load", onLoad);
+        };
+
+        if (document.readyState === "complete") onLoad();
+        else window.addEventListener("load", onLoad);
     }
 
     return {

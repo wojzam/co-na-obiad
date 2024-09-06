@@ -11,7 +11,7 @@ import {useCategories} from "../hooks/useCachedData";
 import {useSearchState} from "../hooks/useSearchState";
 import {usePagingState} from "../hooks/usePagingState";
 
-const pageSize = 30;
+const PAGE_SIZE = 30;
 const MAX_CATEGORIES = 10;
 const TYPE_ALL = "all";
 export const TYPE_USER = "user";
@@ -42,7 +42,7 @@ export default function RecipesFetcher({setRecipes, isPending, setIsPending, typ
             filter.categories.map(i => `&categories[]=${i}`).join("") +
             `&sort=${sort}` +
             `&page=${currentPage}` +
-            `&pageSize=${pageSize}`;
+            `&pageSize=${PAGE_SIZE}`;
         if (userId) {
             if (type === TYPE_USER) endpoint = endpoint + `&creatorId=${userId}`;
             if (type === TYPE_SAVED) endpoint = endpoint + `&savedBy=${userId}`;
@@ -60,7 +60,7 @@ export default function RecipesFetcher({setRecipes, isPending, setIsPending, typ
             .then((response) => {
                 if (currentPage === 1) setRecipes(response.data);
                 else setRecipes((prevRecipes) => [...prevRecipes, ...response.data]);
-                if (response.data.length === 0 || response.data.length !== pageSize) {
+                if (response.data.length === 0 || response.data.length !== PAGE_SIZE) {
                     if (response.data.length === 0) setPagesToLoad(prev => prev - 1);
                     setIsLastPage(true);
                 } else if (currentPage < pagesToLoad) {
@@ -103,7 +103,7 @@ export default function RecipesFetcher({setRecipes, isPending, setIsPending, typ
             const debouncedOnScroll = debounce(() => {
                 setScroll(window.scrollY);
                 if (shouldLoadNextPage()) addNextPage();
-            }, 50);
+            }, 100);
             window.addEventListener("scroll", debouncedOnScroll);
 
             return () => {
