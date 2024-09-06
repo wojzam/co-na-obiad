@@ -83,8 +83,8 @@ export default function SignUp() {
                                         message: "Nazwa użytkownika nie może przekraczać 20 znaków"
                                     },
                                     pattern: {
-                                        value: /^[a-zA-Z0-9 @\-!._:(){}*#%?ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$/,
-                                        message: 'Nazwa użytkownika może zawierać tylko litery, cyfry i znaki @-!._:(){}*#%?'
+                                        value: /^[\p{L}0-9 @\-!.,_:(){}*#%?]+$/u,
+                                        message: 'Nazwa użytkownika może zawierać tylko litery, cyfry i znaki @-!.,_:(){}*#%?'
                                     },
                                 })}
                                 label="Nazwa użytkownika"

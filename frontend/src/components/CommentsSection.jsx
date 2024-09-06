@@ -133,8 +133,8 @@ const CommentsSection = ({recipeId, initialCanComment, initialComments = []}) =>
                             message: "Komentarz nie może przekraczać 1000 znaków"
                         },
                         pattern: {
-                            value: /^[a-zA-Z0-9 @\-!._:(){}*#%?ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$/,
-                            message: 'Komentarz może zawierać tylko litery, cyfry i znaki @-!._:(){}*#%?'
+                            value: /^[\p{L}0-9 @\-!.,_:(){}*#%?]+$/u,
+                            message: 'Komentarz może zawierać tylko litery, cyfry i znaki @-!.,_:(){}*#%?'
                         },
                     }}
                     render={({field}) => (
