@@ -5,9 +5,9 @@ import {useRecipe} from "../hooks/useRecipe";
 import IngredientList from "../components/IngredientList";
 import CategoryLink from "../components/CategoryLink";
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
-import useAuthAxios from "../hooks/useAuthAxios.jsx";
+import useAuthAxios from "../hooks/useAuthAxios";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import CommentsSection from "../components/CommentsSection.jsx";
+import CommentsSection from "../components/CommentsSection";
 
 const RecipeDetails = () => {
     const recipe = useRecipe();

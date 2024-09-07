@@ -1,8 +1,8 @@
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import useAuthAxios from "./useAuthAxios.jsx";
-import useAuthData from "./useAuthData.jsx";
+import useAuthAxios from "./useAuthAxios";
+import useAuthData from "./useAuthData";
 
 export const useRecipe = () => {
     const {id} = useParams();

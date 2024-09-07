@@ -1,6 +1,6 @@
 import {Typography, useTheme} from "@mui/material";
 import {defaultFilter, defaultSort, useSearchState} from "../hooks/useSearchState";
-import {useCategories} from "../hooks/useCachedData.jsx";
+import {useCategories} from "../hooks/useCachedData";
 import {useEffect, useState} from "react";
 import {darken, lighten} from "@mui/material/styles";
 

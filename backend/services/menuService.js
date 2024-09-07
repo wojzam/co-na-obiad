@@ -1,11 +1,17 @@
 const Recipe = require("../models/recipe");
-const {recipeDto} = require("../dto/recipeDto");
+const {recipeDtoSmall} = require("../dto/recipeDto");
 
 const DEFAULT_UNIT = "szt.";
 const DEFAULT_VALUE = 1;
 const OK = (body = {message: "OK"}) => {
     return {status: 200, body: body};
 };
+
+const shoppingList = async (recipeIds) => {
+    const recipes = await Recipe.find({_id: {$in: recipeIds}});
+
+    return OK(aggregateIngredients(recipes));
+}
 
 const random = async (count, category) => {
     const recipes = await Recipe
@@ -14,12 +20,7 @@ const random = async (count, category) => {
             {$sample: {size: count}}
         ]);
 
-    const response = {
-        recipes: recipes?.map(recipe => recipeDto(recipe, null, true)),
-        shoppingList: aggregateIngredients(recipes)
-    }
-
-    return OK(response);
+    return OK(recipes?.map(recipe => recipeDtoSmall(recipe)));
 }
 
 const parseValue = (value) => {
@@ -84,5 +85,6 @@ const aggregateIngredients = (recipes) => {
 }
 
 module.exports = {
-    random
+    random,
+    shoppingList,
 }

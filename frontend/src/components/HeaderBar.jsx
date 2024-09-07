@@ -80,11 +80,11 @@ export default function HeaderBar() {
 
                 {/* Desktop view */}
                 <Box display={{xs: 'none', md: 'flex'}} gap={{sm: 0, md: 0, lg: 6, xl: 8}}>
-                    <Button onClick={openRecipes} sx={buttonStyle}>
-                        Wszystkie przepisy
-                    </Button>
                     <Button href="/menu" sx={buttonStyle}>
                         Menu
+                    </Button>
+                    <Button onClick={openRecipes} sx={buttonStyle}>
+                        Wszystkie przepisy
                     </Button>
                     <Button onClick={openUserRecipes} disabled={!username} sx={buttonStyle}>
                         Moje przepisy

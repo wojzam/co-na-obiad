@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Controller, useForm} from "react-hook-form";
-import useAuthAxios from "../hooks/useAuthAxios.jsx";
+import useAuthAxios from "../hooks/useAuthAxios";
 import {Box, Button, Divider, IconButton, Paper, TextField, Typography, useTheme} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import ReplyIcon from '@mui/icons-material/Reply';
