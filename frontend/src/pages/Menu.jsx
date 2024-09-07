@@ -11,13 +11,17 @@ import axios from "axios";
 import IngredientList from "../components/IngredientList";
 import Recipe from "../components/Recipe";
 import Grid from "@mui/material/Grid";
+import {useIngredients} from "../hooks/useCachedData.jsx";
+
+const MAIN_CATEGORIES = ["Mięso", "Nabiał", "Owoce", "Warzywa", "Produkty zbożowe", "Tłuszcz", "Alkohol", "Przyprawy", "Zioła"];
+const DAYS = ["Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela"];
 
 export default function Menu() {
     const theme = useTheme();
     const [errorMessage, setErrorMessage] = useState("");
+    const ingredients = useIngredients();
 
-    const days = ["Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela"];
-    const emptyRecipes = () => days.reduce((recipesMap, day) => ({...recipesMap, [day]: null}), {});
+    const emptyRecipes = () => DAYS.reduce((recipesMap, day) => ({...recipesMap, [day]: null}), {});
     const mainCourses = "Dania główne";
     const [recipes, setRecipes] = useState(emptyRecipes());
     const [shoppingList, setShoppingList] = useState([]);
@@ -33,7 +37,7 @@ export default function Menu() {
             .then((response) => {
                 const recipesMap = {};
 
-                days.forEach((day, index) => {
+                DAYS.forEach((day, index) => {
                     recipesMap[day] = response.data[index] || null;
                 });
 
@@ -69,7 +73,7 @@ export default function Menu() {
         setErrorMessage("");
 
         const endpoint = `/api/menu/shopping-list?`
-            + days
+            + DAYS
                 .filter(day => recipes[day] !== null)
                 .map(day => `recipes[]=${recipes[day].id}`)
                 .join("&");
@@ -89,8 +93,8 @@ export default function Menu() {
         if (source.index === destination.index) return;
 
         const newRecipes = {...recipes};
-        const sourceDay = days[source.index];
-        const destinationDay = days[destination.index];
+        const sourceDay = DAYS[source.index];
+        const destinationDay = DAYS[destination.index];
 
         const temp = newRecipes[sourceDay];
         newRecipes[sourceDay] = newRecipes[destinationDay];
@@ -107,8 +111,8 @@ export default function Menu() {
                         px: 5,
                         height: "100%",
                         borderRadius: 8,
-                        background: theme.palette.neutral.main,
-                        boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.16)",
+                        borderStyle: "dashed",
+                        borderColor: theme.palette.lightGrey.main,
                     }}>
             <Typography
                 component="h2"
@@ -123,14 +127,65 @@ export default function Menu() {
                 fontWeight="light"
                 align="center"
             >
-                BEZ DANIA
+                BEZ OBIADU
             </Typography>
         </Box>;
     }
 
+
+    function generateIngredientSections() {
+        function getAllChildren(category) {
+            const result = new Set();
+
+            function findChildren(ingredient) {
+                if (!ingredient || !ingredient.children) return;
+                ingredient.children.forEach(child => {
+                    result.add(child._id);
+                    const childIngredient = ingredients.find(i => i._id === child._id);
+                    findChildren(childIngredient);
+                });
+            }
+
+            findChildren(category);
+            return result;
+        }
+
+        const categoryMap = {};
+        MAIN_CATEGORIES.forEach(categoryName => {
+            const category = ingredients.find(ing => ing.name === categoryName);
+            if (category) {
+                const allChildren = getAllChildren(category);
+                categoryMap[categoryName] = new Set([category._id, ...allChildren]);
+            }
+        });
+
+        const sections = MAIN_CATEGORIES.map(categoryName => ({
+            sectionName: categoryName,
+            ingredients: []
+        }));
+        const othersSection = {sectionName: "Inne", ingredients: []};
+
+        shoppingList.forEach(item => {
+            let found = false;
+            for (let section of sections) {
+                const categoryChildren = categoryMap[section.sectionName];
+                if (categoryChildren && categoryChildren.has(item._id)) {
+                    section.ingredients.push(item);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                othersSection.ingredients.push(item);
+            }
+        });
+
+        const filteredSections = sections.filter(section => section.ingredients.length);
+        return othersSection.ingredients.length > 0 ? [...filteredSections, othersSection] : filteredSections;
+    }
+
     return (
         <>
-            <Typography component="h3" fontWeight="medium" color="error">W TRAKCIE TWORZENIA!</Typography>
             <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" width="100%"
                  gap={5} mb={5}>
                 <Typography component="h1" fontWeight="medium" sx={{
@@ -140,7 +195,7 @@ export default function Menu() {
                 </Typography>
                 <Button variant="contained" startIcon={<ShuffleIcon/>} sx={{height: "fit-content"}}
                         onClick={getRandomRecipes}>
-                    Wylosuj dania
+                    Wylosuj obiady
                 </Button>
             </Box>
             <MessageBox message={errorMessage} isError={true}/>
@@ -149,8 +204,8 @@ export default function Menu() {
                     {(provided) => (
                         <Grid container ref={provided.innerRef} {...provided.droppableProps}
                               columnSpacing={5} rowSpacing={20} columns={{sm: 2, md: 8, lg: 8, xl: 12}}
-                              alignItems="stretch" mb={15}>
-                            {days.map((day, index) => (
+                              alignItems="stretch" mb={20}>
+                            {DAYS.map((day, index) => (
                                 <Grid item key={index} sm={2} md={4} lg={4} xl={4} width="100%" display="flex"
                                       flexDirection="column">
                                     <Typography component="h1" variant="h5" fontWeight="medium" gutterBottom
@@ -200,7 +255,12 @@ export default function Menu() {
             }}>
                 Lista zakupów
             </Typography>
-            <IngredientList ingredientSections={[{ingredients: shoppingList}]}/>
+            <Box minWidth={300}>
+                {shoppingList.length ?
+                    <IngredientList ingredientSections={generateIngredientSections()}/> :
+                    <Typography variant="h6" fontWeight="light">Brak produktów</Typography>
+                }
+            </Box>
         </>
     );
 }
