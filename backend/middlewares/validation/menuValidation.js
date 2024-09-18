@@ -13,20 +13,6 @@ const getSchema = [checkSchema({
     },
 }), validRequest];
 
-const shoppingListSchema = [checkSchema({
-    recipes: {
-        optional: true, in: ['query'], isArray: {
-            options: {max: 7}, errorMessage: 'Recipes must be an array with maximum of 7 items',
-        }
-    },
-    'recipes.*': {
-        optional: true, in: ['query'], trim: true, escape: true, isLength: {
-            options: {max: 24}, errorMessage: 'Recipe ID cannot exceed 24 characters'
-        },
-    },
-}), validRequest];
-
 module.exports = {
     getSchema,
-    shoppingListSchema,
 };
