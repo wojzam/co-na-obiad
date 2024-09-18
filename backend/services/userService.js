@@ -18,6 +18,7 @@ const list = async () => {
         users.map(async (user) => {
             const recipeCount = await Recipe.countDocuments({"creator._id": user._id});
             return {
+                _id: user._id,
                 username: user.username,
                 active: user.active,
                 recipeCount: recipeCount
