@@ -12,7 +12,20 @@ const NOT_FOUND = {status: 404, body: {message: 'User not found'}};
 
 
 const list = async () => {
-    return OK(await User.find().select(["username", "active"]));
+    const users = await User.find().select(["username", "active"]);
+
+    const userData = await Promise.all(
+        users.map(async (user) => {
+            const recipeCount = await Recipe.countDocuments({"creator._id": user._id});
+            return {
+                username: user.username,
+                active: user.active,
+                recipeCount: recipeCount
+            };
+        })
+    );
+
+    return OK(userData);
 }
 
 const updateUsername = async (user, username) => {
@@ -47,7 +60,7 @@ const updatePassword = async (user, currentPassword, newPassword) => {
 
 const resetPassword = async (userId, newPassword) => {
     try {
-        const user = await User.findById(userId).lean();
+        const user = await User.findById(userId);
         if (!user) return NOT_FOUND;
 
         user.password = await bcrypt.hash(newPassword, 10);
@@ -61,7 +74,7 @@ const resetPassword = async (userId, newPassword) => {
 
 const updateStatus = async (userId, active) => {
     try {
-        const user = await User.findById(userId).lean();
+        const user = await User.findById(userId);
         if (!user) return NOT_FOUND;
 
         user.active = active;

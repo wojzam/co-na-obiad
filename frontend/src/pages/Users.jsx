@@ -103,6 +103,7 @@ const Users = () => {
                         <TableRow>
                             <TableCell>Nazwa</TableCell>
                             <TableCell align="right">Aktywny</TableCell>
+                            <TableCell align="right">Przepisy</TableCell>
                             <TableCell align="right">Akcje</TableCell>
                         </TableRow>
                     </TableHead>
@@ -124,6 +125,9 @@ const Users = () => {
                                         onChange={() => handleChangeActiveStatus(user._id)}
                                         color="primary"
                                     />
+                                </TableCell>
+                                <TableCell align="right">
+                                    {user.recipeCount}
                                 </TableCell>
                                 <TableCell align="right">
                                     <Button variant="outlined" onClick={() => handleOpenDialog(user)}>
