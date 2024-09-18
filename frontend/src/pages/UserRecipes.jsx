@@ -30,6 +30,7 @@ const maxIngredientsLength = 90;
 const UserRecipes = () => {
     const [selectedView, setSelectedView] = useState(TYPE_USER);
     const [recipes, setRecipes] = useState([]);
+    const [skeletons, setSkeletons] = useState([]);
     const [isPending, setIsPending] = useState(true);
     const [fetcherKey, setFetcherKey] = useState(0);
     const theme = useTheme();
@@ -74,7 +75,8 @@ const UserRecipes = () => {
                     Zapisane
                 </ToggleButton>
             </ToggleButtonGroup>
-            <RecipesFetcher key={fetcherKey} {...{setRecipes, isPending, setIsPending}} type={selectedView}
+            <RecipesFetcher key={fetcherKey} {...{setRecipes, setSkeletons, isPending, setIsPending}}
+                            type={selectedView}
                             id={"/user-recipes"}/>
             <TableContainer component={Paper}>
                 <Table>

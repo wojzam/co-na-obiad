@@ -17,7 +17,14 @@ const TYPE_ALL = "all";
 export const TYPE_USER = "user";
 export const TYPE_SAVED = "savedBy";
 
-export default function RecipesFetcher({setRecipes, isPending, setIsPending, type = TYPE_ALL, id = "/recipes"}) {
+export default function RecipesFetcher({
+                                           setRecipes,
+                                           setSkeletons,
+                                           isPending,
+                                           setIsPending,
+                                           type = TYPE_ALL,
+                                           id = "/recipes"
+                                       }) {
     const {userId} = useAuthData();
     const categories = useCategories();
 
@@ -55,6 +62,7 @@ export default function RecipesFetcher({setRecipes, isPending, setIsPending, typ
         if (isLastPage) return;
 
         setIsPending(true);
+        setSkeletons(Array.from(new Array(6)));
 
         axios.get(generateEndpoint())
             .then((response) => {
@@ -63,6 +71,7 @@ export default function RecipesFetcher({setRecipes, isPending, setIsPending, typ
                 if (response.data.length === 0 || response.data.length !== PAGE_SIZE) {
                     if (response.data.length === 0) setPagesToLoad(prev => prev - 1);
                     setIsLastPage(true);
+                    setSkeletons([]);
                 } else if (currentPage < pagesToLoad) {
                     currentPage++;
                     fetchRecipes();
@@ -85,7 +94,7 @@ export default function RecipesFetcher({setRecipes, isPending, setIsPending, typ
         debounce(fetchRecipes, 50)();
     }, [canFetch, filter, sort, pagesToLoad]);
 
-    const reachedBottom = (threshold = 100) => {
+    const reachedBottom = (threshold = 600) => {
         return document.body.scrollHeight <= window.scrollY + window.innerHeight + threshold;
     }
 
@@ -98,19 +107,20 @@ export default function RecipesFetcher({setRecipes, isPending, setIsPending, typ
     }
 
     useEffect(() => {
-        if (shouldLoadNextPage()) addNextPage();
-        else {
-            const debouncedOnScroll = debounce(() => {
-                setScroll(window.scrollY);
-                if (shouldLoadNextPage()) addNextPage();
-            }, 100);
-            window.addEventListener("scroll", debouncedOnScroll);
+        const debouncedOnScroll = debounce(() => {
+            setScroll(window.scrollY);
+            if (shouldLoadNextPage()) addNextPage();
+        }, 100);
+        window.addEventListener("scroll", debouncedOnScroll);
 
-            return () => {
-                window.removeEventListener("scroll", debouncedOnScroll);
-            };
-        }
+        return () => {
+            window.removeEventListener("scroll", debouncedOnScroll);
+        };
     }, [isPending, isLastPage]);
+
+    useEffect(() => {
+        if (shouldLoadNextPage()) addNextPage();
+    }, []);
 
     return (
         <>
