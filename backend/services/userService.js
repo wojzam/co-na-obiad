@@ -8,6 +8,7 @@ const OK = (body = {message: "OK"}) => {
 const USER_CONFLICT = {status: 409, body: {message: 'User with provided username already exists'}};
 const INCORRECT_PASSWORD = {status: 400, body: {message: 'Incorrect password'}};
 const EXCEED_LIMIT = {status: 429, body: {message: 'Exceed limit of updating username'}};
+const NOT_FOUND = {status: 404, body: {message: 'User not found'}};
 
 
 const list = async () => {
@@ -44,6 +45,34 @@ const updatePassword = async (user, currentPassword, newPassword) => {
     }
 }
 
+const resetPassword = async (userId, newPassword) => {
+    try {
+        const user = await User.findById(userId).lean();
+        if (!user) return NOT_FOUND;
+
+        user.password = await bcrypt.hash(newPassword, 10);
+        await user.save();
+
+        return OK("Updated password");
+    } catch (error) {
+        throw error;
+    }
+}
+
+const updateStatus = async (userId, active) => {
+    try {
+        const user = await User.findById(userId).lean();
+        if (!user) return NOT_FOUND;
+
+        user.active = active;
+        await user.save();
+
+        return OK("Updated status");
+    } catch (error) {
+        throw error;
+    }
+}
+
 const updateUsernameInRecipes = async (id, newUsername) => {
     await Recipe.updateMany(
         {'creator._id': id},
@@ -67,5 +96,7 @@ const isAtLeastOneDayAfter = (date) => {
 module.exports = {
     list,
     updateUsername,
-    updatePassword
+    updatePassword,
+    resetPassword,
+    updateStatus
 }

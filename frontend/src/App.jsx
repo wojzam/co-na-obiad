@@ -13,6 +13,7 @@ import CreateRecipe from "./pages/CreateRecipe";
 import EditRecipe from "./pages/EditRecipe";
 import UserProfile from "./pages/UserProfile";
 import Ingredients from "./pages/Ingredients";
+import Users from "./pages/Users";
 import Healthcheck from "./pages/Healthcheck";
 import ThemeSwitcher from "./components/ThemeSwitcher";
 import useAuthData from "./hooks/useAuthData";
@@ -44,6 +45,7 @@ export default function App() {
                         <Route path="/edit-recipe/:id" element={<EditRecipe/>}/>
                         <Route path="/user-profile" element={<UserProfile/>}/>
                         <Route path="/ingredients" element={<Ingredients/>}/>
+                        <Route path="/users" element={<Users/>}/>
                         <Route path="/healthcheck" element={<Healthcheck/>}/>
                         <Route path="*" element={<Navigate replace to="/"/>}/>
                     </Routes>

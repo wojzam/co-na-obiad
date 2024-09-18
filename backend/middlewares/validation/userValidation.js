@@ -46,4 +46,34 @@ const newPasswordSchema = [checkSchema({
     },
 }), validRequest];
 
-module.exports = {usernameSchema, newPasswordSchema};
+const resetPasswordSchema = [checkSchema({
+    newPassword: {
+        notEmpty: {
+            errorMessage: 'New password is required',
+        },
+        in: ['body'],
+        trim: true,
+        escape: true,
+        isLength: {
+            options: {min: 8, max: 64},
+            errorMessage: 'Password must be between 8-64 characters',
+        },
+    },
+}), validRequest];
+
+
+const statusSchema = [checkSchema({
+    active: {
+        notEmpty: {
+            errorMessage: 'Active status is required',
+        },
+        in: ['body'],
+        trim: true,
+        escape: true,
+        isBoolean: {
+            errorMessage: 'Active status must be boolean',
+        }
+    },
+}), validRequest];
+
+module.exports = {usernameSchema, newPasswordSchema, resetPasswordSchema, statusSchema};
