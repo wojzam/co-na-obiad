@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Autocomplete, Box, TextField} from "@mui/material";
 import axios from "axios";
 import SearchBar from "./SearchBar";
@@ -11,7 +11,7 @@ import {useCategories} from "../hooks/useCachedData";
 import {useSearchState} from "../hooks/useSearchState";
 import {usePagingState} from "../hooks/usePagingState";
 
-const PAGE_SIZE = 30;
+const PAGE_SIZE = 100; // TODO: improve infinite scroll then lower this value
 const MAX_CATEGORIES = 10;
 const TYPE_ALL = "all";
 export const TYPE_USER = "user";
@@ -31,7 +31,7 @@ export default function RecipesFetcher({
     const resetRecipes = () => {
         setRecipes([]);
         setPagesToLoad(1);
-        currentPage = 1;
+        setCurrentPage(1);
         setIsLastPage(false);
     };
 
@@ -40,7 +40,8 @@ export default function RecipesFetcher({
     const {pagesToLoad, setPagesToLoad, isLastPage, setIsLastPage,} = usePagingState({id, scroll});
     const [canFetch, setCanFetch] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    let currentPage = 1;
+    const [currentPage, setCurrentPage] = useState(1);
+    const isFetching = useRef(false);
 
     const generateEndpoint = () => {
         let endpoint = `/api/recipes?name=${filter.name}` +
@@ -59,7 +60,8 @@ export default function RecipesFetcher({
 
     const fetchRecipes = () => {
         setErrorMessage("");
-        if (isLastPage) return;
+        if (isLastPage || isFetching.current) return;
+        isFetching.current = true;
 
         setIsPending(true);
         setSkeletons(Array.from(new Array(6)));
@@ -73,7 +75,7 @@ export default function RecipesFetcher({
                     setIsLastPage(true);
                     setSkeletons([]);
                 } else if (currentPage < pagesToLoad) {
-                    currentPage++;
+                    setCurrentPage((prevPage) => prevPage + 1);
                     fetchRecipes();
                 }
             }).catch(() => {
@@ -81,6 +83,7 @@ export default function RecipesFetcher({
             resetRecipes();
         }).finally(() => {
             setIsPending(false);
+            isFetching.current = false;
         });
     };
 
@@ -91,10 +94,10 @@ export default function RecipesFetcher({
 
     useEffect(() => {
         if (isReadingState || !canFetch) return;
-        debounce(fetchRecipes, 50)();
+        fetchRecipes();
     }, [canFetch, filter, sort, pagesToLoad]);
 
-    const reachedBottom = (threshold = 600) => {
+    const reachedBottom = (threshold = 1500) => {
         return document.body.scrollHeight <= window.scrollY + window.innerHeight + threshold;
     }
 
@@ -117,10 +120,6 @@ export default function RecipesFetcher({
             window.removeEventListener("scroll", debouncedOnScroll);
         };
     }, [isPending, isLastPage]);
-
-    useEffect(() => {
-        if (shouldLoadNextPage()) addNextPage();
-    }, []);
 
     return (
         <>
