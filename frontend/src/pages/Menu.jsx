@@ -138,15 +138,22 @@ export default function Menu() {
         <>
             <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" width="100%"
                  gap={5} mb={5}>
-                <Typography component="h1" fontWeight="medium" sx={{
-                    fontSize: {xs: theme.typography.h4.fontSize, sm: theme.typography.h3.fontSize,}
-                }}>
-                    Menu
-                </Typography>
-                <Button variant="contained" startIcon={<ShuffleIcon/>} sx={{height: "fit-content"}}
-                        onClick={getRandomRecipes}>
-                    Wylosuj obiady
-                </Button>
+                <Box display="flex" flexDirection={{xs: 'column', sm: 'column', md: 'row'}}
+                     alignItems="center" justifyContent="space-between" width="100%">
+                    <Typography component="h1" fontWeight="medium" sx={{
+                        fontSize: {xs: theme.typography.h4.fontSize, sm: theme.typography.h3.fontSize,}
+                    }}>
+                        Menu
+                    </Typography>
+                    <Button variant="contained" startIcon={<ShuffleIcon/>}
+                            sx={{
+                                width: {xs: "100%", sm: "100%", md: "fit-content"},
+                                height: "fit-content"
+                            }}
+                            onClick={getRandomRecipes}>
+                        Wylosuj obiady
+                    </Button>
+                </Box>
             </Box>
             <MessageBox message={errorMessage} isError={true}/>
             <DragDropContext onDragEnd={handleDragEnd}>
@@ -158,7 +165,7 @@ export default function Menu() {
                             {DAYS.map((day, index) => (
                                 <Grid item key={index} sm={2} md={4} lg={4} xl={4} width="100%" display="flex"
                                       flexDirection="column">
-                                    <Typography component="h1" variant="h5" fontWeight="medium" gutterBottom
+                                    <Typography component="h1" variant="h5" fontWeight="medium"
                                                 textAlign={{xs: "center", sm: "center", md: "left"}}>
                                         {day}
                                     </Typography>
