@@ -7,7 +7,10 @@ import CategoryLink from "../components/CategoryLink";
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 import useAuthAxios from "../hooks/useAuthAxios";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DownloadIcon from '@mui/icons-material/Download';
 import CommentsSection from "../components/CommentsSection";
+import {jsPDF} from "jspdf";
+import quicksandFontBase64 from "../fonts/Quicksand.base64.jsx";
 
 const RecipeDetails = () => {
     const recipe = useRecipe();
@@ -36,6 +39,86 @@ const RecipeDetails = () => {
     useEffect(() => {
         if (recipe && 'saved' in recipe) setIsSaved(recipe.saved);
     }, [recipe]);
+
+    const addGoogleFontToJsPDF = (doc) => {
+        doc.addFileToVFS("Quicksand-Regular.ttf", quicksandFontBase64);
+        doc.addFont("Quicksand-Regular.ttf", "Quicksand", "normal");
+        doc.setFont("Quicksand");
+    };
+
+    const addTextWithPageBreaks = (doc, text, startX, startY, pageHeight, marginY) => {
+        const fontSize = doc.internal.getFontSize();
+        const lineHeight = fontSize * 0.5;
+
+        const lines = doc.splitTextToSize(text, doc.internal.pageSize.width - 2 * marginY);
+        let y = startY;
+
+        lines.forEach((line, index) => {
+            if (y + lineHeight > pageHeight - marginY) {
+                doc.addPage();
+                y = marginY;
+            }
+            doc.text(line, startX, y);
+            y += lineHeight;
+        });
+    };
+
+    const downloadRecipeAsPdf = () => {
+        if (!recipe) return;
+
+        const doc = new jsPDF();
+        addGoogleFontToJsPDF(doc);
+
+        const pageWidth = doc.internal.pageSize.width;
+        const pageHeight = doc.internal.pageSize.height;
+        const margin = 15;
+        const lineHeight = 10;
+        let y = 1.5 * margin;
+
+        doc.setFontSize(24);
+        const maxWidth = pageWidth - 2 * margin;
+        doc.text(recipe.name, margin, y, {maxWidth: maxWidth});
+        y += 2 * lineHeight;
+
+        doc.setFontSize(12);
+        doc.text('Składniki:', margin, y);
+
+        recipe.ingredientSections.forEach((section, sectionIndex) => {
+            doc.setFontSize(12);
+            section.sectionName && doc.text(`${section.sectionName}:`, margin, y);
+            y += lineHeight * 0.8;
+
+            section.ingredients.forEach((ingredient, index) => {
+                doc.setFontSize(10);
+                let ingredientText = `${ingredient.name}`;
+                if (ingredient.value || ingredient.unit) {
+                    ingredientText += ` ${ingredient.value ? ingredient.value : ''} ${ingredient.unit ? ingredient.unit : ''}`;
+                }
+                doc.text(`${index + 1}. ${ingredientText}`, margin, y);
+                y += lineHeight / 2;
+            });
+
+            y += lineHeight * 0.8;
+        });
+
+        doc.setFontSize(12);
+        doc.text('Przygotowanie:', margin, y);
+        y += lineHeight / 2;
+
+        doc.setFontSize(10);
+        addTextWithPageBreaks(doc, recipe.preparation, margin, y, pageHeight, 1.5 * margin);
+
+        doc.save(`${sanitizeFileName(recipe.name)}.pdf`);
+    };
+
+    const sanitizeFileName = (fileName) => {
+        return fileName
+            .replace(/[^\p{L}0-9_\-]/ug, '_')
+            .replace(/\s+/g, '_')
+            .replace(/\.+/g, '_')
+            .replace(/_+/g, '_')
+            .replace(/_+$/, '');
+    };
 
     return (
         <>
@@ -89,7 +172,7 @@ const RecipeDetails = () => {
                             )}
                         </Typography>
                     </Box>
-                    <Box display="flex" justifyContent="end" gap={2}>
+                    <Box display="flex" justifyContent="center" gap={2}>
                         <Button sx={{
                             display: recipe && 'saved' in recipe ? "inherit" : "none",
                             height: "fit-content",
@@ -113,6 +196,18 @@ const RecipeDetails = () => {
                                 href={`/edit-recipe/${recipe?._id}`}
                                 disabled={!recipe?.canEdit}>
                             Edytuj
+                        </Button>
+                        <Button
+                            sx={{
+                                height: "fit-content",
+                                width: "fit-content",
+                                mb: {xs: 3, sm: 3, md: 0}
+                            }}
+                            variant="outlined"
+                            startIcon={<DownloadIcon/>}
+                            onClick={downloadRecipeAsPdf}
+                            disabled={!recipe}>
+                            Pobierz
                         </Button>
                     </Box>
                 </Box>

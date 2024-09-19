@@ -18,7 +18,7 @@ user-generated content, allowing individuals to contribute their own recipes and
 
 - **Recipe Discovery and Filtering:** Users can search for recipes based on ingredients and categories, ensuring they
   find exactly what they need. You can also save your favorite recipes for easy access later.
-  This functionality also allows users to exclude ingredients they dislike or are allergic to.
+  This functionality also allows users to exclude ingredients they dislike or are allergic to. Additionally, anyone can download recipes as pdf file.
 - **User Contributions:** After logging in, users can add their own recipes to the platform, sharing their culinary
   creations with the community.
 - **Community Interaction:** Users can comment on recipes, providing feedback, tips, or simply sharing their thoughts on
